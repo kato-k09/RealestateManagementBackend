@@ -75,15 +75,15 @@ public interface RealestateRepository {
           + "fire_insurance=#{fireInsurance}, other=#{other}, is_deleted=#{isDeleted} WHERE project_id=#{projectId}")
   public void updateIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
 
-  @Delete("DELETE FROM projects WHERE id=#{id})")
+  @Delete("DELETE FROM projects WHERE id=#{id}")
   public void deleteProject(int id);
 
-  @Delete("DELETE FROM parcels WHERE id=#{projectId})")
-  public void deleteParcels(int projectId);
+  @Delete("DELETE FROM parcels WHERE project_id=#{projectId}")
+  public void deleteParcel(int projectId);
 
-  @Delete("DELETE FROM buildings WHERE id=#{projectId})")
-  public void deleteBuildings(int projectId);
+  @Delete("DELETE FROM buildings WHERE project_id=#{projectId}")
+  public void deleteBuilding(int projectId);
 
-  @Delete("DELETE FROM incomeAndExpenses WHERE id=#{projectId})")
+  @Delete("DELETE FROM income_and_expenses WHERE project_id=#{projectId}")
   public void deleteIncomeAndExpenses(int projectId);
 }

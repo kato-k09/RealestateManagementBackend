@@ -67,20 +67,10 @@ public class RealestateService {
   @Transactional
   public void deleteRealestate(int projectId) {
 
-    ProjectRequest request = new ProjectRequest(
-        new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
-
-    request.getProject().setId(projectId);
-    request.getParcel().setProjectId(projectId);
-    request.getBuilding().setProjectId(projectId);
-    request.getIncomeAndExpenses().setProjectId(projectId);
-
-    request.getProject().setDeleted(true);
-    request.getParcel().setDeleted(true);
-    request.getBuilding().setDeleted(true);
-    request.getIncomeAndExpenses().setDeleted(true);
-
-    updateRealestate(request);
+    repository.deleteProject(projectId);
+    repository.deleteParcel(projectId);
+    repository.deleteBuilding(projectId);
+    repository.deleteIncomeAndExpenses(projectId);
   }
 
 }
