@@ -39,6 +39,7 @@ public class RealestateController {
     List<RealestateDetail> result = service.searchRealestate(searchParam);
 
     return ResponseEntity.ok(result);
+    // TODO: 検索機能を実装する
   }
 
   /**
@@ -53,7 +54,7 @@ public class RealestateController {
     service.registerRealestate(request);
 
     // 保存処理などを行う
-    return ResponseEntity.ok("受信成功");
+    return ResponseEntity.ok("登録成功");
   }
 
   /**
