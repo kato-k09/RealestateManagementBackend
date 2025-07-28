@@ -16,8 +16,6 @@ public class Building {
   private int projectId;
   @Schema(description = "建物価格", example = "1000000")
   private int buildingPrice;
-  @Schema(description = "建物住所", example = "東京都千代田区1-1-1")
-  private String buildingAddress;
   @Schema(description = "建物種別", example = "アパート")
   private String buildingType;
   @Schema(description = "建物構造", example = "鉄筋コンクリート")

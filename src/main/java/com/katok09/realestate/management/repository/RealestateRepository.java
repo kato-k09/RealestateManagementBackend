@@ -72,9 +72,9 @@ public interface RealestateRepository {
    *
    * @param building 不動産建物情報
    */
-  @Insert("INSERT INTO buildings(project_id, building_price, building_address, building_type, "
+  @Insert("INSERT INTO buildings(project_id, building_price, building_type, "
       + "building_structure, building_size, building_date, building_remark, is_deleted) "
-      + "VALUES(#{projectId}, #{buildingPrice}, #{buildingAddress}, #{buildingType}, "
+      + "VALUES(#{projectId}, #{buildingPrice}, #{buildingType}, "
       + "#{buildingStructure}, #{buildingSize}, #{buildingDate}, #{buildingRemark}, false)")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   public void registerBuilding(Building building);
@@ -117,7 +117,7 @@ public interface RealestateRepository {
    * @param building 不動産建物情報
    */
   @Update(
-      "UPDATE buildings SET building_price=#{buildingPrice}, building_address=#{buildingAddress}, "
+      "UPDATE buildings SET building_price=#{buildingPrice}, "
           + "building_type=#{buildingType}, building_structure=#{buildingStructure}, "
           + "building_size=#{buildingSize}, building_date=#{buildingDate}, "
           + "building_remark=#{buildingRemark}, is_deleted=#{isDeleted} WHERE project_id=#{projectId}")
