@@ -4,7 +4,7 @@ import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
 import com.katok09.realestate.management.data.Parcel;
 import com.katok09.realestate.management.data.Project;
-import com.katok09.realestate.management.domain.ProjectRequest;
+import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.repository.RealestateRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +22,21 @@ public class RealestateService {
     this.repository = repository;
   }
 
-  public List<ProjectRequest> searchRealestate(ProjectRequest projectRequest) {
-    List<ProjectRequest> result = new ArrayList<>();
+  /**
+   * 不動産情報の一覧表示・検索を行います。
+   *
+   * @param realestateDetail 不動産情報の検索パラメーター
+   * @return 検索結果の不動産情報リスト
+   */
+  public List<RealestateDetail> searchRealestate(RealestateDetail realestateDetail) {
+    List<RealestateDetail> result = new ArrayList<>();
     List<Project> project = repository.getProjects();
     List<Parcel> parcels = repository.getParcels();
     List<Building> building = repository.getBuildings();
     List<IncomeAndExpenses> incomeAndExpenses = repository.getIncomeAndExpenses();
 
     for (int i = 0; i < project.size(); i++) {
-      ProjectRequest resultTemp = new ProjectRequest();
+      RealestateDetail resultTemp = new RealestateDetail();
       resultTemp.setProject(project.get(i));
       resultTemp.setParcel(parcels.get(i));
       resultTemp.setBuilding(building.get(i));
@@ -41,8 +47,13 @@ public class RealestateService {
     return result;
   }
 
+  /**
+   * 不動産情報の登録を行います。
+   *
+   * @param request 不動産登録情報
+   */
   @Transactional
-  public void registerRealestate(ProjectRequest request) {
+  public void registerRealestate(RealestateDetail request) {
     repository.registerProject(request.getProject());
 
     request.getParcel().setProjectId(request.getProject().getId());
@@ -54,8 +65,13 @@ public class RealestateService {
     repository.registerIncomeAndExpenses(request.getIncomeAndExpenses());
   }
 
+  /**
+   * 不動産情報の更新を行います。
+   *
+   * @param request 不動産更新情報
+   */
   @Transactional
-  public void updateRealestate(ProjectRequest request) {
+  public void updateRealestate(RealestateDetail request) {
 
     repository.updateProject(request.getProject());
     repository.updateParcel(request.getParcel());
@@ -64,6 +80,11 @@ public class RealestateService {
 
   }
 
+  /**
+   * 不動産情報の削除を行います。
+   *
+   * @param projectId 不動産情報のID
+   */
   @Transactional
   public void deleteRealestate(int projectId) {
 
