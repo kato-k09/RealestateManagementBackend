@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.katok09.realestate.management.domain.RealestateDetail;
+import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.service.RealestateService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class RealestateControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().json("[]"));
 
-    verify(service, times(1)).searchRealestate(any(RealestateDetail.class));
+    verify(service, times(1)).searchRealestate(any(SearchParams.class));
 
   }
 

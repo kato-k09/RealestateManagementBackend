@@ -6,6 +6,8 @@ import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
 import com.katok09.realestate.management.data.Parcel;
 import com.katok09.realestate.management.data.Project;
+import com.katok09.realestate.management.domain.RealestateDetail;
+import com.katok09.realestate.management.dto.SearchParams;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -16,6 +18,26 @@ public class RealestateRepositoryTest {
 
   @Autowired
   private RealestateRepository sut;
+
+  @Test
+  void 不動産詳細情報リストが全件取得できること() {
+
+    List<RealestateDetail> actual = sut.searchRealestate(new SearchParams());
+
+    assertThat(actual.size()).isEqualTo(8);
+
+  }
+
+  @Test
+  void 不動産詳細情報リストが検索条件で取得できること() {
+
+    SearchParams searchParams = new SearchParams(null, "三条", null,
+        null);
+
+    List<RealestateDetail> actual = sut.searchRealestate(searchParams);
+
+    assertThat(actual.size()).isEqualTo(4);
+  }
 
   @Test
   void 不動産プロジェクト情報リストが取得できること() {

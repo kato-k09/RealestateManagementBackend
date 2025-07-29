@@ -8,6 +8,7 @@ import com.katok09.realestate.management.data.IncomeAndExpenses;
 import com.katok09.realestate.management.data.Parcel;
 import com.katok09.realestate.management.data.Project;
 import com.katok09.realestate.management.domain.RealestateDetail;
+import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.repository.RealestateRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,14 +32,11 @@ public class RealestateServiceTest {
   @Test
   void 不動産一覧_検索_リポジトリが適切に呼び出されていること() {
 
-    RealestateDetail dummy = new RealestateDetail();
+    SearchParams dummy = new SearchParams();
 
     sut.searchRealestate(dummy);
 
-    verify(repository, times(1)).getProjects();
-    verify(repository, times(1)).getParcels();
-    verify(repository, times(1)).getBuildings();
-    verify(repository, times(1)).getIncomeAndExpenses();
+    verify(repository, times(1)).searchRealestate(dummy);
   }
 
   @Test

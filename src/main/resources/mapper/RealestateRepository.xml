@@ -178,7 +178,10 @@
     INSERT INTO income_and_expenses(project_id, rent, maintenance_cost, repair_fund, management_fee,
                                     principal, interest, tax, water_bill, electric_bill, gas_bill,
                                     fire_insurance, other,
-                                    is_deleted VALUES(#{projectId}, #{rent}, #{maintenanceCost}, #{repairFund}, #{managementFee}, #{principal}, #{interest}, #{tax}, #{waterBill}, #{electricBill}, #{gasBill}, #{fireInsurance}, #{other}, false)
+                                    is_deleted)
+    VALUES (#{projectId}, #{rent}, #{maintenanceCost}, #{repairFund}, #{managementFee},
+            #{principal}, #{interest}, #{tax}, #{waterBill}, #{electricBill}, #{gasBill},
+            #{fireInsurance}, #{other}, false)
   </insert>
 
   <!-- 不動産プロジェクト情報更新 -->
@@ -237,14 +240,14 @@
   <!-- 不動産プロジェクト情報削除 -->
   <delete id="deleteProject" parameterType="com.katok09.realestate.management.data.Project">
     DELETE
-    FROM parcels
-    WHERE project_id = #{projectId}
+    FROM projects
+    WHERE id = #{projectId}
   </delete>
 
   <!-- 不動産土地情報削除 -->
   <delete id="deleteParcel" parameterType="com.katok09.realestate.management.data.Parcel">
     DELETE
-    FROM buildings
+    FROM parcels
     WHERE project_id = #{projectId}
   </delete>
 
