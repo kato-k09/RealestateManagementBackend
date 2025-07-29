@@ -1,6 +1,7 @@
 package com.katok09.realestate.management.controller;
 
 import com.katok09.realestate.management.domain.RealestateDetail;
+import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.service.RealestateService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +30,16 @@ public class RealestateController {
   /**
    * 不動産情報の一覧表示・検索を行います。
    *
-   * @param searchParam
+   * @param searchParams
    * @return エラーが発生しなければ200 OKとともに不動産情報のリストを返します。
    */
   @GetMapping("/searchRealestate")
   public ResponseEntity<List<RealestateDetail>> searchRealestate(
-      @ModelAttribute RealestateDetail searchParam) {
+      @ModelAttribute SearchParams searchParams) {
 
-    List<RealestateDetail> result = service.searchRealestate(searchParam);
+    List<RealestateDetail> result = service.searchRealestate(searchParams);
 
     return ResponseEntity.ok(result);
-    // TODO: 検索機能を実装する
   }
 
   /**

@@ -1,12 +1,8 @@
 package com.katok09.realestate.management.service;
 
-import com.katok09.realestate.management.data.Building;
-import com.katok09.realestate.management.data.IncomeAndExpenses;
-import com.katok09.realestate.management.data.Parcel;
-import com.katok09.realestate.management.data.Project;
 import com.katok09.realestate.management.domain.RealestateDetail;
+import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.repository.RealestateRepository;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,26 +21,12 @@ public class RealestateService {
   /**
    * 不動産情報の一覧表示・検索を行います。
    *
-   * @param realestateDetail 不動産情報の検索パラメーター
+   * @param searchParams 不動産情報の検索パラメーター
    * @return 検索結果の不動産情報リスト
    */
-  public List<RealestateDetail> searchRealestate(RealestateDetail realestateDetail) {
-    List<RealestateDetail> result = new ArrayList<>();
-    List<Project> project = repository.getProjects();
-    List<Parcel> parcels = repository.getParcels();
-    List<Building> building = repository.getBuildings();
-    List<IncomeAndExpenses> incomeAndExpenses = repository.getIncomeAndExpenses();
+  public List<RealestateDetail> searchRealestate(SearchParams searchParams) {
 
-    for (int i = 0; i < project.size(); i++) {
-      RealestateDetail resultTemp = new RealestateDetail();
-      resultTemp.setProject(project.get(i));
-      resultTemp.setParcel(parcels.get(i));
-      resultTemp.setBuilding(building.get(i));
-      resultTemp.setIncomeAndExpenses(incomeAndExpenses.get(i));
-      result.add(resultTemp);
-    }
-
-    return result;
+    return repository.searchRealestate(searchParams);
   }
 
   /**

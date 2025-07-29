@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.katok09.realestate.management.repository.RealestateRepository">
+
+  <!-- 不動産一覧表示・検索 -->
+  <resultMap id="RealestateDetailResultMap"
+    type="com.katok09.realestate.management.domain.RealestateDetail">
+    <id property="project.id" column="pj_id"/>
+    <association property="project" javaType="com.katok09.realestate.management.data.Project">
+      <id property="id" column="pj_id"/>
+      <result property="projectName" column="pj_project_name"/>
+      <result property="isDeleted" column="pj_is_deleted"/>
+    </association>
+
+    <association property="parcel" javaType="com.katok09.realestate.management.data.Parcel">
+      <id property="id" column="pa_id"/>
+      <result property="projectId" column="pa_project_id"/>
+      <result property="parcelPrice" column="pa_parcel_price"/>
+      <result property="parcelAddress" column="pa_parcel_address"/>
+      <result property="parcelCategory" column="pa_parcel_category"/>
+      <result property="parcelSize" column="pa_parcel_size"/>
+      <result property="parcelRemark" column="pa_parcel_remark"/>
+      <result property="isDeleted" column="pa_is_deleted"/>
+    </association>
+
+    <association property="building" javaType="com.katok09.realestate.management.data.Building">
+      <id property="id" column="bu_id"/>
+      <result property="projectId" column="bu_project_id"/>
+      <result property="buildingPrice" column="bu_building_price"/>
+      <result property="buildingType" column="bu_building_type"/>
+      <result property="buildingStructure" column="bu_building_structure"/>
+      <result property="buildingSize" column="bu_building_size"/>
+      <result property="buildingDate" column="bu_building_date"/>
+      <result property="buildingRemark" column="bu_building_remark"/>
+      <result property="isDeleted" column="bu_is_deleted"/>
+    </association>
+
+    <association property="incomeAndExpenses"
+      javaType="com.katok09.realestate.management.data.IncomeAndExpenses">
+      <id property="id" column="ie_id"/>
+      <result property="projectId" column="ie_project_id"/>
+      <result property="rent" column="ie_rent"/>
+      <result property="maintenanceCost" column="ie_maintenance_cost"/>
+      <result property="repairFund" column="ie_repair_fund"/>
+      <result property="managementFee" column="ie_management_fee"/>
+      <result property="principal" column="ie_principal"/>
+      <result property="interest" column="ie_interest"/>
+      <result property="tax" column="ie_tax"/>
+      <result property="waterBill" column="ie_water_bill"/>
+      <result property="electricBill" column="ie_electric_bill"/>
+      <result property="gasBill" column="ie_gas_bill"/>
+      <result property="fireInsurance" column="ie_fire_insurance"/>
+      <result property="other" column="ie_other"/>
+      <result property="isDeleted" column="ie_is_deleted"/>
+    </association>
+  </resultMap>
+
+  <select id="searchRealestate" resultMap="RealestateDetailResultMap">
+    SELECT pj.id AS pj_id,
+    pj.project_name AS pj_project_name,
+    pj.is_deleted AS pj_is_deleted,
+
+    pa.id AS pa_id,
+    pa.project_id AS pa_project_id,
+    pa.parcel_price AS pa_parcel_price,
+    pa.parcel_address AS pa_parcel_address,
+    pa.parcel_category AS pa_parcel_category,
+    pa.parcel_size AS pa_parcel_size,
+    pa.parcel_remark AS pa_parcel_remark,
+    pa.is_deleted AS pa_is_deleted,
+
+    bu.id AS bu_id,
+    bu.project_id AS bu_project_id,
+    bu.building_price AS bu_building_price,
+    bu.building_type AS bu_building_type,
+    bu.building_structure AS bu_building_structure,
+    bu.building_size AS bu_building_size,
+    bu.building_date AS bu_building_date,
+    bu.building_remark AS bu_building_remark,
+    bu.is_deleted AS bu_is_deleted,
+
+    ie.id AS ie_id,
+    ie.project_id AS ie_project_id,
+    ie.rent AS ie_rent,
+    ie.maintenance_cost AS ie_maintenance_cost,
+    ie.repair_fund AS ie_repair_fund,
+    ie.management_fee AS ie_management_fee,
+    ie.principal AS ie_principal,
+    ie.interest AS ie_interest,
+    ie.tax AS ie_tax,
+    ie.water_bill AS ie_water_bill,
+    ie.electric_bill AS ie_electric_bill,
+    ie.gas_bill AS ie_gas_bill,
+    ie.fire_insurance AS ie_fire_insurance,
+    ie.other AS ie_other,
+    ie.is_deleted AS ie_is_deleted
+
+    FROM projects AS pj
+    LEFT JOIN parcels AS pa ON pj.id = pa.project_id
+    LEFT JOIN buildings AS bu ON pj.id = bu.project_id
+    LEFT JOIN income_and_expenses AS ie ON pj.id = ie.project_id
+
+    <where>
+      <if
+        test="searchProjectName != null and searchProjectName != ''">
+        AND pj.project_name LIKE CONCAT('%', #{searchProjectName}, '%')
+      </if>
+      <if
+        test="searchParcelAddress != null and searchParcelAddress != ''">
+        AND pa.parcel_address LIKE CONCAT('%', #{searchParcelAddress}, '%')
+      </if>
+      <if
+        test="searchBuildingType != null and searchBuildingType != ''">
+        AND bu.building_type LIKE CONCAT('%', #{searchBuildingType}, '%')
+      </if>
+      <if
+        test="searchBuildingStructure != null and searchBuildingStructure != ''">
+        AND bu.building_structure LIKE CONCAT('%', #{searchBuildingStructure}, '%')
+      </if>
+    </where>
+  </select>
+
+  <!-- 不動産プロジェクト情報リスト取得 -->
+  <select id="getProjects" parameterType="com.katok09.realestate.management.data.Project">
+    SELECT *
+    FROM projects
+  </select>
+
+  <!-- 不動産土地情報リスト取得 -->
+  <select id="getParcels" parameterType="com.katok09.realestate.management.data.Parcel">
+    SELECT *
+    FROM parcels
+  </select>
+
+  <!-- 不動産建物情報リスト取得 -->
+  <select id="getBuildings" parameterType="com.katok09.realestate.management.data.Building">
+    SELECT *
+    FROM buildings
+  </select>
+
+  <!-- 不動産収支情報リスト取得 -->
+  <select id="getIncomeAndExpenses"
+    parameterType="com.katok09.realestate.management.data.IncomeAndExpenses">
+    SELECT *
+    FROM income_and_expenses
+  </select>
+
+  <!-- 不動産プロジェクト登録 -->
+  <insert id="registerProject" parameterType="com.katok09.realestate.management.data.Project"
+    useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO projects(project_name, is_deleted)
+    VALUES (#{projectName}, false)
+  </insert>
+
+  <!-- 不動産土地情報登録 -->
+  <insert id="registerParcel" parameterType="com.katok09.realestate.management.data.Parcel"
+    useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO parcels(project_id, parcel_price, parcel_address, parcel_category, parcel_size,
+                        parcel_remark, is_deleted)
+    VALUES (#{projectId}, #{parcelPrice}, #{parcelAddress}, #{parcelCategory}, #{parcelSize},
+            #{parcelRemark}, false)
+  </insert>
+
+  <!-- 不動産建物情報登録 -->
+  <insert id="registerBuilding" parameterType="com.katok09.realestate.management.data.Building"
+    useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO buildings(project_id, building_price, building_type, building_structure,
+                          building_size, building_date, building_remark, is_deleted)
+    VALUES (#{projectId}, #{buildingPrice}, #{buildingType}, #{buildingStructure}, #{buildingSize},
+            #{buildingDate}, #{buildingRemark}, false)
+  </insert>
+
+  <!-- 不動産収支情報登録 -->
+  <insert id="registerIncomeAndExpenses"
+    parameterType="com.katok09.realestate.management.data.IncomeAndExpenses"
+    useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO income_and_expenses(project_id, rent, maintenance_cost, repair_fund, management_fee,
+                                    principal, interest, tax, water_bill, electric_bill, gas_bill,
+                                    fire_insurance, other,
+                                    is_deleted VALUES(#{projectId}, #{rent}, #{maintenanceCost}, #{repairFund}, #{managementFee}, #{principal}, #{interest}, #{tax}, #{waterBill}, #{electricBill}, #{gasBill}, #{fireInsurance}, #{other}, false)
+  </insert>
+
+  <!-- 不動産プロジェクト情報更新 -->
+  <update id="updateProject" parameterType="com.katok09.realestate.management.data.Project">
+    UPDATE projects
+    SET project_name=#{projectName},
+        is_deleted=#{isDeleted}
+    WHERE id = #{id}
+  </update>
+
+  <!-- 不動産土地情報更新 -->
+  <update id="updateParcel" parameterType="com.katok09.realestate.management.data.Parcel">
+    UPDATE parcels
+    SET parcel_price=#{parcelPrice},
+        parcel_address=#{parcelAddress},
+        parcel_category=#{parcelCategory},
+        parcel_size=#{parcelSize},
+        parcel_remark=#{parcelRemark},
+        is_deleted=#{isDeleted}
+    WHERE project_id = #{projectId}
+  </update>
+
+  <!-- 不動産建物情報更新 -->
+  <update id="updateBuilding" parameterType="com.katok09.realestate.management.data.Building">
+    UPDATE buildings
+    SET building_price=#{buildingPrice},
+        building_type=#{buildingType},
+        building_structure=#{buildingStructure},
+        building_size=#{buildingSize},
+        building_date=#{buildingDate},
+        building_remark=#{buildingRemark},
+        is_deleted=#{isDeleted}
+    WHERE project_id = #{projectId}
+  </update>
+
+  <!-- 不動産収支情報更新 -->
+  <update id="updateIncomeAndExpenses"
+    parameterType="com.katok09.realestate.management.data.IncomeAndExpenses">
+    UPDATE income_and_expenses
+    SET rent=#{rent},
+        maintenance_cost=#{maintenanceCost},
+        repair_fund=#{repairFund},
+        management_fee=#{managementFee},
+        principal=#{principal},
+        interest=#{interest},
+        tax=#{tax},
+        water_bill=#{waterBill},
+        electric_bill=#{electricBill},
+        gas_bill=#{gasBill},
+        fire_insurance=#{fireInsurance},
+        other=#{other},
+        is_deleted=#{isDeleted}
+    WHERE project_id = #{projectId}
+  </update>
+
+  <!-- 不動産プロジェクト情報削除 -->
+  <delete id="deleteProject" parameterType="com.katok09.realestate.management.data.Project">
+    DELETE
+    FROM parcels
+    WHERE project_id = #{projectId}
+  </delete>
+
+  <!-- 不動産土地情報削除 -->
+  <delete id="deleteParcel" parameterType="com.katok09.realestate.management.data.Parcel">
+    DELETE
+    FROM buildings
+    WHERE project_id = #{projectId}
+  </delete>
+
+  <!-- 不動産建物情報削除 -->
+  <delete id="deleteBuilding" parameterType="com.katok09.realestate.management.data.Building">
+    DELETE
+    FROM buildings
+    WHERE project_id = #{projectId}
+  </delete>
+
+  <!-- 不動産収支情報削除 -->
+  <delete id="deleteIncomeAndExpenses"
+    parameterType="com.katok09.realestate.management.data.IncomeAndExpenses">
+    DELETE
+    FROM income_and_expenses
+    WHERE project_id = #{projectId}
+  </delete>
+
+</mapper>
