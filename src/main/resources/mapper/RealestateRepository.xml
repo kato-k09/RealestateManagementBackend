@@ -118,6 +118,13 @@
         test="searchBuildingStructure != null and searchBuildingStructure != ''">
         AND bu.building_structure LIKE CONCAT('%', #{searchBuildingStructure}, '%')
       </if>
+
+      <if test="searchFinancing == true">
+        AND (ie.principal &gt; 0 OR ie.interest &gt; 0)
+      </if>
+      <if test="searchFinancing == false">
+        AND (ie.principal = 0 AND ie.interest = 0)
+      </if>
     </where>
   </select>
 

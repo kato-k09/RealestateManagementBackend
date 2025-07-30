@@ -21,5 +21,7 @@ public class SearchParams {
   private String searchBuildingType;
   @Schema(description = "建物構造", example = "鉄筋コンクリート")
   private String searchBuildingStructure;
+  @Schema(description = "融資の有無", example = "true")
+  private Boolean searchFinancing;
 
 }
