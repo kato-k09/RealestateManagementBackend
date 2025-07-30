@@ -32,7 +32,7 @@ public class RealestateRepositoryTest {
   void 不動産詳細情報リストが検索条件で取得できること() {
 
     SearchParams searchParams = new SearchParams(null, "三条", null,
-        null);
+        null, null);
 
     List<RealestateDetail> actual = sut.searchRealestate(searchParams);
 
