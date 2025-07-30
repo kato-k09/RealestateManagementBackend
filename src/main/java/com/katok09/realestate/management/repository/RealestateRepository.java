@@ -4,86 +4,131 @@ import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
 import com.katok09.realestate.management.data.Parcel;
 import com.katok09.realestate.management.data.Project;
-import com.katok09.realestate.management.domain.ProjectRequest;
+import com.katok09.realestate.management.domain.RealestateDetail;
+import com.katok09.realestate.management.dto.SearchParams;
 import java.util.List;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface RealestateRepository {
 
-  @Select("SELECT * FROM projects")
+  /**
+   * 不動産詳細情報のリスト取得を行います。検索パラメーターの値で絞り込みを行います。
+   *
+   * @param searchParams 検索パラメーター
+   * @return 不動産詳細情報リスト
+   */
+  public List<RealestateDetail> searchRealestate(SearchParams searchParams);
+
+  /**
+   * 不動産プロジェクト情報のリスト取得を行います。
+   *
+   * @return 不動産プロジェクト情報リスト
+   */
   public List<Project> getProjects();
 
-  @Select("SELECT * FROM parcels")
+  /**
+   * 不動産土地情報のリスト取得を行います。
+   *
+   * @return 不動産土地情報リスト
+   */
   public List<Parcel> getParcels();
 
-  @Select("SELECT * FROM buildings")
+  /**
+   * 不動産建物情報のリスト取得を行います。
+   *
+   * @return 不動産建物情報リスト
+   */
   public List<Building> getBuildings();
 
-  @Select("SELECT * FROM income_and_expenses")
+  /**
+   * 不動産収支情報のリスト取得を行います。
+   *
+   * @return 不動産収支情報リスト
+   */
   public List<IncomeAndExpenses> getIncomeAndExpenses();
 
-  @Insert("INSERT INTO projects(project_name, is_deleted) VALUES(#{projectName}, false)")
-  @Options(useGeneratedKeys = true, keyProperty = "id")
+  /**
+   * 不動産プロジェクト情報の登録を行います。
+   *
+   * @param project 不動産プロジェクト情報
+   */
   public void registerProject(Project project);
 
-  @Insert("INSERT INTO parcels(project_id, parcel_price, parcel_address, parcel_category, parcel_size, parcel_remark, is_deleted) "
-      + "VALUES(#{projectId}, #{parcelPrice}, #{parcelAddress}, #{parcelCategory}, #{parcelSize}, #{parcelRemark}, false)")
-  @Options(useGeneratedKeys = true, keyProperty = "id")
+  /**
+   * 不動産土地情報の登録を行います。
+   *
+   * @param parcel 不動産土地情報
+   */
   public void registerParcel(Parcel parcel);
 
-  @Insert("INSERT INTO buildings(project_id, building_price, building_address, building_address_number, building_type, "
-      + "building_structure, building_size, building_date, building_remark, is_deleted) "
-      + "VALUES(#{projectId}, #{buildingPrice}, #{buildingAddress}, #{buildingAddressNumber}, #{buildingType}, "
-      + "#{buildingStructure}, #{buildingSize}, #{buildingDate}, #{buildingRemark}, false)")
-  @Options(useGeneratedKeys = true, keyProperty = "id")
+  /**
+   * 不動産建物情報の登録を行います。
+   *
+   * @param building 不動産建物情報
+   */
   public void registerBuilding(Building building);
 
-  @Insert("INSERT INTO income_and_expenses(project_id, rent, maintenance_cost, repair_fund, management_fee, principal, interest, "
-      + "tax, water_bill, electric_bill, gas_bill, fire_insurance, other, is_deleted)"
-      + "VALUES(#{projectId}, #{rent}, #{maintenanceCost}, #{repairFund}, #{managementFee}, "
-      + "#{principal}, #{interest}, #{tax}, #{waterBill}, #{electricBill}, #{gasBill}, #{fireInsurance}, #{other}, false)")
-  @Options(useGeneratedKeys = true, keyProperty = "id")
+  /**
+   * 不動産収支情報の登録を行います。
+   *
+   * @param incomeAndExpenses 不動産収支情報
+   */
   public void registerIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
 
-  @Update(
-      "UPDATE projects SET project_name=#{projectName}, is_deleted=#{isDeleted} WHERE id=#{id}")
+  /**
+   * 不動産プロジェクト情報の更新を行います。
+   *
+   * @param project 不動産プロジェクト情報
+   */
   public void updateProject(Project project);
 
-  @Update(
-      "UPDATE parcels SET parcel_price=#{parcelPrice}, parcel_address=#{parcelAddress}, parcel_category=#{parcelCategory}, "
-          + "parcel_size=#{parcelSize}, parcel_remark=#{parcelRemark}, is_deleted=#{isDeleted} WHERE project_id=#{projectId}")
+  /**
+   * 不動産土地情報の更新を行います。
+   *
+   * @param parcel 不動産土地情報
+   */
   public void updateParcel(Parcel parcel);
 
-  @Update(
-      "UPDATE buildings SET building_price=#{buildingPrice}, building_address=#{buildingAddress}, "
-          + "building_address_number=#{buildingAddressNumber}, building_type=#{buildingType}, "
-          + "building_structure=#{buildingStructure}, building_size=#{buildingSize}, building_date=#{buildingDate}, "
-          + "building_remark=#{buildingRemark}, is_deleted=#{isDeleted} WHERE project_id=#{projectId}")
+  /**
+   * 不動産建物情報の更新を行います。
+   *
+   * @param building 不動産建物情報
+   */
   public void updateBuilding(Building building);
 
-  @Update(
-      "UPDATE income_and_expenses SET rent=#{rent}, maintenance_cost=#{maintenanceCost}, "
-          + "repair_fund=#{repairFund}, management_fee=#{managementFee}, "
-          + "principal=#{principal}, interest=#{interest}, tax=#{tax}, "
-          + "water_bill=#{waterBill}, electric_bill=#{electricBill}, gas_bill=#{gasBill}, "
-          + "fire_insurance=#{fireInsurance}, other=#{other}, is_deleted=#{isDeleted} WHERE project_id=#{projectId}")
+  /**
+   * 不動産収支情報の更新を行います。
+   *
+   * @param incomeAndExpenses 不動産収支情報
+   */
   public void updateIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
 
-  @Delete("DELETE FROM projects WHERE id=#{id})")
+  /**
+   * 不動産プロジェクト情報の削除を行います。
+   *
+   * @param id 不動産プロジェクト情報のID
+   */
   public void deleteProject(int id);
 
-  @Delete("DELETE FROM parcels WHERE id=#{projectId})")
-  public void deleteParcels(int projectId);
+  /**
+   * 不動産土地情報の削除を行います。
+   *
+   * @param projectId 不動産プロジェクト情報のID
+   */
+  public void deleteParcel(int projectId);
 
-  @Delete("DELETE FROM buildings WHERE id=#{projectId})")
-  public void deleteBuildings(int projectId);
+  /**
+   * 不動産建物情報の削除を行います。
+   *
+   * @param projectId 不動産プロジェクト情報のID
+   */
+  public void deleteBuilding(int projectId);
 
-  @Delete("DELETE FROM incomeAndExpenses WHERE id=#{projectId})")
+  /**
+   * 不動産収支情報の削除を行います。
+   *
+   * @param projectId 不動産プロジェクト情報のID
+   */
   public void deleteIncomeAndExpenses(int projectId);
 }
