@@ -70,26 +70,7 @@ public class AuthController {
 
       System.out.println("AuthService.authenticate() 完了");
 
-      // 一時的な回避策：単純なMapレスポンスを作成
-      Map<String, Object> response = new HashMap<>();
-      response.put("token", loginResponse.getToken());
-      response.put("type", "Bearer");
-
-      // UserInfo情報を個別に設定
-      Map<String, Object> userInfo = new HashMap<>();
-      if (loginResponse.getUserInfo() != null) {
-        userInfo.put("id", loginResponse.getUserInfo().getId());
-        userInfo.put("username", loginResponse.getUserInfo().getUsername());
-        userInfo.put("displayName", loginResponse.getUserInfo().getDisplayName());
-        userInfo.put("email", loginResponse.getUserInfo().getEmail());
-        userInfo.put("role", loginResponse.getUserInfo().getRole());
-      }
-      response.put("userInfo", userInfo);
-
-      System.out.println("レスポンス作成完了");
-      System.out.println("=== AuthController.login() 正常終了 ===");
-
-      return ResponseEntity.ok(response);
+      return ResponseEntity.ok(loginResponse);
 
     } catch (BadCredentialsException e) {
       System.err.println("BadCredentialsException: " + e.getMessage());
@@ -105,71 +86,6 @@ public class AuthController {
     }
   }
 
-  /**
-   * デバッグ用: データベース接続テスト
-   */
-  @GetMapping("/debug/db-test")
-  @Operation(summary = "データベース接続テスト", description = "データベース接続とusersテーブルの確認")
-  public ResponseEntity<?> debugDbTest() {
-    try {
-      // AuthServiceのvalidateTokenメソッドを使用してテスト
-      UserInfo testUser = authService.getUserInfo(1L); // ID:1のユーザー情報取得でテスト
-
-      Map<String, Object> response = new HashMap<>();
-      response.put("database_connection", "OK");
-      response.put("test_user_found", testUser != null);
-      if (testUser != null) {
-        response.put("test_username", testUser.getUsername());
-      }
-
-      return ResponseEntity.ok(response);
-    } catch (Exception e) {
-      Map<String, Object> error = new HashMap<>();
-      error.put("database_connection", "ERROR");
-      error.put("error_message", e.getMessage());
-      error.put("error_class", e.getClass().getSimpleName());
-
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-  }
-
-  /**
-   * デバッグ用: 簡単なログインテスト
-   */
-  @PostMapping("/debug/simple-login")
-  @Operation(summary = "シンプルログインテスト", description = "最小限のレスポンスでログインテスト")
-  public ResponseEntity<?> simpleLogin(@RequestBody LoginRequest loginRequest) {
-    try {
-      System.out.println("=== シンプルログインテスト開始 ===");
-
-      // 認証のみ実行
-      LoginResponse loginResponse = authService.authenticate(loginRequest);
-
-      // 最小限のレスポンス
-      Map<String, Object> simpleResponse = new HashMap<>();
-      simpleResponse.put("success", true);
-      simpleResponse.put("message", "ログイン成功");
-      simpleResponse.put("username", loginResponse.getUserInfo().getUsername());
-      simpleResponse.put("role", loginResponse.getUserInfo().getRole());
-      simpleResponse.put("hasToken", loginResponse.getToken() != null);
-
-      System.out.println("シンプルレスポンス作成完了");
-      return ResponseEntity.ok(simpleResponse);
-
-    } catch (Exception e) {
-      System.err.println("シンプルログインエラー: " + e.getMessage());
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(Map.of("error", e.getMessage()));
-    }
-  }
-
-  /**
-   * 新規ユーザー登録
-   *
-   * @param registerRequest ユーザー登録リクエスト
-   * @return 登録結果
-   */
   @PostMapping("/register")
   @Operation(summary = "ユーザー登録", description = "新規ユーザーを登録します")
   public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {

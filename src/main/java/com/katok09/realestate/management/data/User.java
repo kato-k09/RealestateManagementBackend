@@ -28,11 +28,10 @@ public class User {
   private LocalDateTime createdAt;
   @Schema(description = "更新日時")
   private LocalDateTime updatedAt;
-
+  @Schema(description = "最終ログイン日時")
   private LocalDateTime lastLoginAt;
-
+  @Schema(description = "パスワード変更日時")
   private LocalDateTime passwordChangedAt;
-
   @Schema(description = "削除フラグ", example = "false")
   private boolean isDeleted;
 
