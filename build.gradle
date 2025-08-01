@@ -1,67 +1,75 @@
 plugins {
-	id 'java'
-	id 'war'
-	id 'org.springframework.boot' version '3.5.4'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.5.4'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.katok09'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	configurations {
-		compileOnly {
-			extendsFrom annotationProcessor
-		}
-	}
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	// Spring Boot
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// Thymeleaf
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	// Validation
-	implementation("org.springframework.boot:spring-boot-starter-validation")
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    // Validation
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	// OpenAPI Generator
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
+    // OpenAPI Generator
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
 
-	// Apache Commons Lang（便利機能、ユーティリティ）
-	implementation("org.apache.commons:commons-lang3:3.17.0")
+    // Apache Commons Lang（便利機能、ユーティリティ）
+    implementation("org.apache.commons:commons-lang3:3.17.0")
 
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	// MySQLドライバ
-	runtimeOnly 'com.mysql:mysql-connector-j'
+    // MySQLドライバ
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-	// MyBatis
-	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4")
+    // MyBatis
+    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4")
 
-	// APサーバー(TomCat)
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    // APサーバー(TomCat)
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
-	// SpringBoot Test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // SpringBoot Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// MyBatis Test
-	testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4")
+    // MyBatis Test
+    testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4")
 
-	// H2(InMemoryDB)
-	testImplementation("com.h2database:h2:2.3.232")
+    // H2(InMemoryDB)
+    testImplementation("com.h2database:h2:2.3.232")
 
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT（JSON Web Token）for トークンベース認証
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

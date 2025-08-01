@@ -49,3 +49,12 @@ VALUES (1, 160000, 8000, 0, 0, 85000, 25000, 0, 0, 5000, 0, 5000, '', false),
        (6, 30000, 1500, 8000, 7000, 0, 0, 0, 0, 0, 0, 800, '', false),
        (7, 640000, 32000, 0, 0, 250000, 220000, 0, 0, 8000, 0, 4000, '', false),
        (8, 1100000, 0, 0, 0, 0, 0, 0, 20000, 20000, 20000, 20000, '', false);
+
+
+INSERT INTO users (username, password, email, display_name, role, enabled, is_deleted)
+VALUES ('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
+        'admin@example.com', '管理者', 'ADMIN', true, false),
+       ('user1', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
+        'user1@example.com', '山田太郎', 'USER', true, false),
+       ('user2', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
+        'user2@example.com', '田中花子', 'USER', true, false);
