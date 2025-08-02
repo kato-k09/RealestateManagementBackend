@@ -54,13 +54,13 @@ public class AuthController {
       if (loginRequest.getUsername() == null || loginRequest.getUsername().trim().isEmpty()) {
         System.err.println("ユーザー名が空です");
         return ResponseEntity.badRequest()
-            .body(createErrorResponse("VALIDATION_ERROR", "ユーザー名は必須です"));
+            .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", "ユーザー名は必須です"));
       }
 
       if (loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
         System.err.println("パスワードが空です");
         return ResponseEntity.badRequest()
-            .body(createErrorResponse("VALIDATION_ERROR", "パスワードは必須です"));
+            .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", "パスワードは必須です"));
       }
 
       System.out.println("バリデーション完了、AuthService呼び出し開始");
@@ -76,12 +76,12 @@ public class AuthController {
       System.err.println("BadCredentialsException: " + e.getMessage());
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(createErrorResponse("INVALID_CREDENTIALS", e.getMessage()));
+          .body(jwtUtil.createErrorResponse("INVALID_CREDENTIALS", e.getMessage()));
     } catch (Exception e) {
       System.err.println("予期しないエラー: " + e.getMessage());
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(createErrorResponse("INTERNAL_ERROR",
+          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR",
               "システムエラーが発生しました: " + e.getMessage()));
     }
   }
@@ -101,10 +101,10 @@ public class AuthController {
 
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest()
-          .body(createErrorResponse("VALIDATION_ERROR", e.getMessage()));
+          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(createErrorResponse("INTERNAL_ERROR", "ユーザー登録に失敗しました"));
+          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "ユーザー登録に失敗しました"));
     }
   }
 
@@ -118,18 +118,19 @@ public class AuthController {
   @Operation(summary = "トークン有効性確認", description = "JWTトークンの有効性を確認し、ユーザー情報を取得します")
   public ResponseEntity<?> validateToken(HttpServletRequest request) {
     try {
-      String token = extractTokenFromRequest(request);
+      String token = jwtUtil.extractTokenFromRequest(request);
 
       if (token == null) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(createErrorResponse("MISSING_TOKEN", "Authorization ヘッダーが見つかりません"));
+            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+                "Authorization ヘッダーが見つかりません"));
       }
 
       UserInfo userInfo = authService.validateToken(token);
 
       if (userInfo == null) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(createErrorResponse("INVALID_TOKEN", "無効なトークンです"));
+            .body(jwtUtil.createErrorResponse("INVALID_TOKEN", "無効なトークンです"));
       }
 
       Map<String, Object> response = new HashMap<>();
@@ -141,7 +142,7 @@ public class AuthController {
 
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(createErrorResponse("TOKEN_ERROR", "トークンの検証に失敗しました"));
+          .body(jwtUtil.createErrorResponse("TOKEN_ERROR", "トークンの検証に失敗しました"));
     }
   }
 
@@ -155,11 +156,12 @@ public class AuthController {
   @Operation(summary = "現在のユーザー情報取得", description = "JWTトークンから現在のユーザー情報を取得します")
   public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
     try {
-      String token = extractTokenFromRequest(request);
+      String token = jwtUtil.extractTokenFromRequest(request);
 
       if (token == null) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(createErrorResponse("MISSING_TOKEN", "Authorization ヘッダーが見つかりません"));
+            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+                "Authorization ヘッダーが見つかりません"));
       }
 
       Long userId = jwtUtil.getUserIdFromToken(token);
@@ -169,7 +171,7 @@ public class AuthController {
 
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(createErrorResponse("USER_ERROR", "ユーザー情報の取得に失敗しました"));
+          .body(jwtUtil.createErrorResponse("USER_ERROR", "ユーザー情報の取得に失敗しました"));
     }
   }
 
@@ -185,11 +187,12 @@ public class AuthController {
   public ResponseEntity<?> changePassword(HttpServletRequest request,
       @RequestBody Map<String, String> passwordChangeRequest) {
     try {
-      String token = extractTokenFromRequest(request);
+      String token = jwtUtil.extractTokenFromRequest(request);
 
       if (token == null) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(createErrorResponse("MISSING_TOKEN", "Authorization ヘッダーが見つかりません"));
+            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+                "Authorization ヘッダーが見つかりません"));
       }
 
       Long userId = jwtUtil.getUserIdFromToken(token);
@@ -206,10 +209,10 @@ public class AuthController {
 
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest()
-          .body(createErrorResponse("VALIDATION_ERROR", e.getMessage()));
+          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(createErrorResponse("INTERNAL_ERROR", "パスワード変更に失敗しました"));
+          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "パスワード変更に失敗しました"));
     }
   }
 
@@ -247,33 +250,4 @@ public class AuthController {
     return ResponseEntity.ok(response);
   }
 
-  /**
-   * リクエストからJWTトークンを抽出
-   *
-   * @param request HTTPリクエスト
-   * @return JWTトークン（Bearer プレフィックスなし）
-   */
-  private String extractTokenFromRequest(HttpServletRequest request) {
-    String authHeader = request.getHeader("Authorization");
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      return authHeader.substring(7);
-    }
-    return null;
-  }
-
-  /**
-   * エラーレスポンスを作成
-   *
-   * @param errorCode エラーコード
-   * @param message   エラーメッセージ
-   * @return エラーレスポンス
-   */
-  private Map<String, Object> createErrorResponse(String errorCode, String message) {
-    Map<String, Object> error = new HashMap<>();
-    error.put("error", true);
-    error.put("errorCode", errorCode);
-    error.put("message", message);
-    error.put("timestamp", System.currentTimeMillis());
-    return error;
-  }
 }

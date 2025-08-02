@@ -9,6 +9,7 @@
     <id property="project.id" column="pj_id"/>
     <association property="project" javaType="com.katok09.realestate.management.data.Project">
       <id property="id" column="pj_id"/>
+      <result property="userId" column="pj_user_id"/>
       <result property="projectName" column="pj_project_name"/>
       <result property="isDeleted" column="pj_is_deleted"/>
     </association>
@@ -58,6 +59,7 @@
 
   <select id="searchRealestate" resultMap="RealestateDetailResultMap">
     SELECT pj.id AS pj_id,
+    pj.user_id AS pj_user_id,
     pj.project_name AS pj_project_name,
     pj.is_deleted AS pj_is_deleted,
 
@@ -102,6 +104,8 @@
     LEFT JOIN income_and_expenses AS ie ON pj.id = ie.project_id
 
     <where>
+      pj.user_id = #{userId}
+
       <if
         test="searchProjectName != null and searchProjectName != ''">
         AND pj.project_name LIKE CONCAT('%', #{searchProjectName}, '%')

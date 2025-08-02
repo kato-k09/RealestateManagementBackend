@@ -7,6 +7,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,5 +126,35 @@ public class JwtUtil {
     Date now = new Date();
     long remainingTime = expiration.getTime() - now.getTime();
     return remainingTime / (60 * 1000);
+  }
+
+  /**
+   * リクエストからJWTトークンを抽出
+   *
+   * @param request HTTPリクエスト
+   * @return JWTトークン（Bearer プレフィックスなし）
+   */
+  public String extractTokenFromRequest(HttpServletRequest request) {
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+      return authHeader.substring(7);
+    }
+    return null;
+  }
+
+  /**
+   * エラーレスポンスを作成
+   *
+   * @param errorCode エラーコード
+   * @param message   エラーメッセージ
+   * @return エラーレスポンス
+   */
+  public Map<String, Object> createErrorResponse(String errorCode, String message) {
+    Map<String, Object> error = new HashMap<>();
+    error.put("error", true);
+    error.put("errorCode", errorCode);
+    error.put("message", message);
+    error.put("timestamp", System.currentTimeMillis());
+    return error;
   }
 }

@@ -3,6 +3,8 @@ package com.katok09.realestate.management.controller;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.service.RealestateService;
+import com.katok09.realestate.management.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,9 @@ public class RealestateController {
   private RealestateService service;
 
   @Autowired
+  private JwtUtil jwtUtil;
+
+  @Autowired
   public RealestateController(RealestateService service) {
     this.service = service;
   }
@@ -35,7 +40,12 @@ public class RealestateController {
    */
   @GetMapping("/searchRealestate")
   public ResponseEntity<List<RealestateDetail>> searchRealestate(
-      @ModelAttribute SearchParams searchParams) {
+      @ModelAttribute SearchParams searchParams, HttpServletRequest request) {
+
+    String token = jwtUtil.extractTokenFromRequest(request);
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    searchParams.setUserId(userId);
 
     List<RealestateDetail> result = service.searchRealestate(searchParams);
 

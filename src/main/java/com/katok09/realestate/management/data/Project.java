@@ -8,8 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Project {
+
   @Schema(description = "プロジェクトID DB登録時に自動採番されます。", example = "99")
   private int id;
+  @Schema(description = "ユーザーID", example = "99")
+  private Long userId;
   @Schema(description = "プロジェクト名", example = "○○アパート")
   private String projectName;
   @Schema(description = "削除フラグ", example = "false")
