@@ -109,26 +109,26 @@ public interface RealestateRepository {
    *
    * @param id 不動産プロジェクト情報のID
    */
-  public void deleteProject(int id);
+  public void deleteProject(int id, Long userId);
 
   /**
    * 不動産土地情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteParcel(int projectId);
+  public void deleteParcel(int projectId, Long userId);
 
   /**
    * 不動産建物情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteBuilding(int projectId);
+  public void deleteBuilding(int projectId, Long userId);
 
   /**
    * 不動産収支情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteIncomeAndExpenses(int projectId);
+  public void deleteIncomeAndExpenses(int projectId, Long userId);
 }

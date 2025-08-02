@@ -3,6 +3,8 @@ package com.katok09.realestate.management.service;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.repository.RealestateRepository;
+import com.katok09.realestate.management.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,21 @@ public class RealestateService {
     this.repository = repository;
   }
 
+  @Autowired
+  private JwtUtil jwtUtil;
+
   /**
    * 不動産情報の一覧表示・検索を行います。
    *
    * @param searchParams 不動産情報の検索パラメーター
    * @return 検索結果の不動産情報リスト
    */
-  public List<RealestateDetail> searchRealestate(SearchParams searchParams) {
+  public List<RealestateDetail> searchRealestate(SearchParams searchParams,
+      HttpServletRequest request) {
+
+    String token = jwtUtil.extractTokenFromRequest(request);
+    Long userId = jwtUtil.getUserIdFromToken(token);
+    searchParams.setUserId(userId);
 
     return repository.searchRealestate(searchParams);
   }
@@ -35,7 +45,15 @@ public class RealestateService {
    * @param request 不動産登録情報
    */
   @Transactional
-  public void registerRealestate(RealestateDetail request) {
+  public void registerRealestate(RealestateDetail request, HttpServletRequest request_token) {
+
+    String token = jwtUtil.extractTokenFromRequest(request_token);
+    Long userId = jwtUtil.getUserIdFromToken(token);
+    request.getProject().setUserId(userId);
+    request.getParcel().setUserId(userId);
+    request.getBuilding().setUserId(userId);
+    request.getIncomeAndExpenses().setUserId(userId);
+
     repository.registerProject(request.getProject());
 
     request.getParcel().setProjectId(request.getProject().getId());
@@ -53,7 +71,15 @@ public class RealestateService {
    * @param request 不動産更新情報
    */
   @Transactional
-  public void updateRealestate(RealestateDetail request) {
+  public void updateRealestate(RealestateDetail request, HttpServletRequest request_token) {
+
+    // requestにはuserIdが入っているが改ざん防止の為に改めてトークンからuserIdを取得しセット
+    String token = jwtUtil.extractTokenFromRequest(request_token);
+    Long userId = jwtUtil.getUserIdFromToken(token);
+    request.getProject().setUserId(userId);
+    request.getParcel().setUserId(userId);
+    request.getBuilding().setUserId(userId);
+    request.getIncomeAndExpenses().setUserId(userId);
 
     repository.updateProject(request.getProject());
     repository.updateParcel(request.getParcel());
@@ -68,13 +94,15 @@ public class RealestateService {
    * @param projectId 不動産情報のID
    */
   @Transactional
-  public void deleteRealestate(int projectId) {
+  public void deleteRealestate(int projectId, HttpServletRequest request_token) {
 
-    repository.deleteProject(projectId);
-    repository.deleteParcel(projectId);
-    repository.deleteBuilding(projectId);
-    repository.deleteIncomeAndExpenses(projectId);
+    String token = jwtUtil.extractTokenFromRequest(request_token);
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    repository.deleteProject(projectId, userId);
+    repository.deleteParcel(projectId, userId);
+    repository.deleteBuilding(projectId, userId);
+    repository.deleteIncomeAndExpenses(projectId, userId);
   }
 
 }
-

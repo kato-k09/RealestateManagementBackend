@@ -13,6 +13,8 @@ public class Parcel {
   private int id;
   @Schema(description = "プロジェクトID プロジェクトごとに紐づけをします。", example = "99")
   private int projectId;
+  @Schema(description = "ユーザーID", example = "99")
+  private Long userId;
   @Schema(description = "土地価格", example = "1000000")
   private int parcelPrice;
   @Schema(description = "土地住所", example = "東京都千代田区1-1-1")

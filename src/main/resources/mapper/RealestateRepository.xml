@@ -17,6 +17,7 @@
     <association property="parcel" javaType="com.katok09.realestate.management.data.Parcel">
       <id property="id" column="pa_id"/>
       <result property="projectId" column="pa_project_id"/>
+      <result property="userId" column="pa_user_id"/>
       <result property="parcelPrice" column="pa_parcel_price"/>
       <result property="parcelAddress" column="pa_parcel_address"/>
       <result property="parcelCategory" column="pa_parcel_category"/>
@@ -28,6 +29,7 @@
     <association property="building" javaType="com.katok09.realestate.management.data.Building">
       <id property="id" column="bu_id"/>
       <result property="projectId" column="bu_project_id"/>
+      <result property="userId" column="bu_user_id"/>
       <result property="buildingPrice" column="bu_building_price"/>
       <result property="buildingType" column="bu_building_type"/>
       <result property="buildingStructure" column="bu_building_structure"/>
@@ -41,6 +43,7 @@
       javaType="com.katok09.realestate.management.data.IncomeAndExpenses">
       <id property="id" column="ie_id"/>
       <result property="projectId" column="ie_project_id"/>
+      <result property="userId" column="ie_user_id"/>
       <result property="rent" column="ie_rent"/>
       <result property="maintenanceCost" column="ie_maintenance_cost"/>
       <result property="repairFund" column="ie_repair_fund"/>
@@ -65,6 +68,7 @@
 
     pa.id AS pa_id,
     pa.project_id AS pa_project_id,
+    pa.user_id AS pa_user_id,
     pa.parcel_price AS pa_parcel_price,
     pa.parcel_address AS pa_parcel_address,
     pa.parcel_category AS pa_parcel_category,
@@ -74,6 +78,7 @@
 
     bu.id AS bu_id,
     bu.project_id AS bu_project_id,
+    bu.user_id AS bu_user_id,
     bu.building_price AS bu_building_price,
     bu.building_type AS bu_building_type,
     bu.building_structure AS bu_building_structure,
@@ -84,6 +89,7 @@
 
     ie.id AS ie_id,
     ie.project_id AS ie_project_id,
+    ie.user_id AS ie_user_id,
     ie.rent AS ie_rent,
     ie.maintenance_cost AS ie_maintenance_cost,
     ie.repair_fund AS ie_repair_fund,
@@ -160,25 +166,28 @@
   <!-- 不動産プロジェクト登録 -->
   <insert id="registerProject" parameterType="com.katok09.realestate.management.data.Project"
     useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO projects(project_name, is_deleted)
-    VALUES (#{projectName}, false)
+    INSERT INTO projects(user_id, project_name, is_deleted)
+    VALUES (#{userId}, #{projectName}, false)
   </insert>
 
   <!-- 不動産土地情報登録 -->
   <insert id="registerParcel" parameterType="com.katok09.realestate.management.data.Parcel"
     useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO parcels(project_id, parcel_price, parcel_address, parcel_category, parcel_size,
+    INSERT INTO parcels(project_id, user_id, parcel_price, parcel_address, parcel_category,
+                        parcel_size,
                         parcel_remark, is_deleted)
-    VALUES (#{projectId}, #{parcelPrice}, #{parcelAddress}, #{parcelCategory}, #{parcelSize},
+    VALUES (#{projectId}, #{userId}, #{parcelPrice}, #{parcelAddress}, #{parcelCategory},
+            #{parcelSize},
             #{parcelRemark}, false)
   </insert>
 
   <!-- 不動産建物情報登録 -->
   <insert id="registerBuilding" parameterType="com.katok09.realestate.management.data.Building"
     useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO buildings(project_id, building_price, building_type, building_structure,
+    INSERT INTO buildings(project_id, user_id, building_price, building_type, building_structure,
                           building_size, building_date, building_remark, is_deleted)
-    VALUES (#{projectId}, #{buildingPrice}, #{buildingType}, #{buildingStructure}, #{buildingSize},
+    VALUES (#{projectId}, #{userId}, #{buildingPrice}, #{buildingType}, #{buildingStructure},
+            #{buildingSize},
             #{buildingDate}, #{buildingRemark}, false)
   </insert>
 
@@ -186,11 +195,12 @@
   <insert id="registerIncomeAndExpenses"
     parameterType="com.katok09.realestate.management.data.IncomeAndExpenses"
     useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO income_and_expenses(project_id, rent, maintenance_cost, repair_fund, management_fee,
+    INSERT INTO income_and_expenses(project_id, user_id, rent, maintenance_cost, repair_fund,
+                                    management_fee,
                                     principal, interest, tax, water_bill, electric_bill, gas_bill,
                                     fire_insurance, other,
                                     is_deleted)
-    VALUES (#{projectId}, #{rent}, #{maintenanceCost}, #{repairFund}, #{managementFee},
+    VALUES (#{projectId}, #{userId}, #{rent}, #{maintenanceCost}, #{repairFund}, #{managementFee},
             #{principal}, #{interest}, #{tax}, #{waterBill}, #{electricBill}, #{gasBill},
             #{fireInsurance}, #{other}, false)
   </insert>
@@ -201,6 +211,7 @@
     SET project_name=#{projectName},
         is_deleted=#{isDeleted}
     WHERE id = #{id}
+      AND user_id = #{userId}
   </update>
 
   <!-- 不動産土地情報更新 -->
@@ -213,6 +224,7 @@
         parcel_remark=#{parcelRemark},
         is_deleted=#{isDeleted}
     WHERE project_id = #{projectId}
+      AND user_id = #{userId}
   </update>
 
   <!-- 不動産建物情報更新 -->
@@ -226,6 +238,7 @@
         building_remark=#{buildingRemark},
         is_deleted=#{isDeleted}
     WHERE project_id = #{projectId}
+      AND user_id = #{userId}
   </update>
 
   <!-- 不動産収支情報更新 -->
@@ -246,13 +259,15 @@
         other=#{other},
         is_deleted=#{isDeleted}
     WHERE project_id = #{projectId}
+      AND user_id = #{userId}
   </update>
 
   <!-- 不動産プロジェクト情報削除 -->
   <delete id="deleteProject" parameterType="com.katok09.realestate.management.data.Project">
     DELETE
     FROM projects
-    WHERE id = #{projectId}
+    WHERE id = #{id}
+      AND user_id = #{userId}
   </delete>
 
   <!-- 不動産土地情報削除 -->
@@ -260,6 +275,7 @@
     DELETE
     FROM parcels
     WHERE project_id = #{projectId}
+      AND user_id = #{userId}
   </delete>
 
   <!-- 不動産建物情報削除 -->
@@ -267,6 +283,7 @@
     DELETE
     FROM buildings
     WHERE project_id = #{projectId}
+      AND user_id = #{userId}
   </delete>
 
   <!-- 不動産収支情報削除 -->
@@ -275,6 +292,7 @@
     DELETE
     FROM income_and_expenses
     WHERE project_id = #{projectId}
+      AND user_id = #{userId}
   </delete>
 
 </mapper>

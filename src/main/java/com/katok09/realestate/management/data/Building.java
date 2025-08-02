@@ -14,6 +14,8 @@ public class Building {
   private int id;
   @Schema(description = "プロジェクトID プロジェクトごとに紐づけをします。", example = "99")
   private int projectId;
+  @Schema(description = "ユーザーID", example = "99")
+  private Long userId;
   @Schema(description = "建物価格", example = "1000000")
   private int buildingPrice;
   @Schema(description = "建物種別", example = "アパート")

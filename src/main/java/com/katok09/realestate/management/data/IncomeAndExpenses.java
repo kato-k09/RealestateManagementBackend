@@ -13,6 +13,8 @@ public class IncomeAndExpenses {
   private int id;
   @Schema(description = "プロジェクトID プロジェクトごとに紐づけをします。", example = "99")
   private int projectId;
+  @Schema(description = "ユーザーID", example = "99")
+  private Long userId;
   @Schema(description = "月収入", example = "100000")
   private int rent;
   @Schema(description = "管理費", example = "10000")
