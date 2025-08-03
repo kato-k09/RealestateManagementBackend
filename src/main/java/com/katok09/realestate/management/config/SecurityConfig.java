@@ -50,7 +50,7 @@ public class SecurityConfig {
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
             // 認証が必要なエンドポイント
-            .requestMatchers("/api/auth/validate", "/api/auth/me", "/api/auth/change-password")
+            .requestMatchers("/api/auth/validate", "/api/auth/me", "/api/auth/change-password", "/api/auth/changeUserInfo")
             .authenticated()
             // 不動産管理API（認証が必要）
             .requestMatchers("/searchRealestate", "/registerRealestate", "/updateRealestate",

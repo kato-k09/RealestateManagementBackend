@@ -196,6 +196,21 @@
       AND is_deleted = false
   </select>
 
+  <update id="changeUserInfo">
+    UPDATE users
+    SET username = #{username},
+    email = #{email},
+    display_name = #{displayName},
+    updated_at = CURRENT_TIMESTAMP
+    <if test="password != #{password}">
+      password = #{password},
+      password_changed_at = CURRENT_TIMESTAMP,
+    </if>
+    WHERE id = #{id}
+    AND is_deleted = false
+
+  </update>
+
   <update id="updateLastLoginAt">
     UPDATE users
     SET last_login_at = #{lastLoginAt},

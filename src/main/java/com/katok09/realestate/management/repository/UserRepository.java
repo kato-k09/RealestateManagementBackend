@@ -1,6 +1,7 @@
 package com.katok09.realestate.management.repository;
 
 import com.katok09.realestate.management.data.User;
+import com.katok09.realestate.management.dto.UpdateRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,8 @@ public interface UserRepository {
   List<User> findUsersUpdatedAfter(@Param("since") LocalDateTime since);
 
   int countByRole(@Param("role") String role);
+
+  void changeUserInfo(@Param("id") Long id, @Param("updateRequest") UpdateRequest updateRequest);
 
   void updateLastLoginAt(@Param("id") Long id, @Param("lastLoginAt") LocalDateTime lastLoginAt);
 

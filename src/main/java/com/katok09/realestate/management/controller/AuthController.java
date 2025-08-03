@@ -3,6 +3,7 @@ package com.katok09.realestate.management.controller;
 import com.katok09.realestate.management.dto.LoginRequest;
 import com.katok09.realestate.management.dto.LoginResponse;
 import com.katok09.realestate.management.dto.RegisterRequest;
+import com.katok09.realestate.management.dto.UpdateRequest;
 import com.katok09.realestate.management.dto.UserInfo;
 import com.katok09.realestate.management.service.AuthService;
 import com.katok09.realestate.management.util.JwtUtil;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -172,6 +174,37 @@ public class AuthController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(jwtUtil.createErrorResponse("USER_ERROR", "ユーザー情報の取得に失敗しました"));
+    }
+  }
+
+  @PutMapping("/changeUserInfo")
+  @Operation(summary = "ユーザー情報変更", description = "現在のユーザー情報を変更します")
+  public ResponseEntity<?> changeUserInfo(HttpServletRequest request,
+      @RequestBody UpdateRequest updateRequest) {
+    try {
+      String token = jwtUtil.extractTokenFromRequest(request);
+
+      if (token == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+                "Authorization ヘッダーが見つかりません"));
+      }
+
+      Long userId = jwtUtil.getUserIdFromToken(token);
+
+      authService.changeUserInfo(userId, updateRequest);
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("success", true);
+      response.put("message", "ユーザー情報が変更されました");
+      return ResponseEntity.ok(response);
+
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest()
+          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "ユーザー情報の変更に失敗しました"));
     }
   }
 

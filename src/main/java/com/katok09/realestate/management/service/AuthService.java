@@ -4,6 +4,7 @@ import com.katok09.realestate.management.data.User;
 import com.katok09.realestate.management.dto.LoginRequest;
 import com.katok09.realestate.management.dto.LoginResponse;
 import com.katok09.realestate.management.dto.RegisterRequest;
+import com.katok09.realestate.management.dto.UpdateRequest;
 import com.katok09.realestate.management.dto.UserInfo;
 import com.katok09.realestate.management.repository.UserRepository;
 import com.katok09.realestate.management.util.JwtUtil;
@@ -197,6 +198,36 @@ public class AuthService {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  @Transactional
+  public void changeUserInfo(Long userId, UpdateRequest updateRequest) {
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
+
+    // 現在のパスワードを確認
+    if (!passwordEncoder.matches(updateRequest.getCurrentPassword(), user.getPassword())) {
+      throw new IllegalArgumentException("現在のパスワードが間違っています");
+    }
+
+    // 新しいパスワードのバリデーション
+    if (updateRequest.getNewPassword() == null || updateRequest.getNewPassword().length() < 6) {
+      throw new IllegalArgumentException("新しいパスワードは6文字以上で入力してください");
+    }
+
+    RegisterRequest validateRequest = new RegisterRequest();
+    validateRequest.setUsername(updateRequest.getUsername());
+    validateRequest.setEmail(updateRequest.getEmail());
+    validateRequest.setDisplayName(updateRequest.getDisplayName());
+    // パスワードはあえて現在のパスワードを入れvalidateを回避
+    validateRequest.setPassword(updateRequest.getCurrentPassword());
+    validateUserRegistration(validateRequest);
+
+    String hashedPassword = passwordEncoder.encode(updateRequest.getNewPassword());
+    updateRequest.setNewPassword(hashedPassword);
+
+    userRepository.changeUserInfo(userId, updateRequest);
   }
 
   /**
