@@ -13,15 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RealestateService {
 
-  private RealestateRepository repository;
+  private final RealestateRepository repository;
+  private final JwtUtil jwtUtil;
 
   @Autowired
-  public RealestateService(RealestateRepository repository) {
+  public RealestateService(RealestateRepository repository, JwtUtil jwtUtil) {
     this.repository = repository;
+    this.jwtUtil = jwtUtil;
   }
-
-  @Autowired
-  private JwtUtil jwtUtil;
 
   /**
    * 不動産情報の一覧表示・検索を行います。
@@ -30,9 +29,9 @@ public class RealestateService {
    * @return 検索結果の不動産情報リスト
    */
   public List<RealestateDetail> searchRealestate(SearchParams searchParams,
-      HttpServletRequest request) {
+      HttpServletRequest requestToken) {
 
-    String token = jwtUtil.extractTokenFromRequest(request);
+    String token = jwtUtil.extractTokenFromRequest(requestToken);
     Long userId = jwtUtil.getUserIdFromToken(token);
     searchParams.setUserId(userId);
 
@@ -45,9 +44,9 @@ public class RealestateService {
    * @param request 不動産登録情報
    */
   @Transactional
-  public void registerRealestate(RealestateDetail request, HttpServletRequest request_token) {
+  public void registerRealestate(RealestateDetail request, HttpServletRequest requestToken) {
 
-    String token = jwtUtil.extractTokenFromRequest(request_token);
+    String token = jwtUtil.extractTokenFromRequest(requestToken);
     Long userId = jwtUtil.getUserIdFromToken(token);
     request.getProject().setUserId(userId);
     request.getParcel().setUserId(userId);
@@ -71,10 +70,10 @@ public class RealestateService {
    * @param request 不動産更新情報
    */
   @Transactional
-  public void updateRealestate(RealestateDetail request, HttpServletRequest request_token) {
+  public void updateRealestate(RealestateDetail request, HttpServletRequest requestToken) {
 
     // requestにはuserIdが入っているが改ざん防止の為に改めてトークンからuserIdを取得しセット
-    String token = jwtUtil.extractTokenFromRequest(request_token);
+    String token = jwtUtil.extractTokenFromRequest(requestToken);
     Long userId = jwtUtil.getUserIdFromToken(token);
     request.getProject().setUserId(userId);
     request.getParcel().setUserId(userId);
@@ -94,9 +93,9 @@ public class RealestateService {
    * @param projectId 不動産情報のID
    */
   @Transactional
-  public void deleteRealestate(int projectId, HttpServletRequest request_token) {
+  public void deleteRealestate(int projectId, HttpServletRequest requestToken) {
 
-    String token = jwtUtil.extractTokenFromRequest(request_token);
+    String token = jwtUtil.extractTokenFromRequest(requestToken);
     Long userId = jwtUtil.getUserIdFromToken(token);
 
     repository.deleteProject(projectId, userId);

@@ -22,21 +22,24 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産詳細情報リストが全件取得できること() {
 
-    List<RealestateDetail> actual = sut.searchRealestate(new SearchParams());
+    SearchParams searchParams = new SearchParams();
+    searchParams.setUserId(1L);
 
-    assertThat(actual.size()).isEqualTo(8);
+    List<RealestateDetail> actual = sut.searchRealestate(searchParams);
+
+    assertThat(actual.size()).isEqualTo(4);
 
   }
 
   @Test
   void 不動産詳細情報リストが検索条件で取得できること() {
 
-    SearchParams searchParams = new SearchParams(null, "三条", null,
+    SearchParams searchParams = new SearchParams(1L, null, "三条", null,
         null, null);
 
     List<RealestateDetail> actual = sut.searchRealestate(searchParams);
 
-    assertThat(actual.size()).isEqualTo(4);
+    assertThat(actual.size()).isEqualTo(3);
   }
 
   @Test
@@ -74,7 +77,10 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産プロジェクト情報が登録できること() {
 
-    sut.registerProject(new Project());
+    Project project = new Project();
+    project.setUserId(1L);
+
+    sut.registerProject(project);
 
     assertThat(sut.getProjects().size()).isEqualTo(9);
   }
@@ -82,7 +88,10 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産土地情報が登録できること() {
 
-    sut.registerParcel(new Parcel());
+    Parcel parcel = new Parcel();
+    parcel.setUserId(1L);
+
+    sut.registerParcel(parcel);
 
     assertThat(sut.getParcels().size()).isEqualTo(9);
   }
@@ -90,7 +99,10 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産建物情報が登録できること() {
 
-    sut.registerBuilding(new Building());
+    Building building = new Building();
+    building.setUserId(1L);
+
+    sut.registerBuilding(building);
 
     assertThat(sut.getBuildings().size()).isEqualTo(9);
   }
@@ -98,7 +110,10 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産収支情報が登録できること() {
 
-    sut.registerIncomeAndExpenses(new IncomeAndExpenses());
+    IncomeAndExpenses incomeAndExpenses = new IncomeAndExpenses();
+    incomeAndExpenses.setUserId(1L);
+
+    sut.registerIncomeAndExpenses(incomeAndExpenses);
 
     assertThat(sut.getIncomeAndExpenses().size()).isEqualTo(9);
   }
@@ -108,7 +123,14 @@ public class RealestateRepositoryTest {
 
     Project project = new Project();
     project.setId(1);
+    project.setUserId(1L);
     project.setProjectName("テストプロジェクト");
+
+    assertThat(sut.getProjects().stream()
+        .filter(p -> p.getId() == 1) // プロジェクトリストからid=1のものを抽出
+        .findFirst()
+        .orElseThrow()
+        .getProjectName()).isEqualTo("東三条AP");
 
     sut.updateProject(project);
 
@@ -124,6 +146,7 @@ public class RealestateRepositoryTest {
 
     Parcel parcel = new Parcel();
     parcel.setProjectId(1);
+    parcel.setUserId(1L);
     parcel.setParcelPrice(99999999);
 
     assertThat(sut.getParcels().stream()
@@ -146,6 +169,7 @@ public class RealestateRepositoryTest {
 
     Building building = new Building();
     building.setProjectId(1);
+    building.setUserId(1L);
     building.setBuildingPrice(99999999);
 
     assertThat(sut.getBuildings().stream()
@@ -168,6 +192,7 @@ public class RealestateRepositoryTest {
 
     IncomeAndExpenses incomeAndExpenses = new IncomeAndExpenses();
     incomeAndExpenses.setProjectId(1);
+    incomeAndExpenses.setUserId(1L);
     incomeAndExpenses.setRent(99999999);
 
     assertThat(sut.getIncomeAndExpenses().stream()
@@ -192,7 +217,7 @@ public class RealestateRepositoryTest {
         .anyMatch(p -> p.getId() == 1))
         .isTrue();
 
-    sut.deleteProject(1);
+    sut.deleteProject(1, 1L);
 
     assertThat(sut.getProjects().stream()
         .noneMatch(p -> p.getId() == 1))
@@ -208,7 +233,7 @@ public class RealestateRepositoryTest {
         .anyMatch(p -> p.getProjectId() == 1))
         .isTrue();
 
-    sut.deleteParcel(1);
+    sut.deleteParcel(1, 1L);
 
     assertThat(sut.getParcels().stream()
         .noneMatch(p -> p.getProjectId() == 1))
@@ -224,7 +249,7 @@ public class RealestateRepositoryTest {
         .anyMatch(b -> b.getProjectId() == 1))
         .isTrue();
 
-    sut.deleteBuilding(1);
+    sut.deleteBuilding(1, 1L);
 
     assertThat(sut.getBuildings().stream()
         .noneMatch(b -> b.getProjectId() == 1))
@@ -240,7 +265,7 @@ public class RealestateRepositoryTest {
         .anyMatch(i -> i.getProjectId() == 1))
         .isTrue();
 
-    sut.deleteIncomeAndExpenses(1);
+    sut.deleteIncomeAndExpenses(1, 1L);
 
     assertThat(sut.getIncomeAndExpenses().stream()
         .noneMatch(i -> i.getProjectId() == 1))

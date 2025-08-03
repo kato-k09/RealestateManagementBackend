@@ -1,7 +1,9 @@
 package com.katok09.realestate.management.service;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
@@ -10,6 +12,8 @@ import com.katok09.realestate.management.data.Project;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.repository.RealestateRepository;
+import com.katok09.realestate.management.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,62 +26,82 @@ public class RealestateServiceTest {
   @Mock
   private RealestateRepository repository;
 
+  @Mock
+  private JwtUtil jwtUtil;
+
   private RealestateService sut;
+
 
   @BeforeEach
   void before() {
-    sut = new RealestateService(repository);
+    sut = new RealestateService(repository, jwtUtil);
   }
 
   @Test
   void 不動産一覧_検索_リポジトリが適切に呼び出されていること() {
 
-    SearchParams dummy = new SearchParams();
+    SearchParams dummySearchParams = new SearchParams();
+    HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    sut.searchRealestate(dummy);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
 
-    verify(repository, times(1)).searchRealestate(dummy);
+    sut.searchRealestate(dummySearchParams, dummyRequestToken);
+
+    verify(repository, times(1)).searchRealestate(dummySearchParams);
   }
 
   @Test
   void 不動産登録_リポジトリが適切に呼び出されていること() {
 
-    RealestateDetail dummy = new RealestateDetail(
+    RealestateDetail dummyRequest = new RealestateDetail(
         new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
+    HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    sut.registerRealestate(dummy);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
 
-    verify(repository, times(1)).registerProject(dummy.getProject());
-    verify(repository, times(1)).registerParcel(dummy.getParcel());
-    verify(repository, times(1)).registerBuilding(dummy.getBuilding());
-    verify(repository, times(1)).registerIncomeAndExpenses(dummy.getIncomeAndExpenses());
+    sut.registerRealestate(dummyRequest, dummyRequestToken);
+
+    verify(repository, times(1)).registerProject(dummyRequest.getProject());
+    verify(repository, times(1)).registerParcel(dummyRequest.getParcel());
+    verify(repository, times(1)).registerBuilding(dummyRequest.getBuilding());
+    verify(repository, times(1)).registerIncomeAndExpenses(dummyRequest.getIncomeAndExpenses());
   }
 
   @Test
   void 不動産更新_リポジトリが適切に呼び出されていること() {
 
-    RealestateDetail dummy = new RealestateDetail(
+    RealestateDetail dummyRequest = new RealestateDetail(
         new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
+    HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    sut.updateRealestate(dummy);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
 
-    verify(repository, times(1)).updateProject(dummy.getProject());
-    verify(repository, times(1)).updateParcel(dummy.getParcel());
-    verify(repository, times(1)).updateBuilding(dummy.getBuilding());
-    verify(repository, times(1)).updateIncomeAndExpenses(dummy.getIncomeAndExpenses());
+    sut.updateRealestate(dummyRequest, dummyRequestToken);
+
+    verify(repository, times(1)).updateProject(dummyRequest.getProject());
+    verify(repository, times(1)).updateParcel(dummyRequest.getParcel());
+    verify(repository, times(1)).updateBuilding(dummyRequest.getBuilding());
+    verify(repository, times(1)).updateIncomeAndExpenses(dummyRequest.getIncomeAndExpenses());
   }
 
   @Test
   void 不動産削除_リポジトリが適切に呼び出されていること() {
 
     int projectId = 999;
+    HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    sut.deleteRealestate(projectId);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
 
-    verify(repository, times(1)).deleteProject(projectId);
-    verify(repository, times(1)).deleteParcel(projectId);
-    verify(repository, times(1)).deleteBuilding(projectId);
-    verify(repository, times(1)).deleteIncomeAndExpenses(projectId);
+    sut.deleteRealestate(projectId, dummyRequestToken);
+
+    verify(repository, times(1)).deleteProject(projectId, 999L);
+    verify(repository, times(1)).deleteParcel(projectId, 999L);
+    verify(repository, times(1)).deleteBuilding(projectId, 999L);
+    verify(repository, times(1)).deleteIncomeAndExpenses(projectId, 999L);
   }
 
 }
