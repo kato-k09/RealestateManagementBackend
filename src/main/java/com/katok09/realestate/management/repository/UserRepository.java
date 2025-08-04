@@ -21,6 +21,10 @@ public interface UserRepository {
 
   boolean existsByEmail(@Param("email") String email);
 
+  boolean existsByUsernameNotId(@Param("username") String username, @Param("id") Long id);
+
+  boolean existsByEmailNotId(@Param("email") String email, @Param("id") Long id);
+
   void save(@Param("user") User user);
 
   void update(@Param("user") User user);

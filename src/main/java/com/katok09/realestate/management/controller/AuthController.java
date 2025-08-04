@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -209,47 +210,6 @@ public class AuthController {
   }
 
   /**
-   * パスワード変更
-   *
-   * @param request               HTTPリクエスト
-   * @param passwordChangeRequest パスワード変更リクエスト
-   * @return 変更結果
-   */
-  @PostMapping("/change-password")
-  @Operation(summary = "パスワード変更", description = "現在のユーザーのパスワードを変更します")
-  public ResponseEntity<?> changePassword(HttpServletRequest request,
-      @RequestBody Map<String, String> passwordChangeRequest) {
-    try {
-      String token = jwtUtil.extractTokenFromRequest(request);
-
-      if (token == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
-                "Authorization ヘッダーが見つかりません"));
-      }
-
-      Long userId = jwtUtil.getUserIdFromToken(token);
-      String oldPassword = passwordChangeRequest.get("oldPassword");
-      String newPassword = passwordChangeRequest.get("newPassword");
-
-      authService.changePassword(userId, oldPassword, newPassword);
-
-      Map<String, Object> response = new HashMap<>();
-      response.put("success", true);
-      response.put("message", "パスワードが変更されました");
-
-      return ResponseEntity.ok(response);
-
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest()
-          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "パスワード変更に失敗しました"));
-    }
-  }
-
-  /**
    * ログアウト（トークン無効化） 現在の実装では、クライアント側でトークンを削除する 将来的にはトークンのブラックリスト機能を追加可能
    *
    * @return ログアウト結果
@@ -281,6 +241,36 @@ public class AuthController {
     response.put("timestamp", System.currentTimeMillis());
 
     return ResponseEntity.ok(response);
+  }
+
+  @DeleteMapping("/deleteUser")
+  @Operation(summary = "ユーザー削除", description = "ユーザーを削除します")
+  public ResponseEntity<Map<String, Object>> deleteUser(HttpServletRequest request) {
+    try {
+      String token = jwtUtil.extractTokenFromRequest(request);
+
+      if (token == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+                "Authorization ヘッダーが見つかりません"));
+      }
+
+      Long userId = jwtUtil.getUserIdFromToken(token);
+
+      authService.deleteUser(userId);
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("success", true);
+      response.put("message", "ユーザーが削除されました");
+      return ResponseEntity.ok(response);
+
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest()
+          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "ユーザーの削除に失敗しました"));
+    }
   }
 
 }

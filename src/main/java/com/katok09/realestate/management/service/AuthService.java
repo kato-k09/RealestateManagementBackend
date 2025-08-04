@@ -38,6 +38,9 @@ public class AuthService {
   @Autowired
   private AuthenticationManager authenticationManager;
 
+  @Autowired
+  private RealestateService realestateService;
+
   /**
    * ユーザー認証とJWTトークン生成
    *
@@ -169,6 +172,44 @@ public class AuthService {
   }
 
   /**
+   * ユーザー更新時のバリデーション
+   */
+  private void validateUserUpdate(UpdateRequest request, User user) {
+    // ユーザー名の重複チェック
+    if (userRepository.existsByUsernameNotId(request.getUsername(), user.getId())) {
+      throw new IllegalArgumentException("このユーザー名は既に使用されています");
+    }
+
+    // メールアドレスの重複チェック
+    if (userRepository.existsByEmailNotId(request.getEmail(), user.getId())) {
+      throw new IllegalArgumentException("このメールアドレスは既に使用されています");
+    }
+
+    // 基本的なバリデーション
+    if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+      throw new IllegalArgumentException("ユーザー名は必須です");
+    }
+
+    if (request.getCurrentPassword() != null) {
+      // 現在のパスワードを確認
+      if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+        throw new IllegalArgumentException("現在のパスワードが間違っています");
+      }
+      if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+        throw new IllegalArgumentException("パスワードは6文字以上で入力してください");
+      }
+    }
+
+    if (request.getEmail() == null || !request.getEmail().contains("@")) {
+      throw new IllegalArgumentException("有効なメールアドレスを入力してください");
+    }
+
+    if (request.getDisplayName() == null || request.getDisplayName().trim().isEmpty()) {
+      throw new IllegalArgumentException("表示名は必須です");
+    }
+  }
+
+  /**
    * JWTトークンの有効性を検証
    *
    * @param token JWTトークン
@@ -206,55 +247,15 @@ public class AuthService {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 
-    // 現在のパスワードを確認
-    if (!passwordEncoder.matches(updateRequest.getCurrentPassword(), user.getPassword())) {
-      throw new IllegalArgumentException("現在のパスワードが間違っています");
+    validateUserUpdate(updateRequest, user);
+
+    if (updateRequest.getCurrentPassword() != null && updateRequest.getNewPassword() != null) {
+      String hashedPassword = passwordEncoder.encode(updateRequest.getNewPassword());
+      updateRequest.setNewPassword(hashedPassword);
+      userRepository.updatePassword(userId, updateRequest.getNewPassword());
     }
-
-    // 新しいパスワードのバリデーション
-    if (updateRequest.getNewPassword() == null || updateRequest.getNewPassword().length() < 6) {
-      throw new IllegalArgumentException("新しいパスワードは6文字以上で入力してください");
-    }
-
-    RegisterRequest validateRequest = new RegisterRequest();
-    validateRequest.setUsername(updateRequest.getUsername());
-    validateRequest.setEmail(updateRequest.getEmail());
-    validateRequest.setDisplayName(updateRequest.getDisplayName());
-    // パスワードはあえて現在のパスワードを入れvalidateを回避
-    validateRequest.setPassword(updateRequest.getCurrentPassword());
-    validateUserRegistration(validateRequest);
-
-    String hashedPassword = passwordEncoder.encode(updateRequest.getNewPassword());
-    updateRequest.setNewPassword(hashedPassword);
 
     userRepository.changeUserInfo(userId, updateRequest);
-  }
-
-  /**
-   * パスワード変更
-   *
-   * @param userId      ユーザーID
-   * @param oldPassword 現在のパスワード
-   * @param newPassword 新しいパスワード
-   */
-  @Transactional
-  public void changePassword(Long userId, String oldPassword, String newPassword) {
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
-
-    // 現在のパスワードを確認
-    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-      throw new IllegalArgumentException("現在のパスワードが間違っています");
-    }
-
-    // 新しいパスワードのバリデーション
-    if (newPassword == null || newPassword.length() < 6) {
-      throw new IllegalArgumentException("新しいパスワードは6文字以上で入力してください");
-    }
-
-    // パスワードをハッシュ化して更新
-    String hashedPassword = passwordEncoder.encode(newPassword);
-    userRepository.updatePassword(userId, hashedPassword);
   }
 
   /**
@@ -300,5 +301,16 @@ public class AuthService {
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 
     userRepository.updateEnabled(userId, enabled);
+  }
+
+  /**
+   * ユーザーの削除
+   *
+   * @param userId ユーザーID
+   */
+  @Transactional
+  public void deleteUser(Long userId) {
+    realestateService.deleteRealestateByUserId(userId);
+    userRepository.deleteById(userId);
   }
 }

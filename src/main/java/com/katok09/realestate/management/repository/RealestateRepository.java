@@ -131,4 +131,37 @@ public interface RealestateRepository {
    * @param projectId 不動産プロジェクト情報のID
    */
   public void deleteIncomeAndExpenses(int projectId, Long userId);
+
+  /**
+   * 指定されたユーザーの不動産プロジェクトを削除します。。
+   *
+   * @param userId
+   * @return
+   */
+  public void deleteProjectByUserId(Long userId);
+
+  /**
+   * 指定されたユーザーの不動産土地情報を削除します。。
+   *
+   * @param userId
+   * @return
+   */
+  public void deleteParcelByUserId(Long userId);
+
+  /**
+   * 指定されたユーザーの不動産建物情報を削除します。。
+   *
+   * @param userId
+   * @return
+   */
+  public void deleteBuildingByUserId(Long userId);
+
+  /**
+   * 指定されたユーザーの不動産収支情報を削除します。。
+   *
+   * @param userId
+   * @return
+   */
+  public void deleteIncomeAndExpensesByUserId(Long userId);
+
 }

@@ -90,7 +90,8 @@ public class RealestateService {
   /**
    * 不動産情報の削除を行います。
    *
-   * @param projectId 不動産情報のID
+   * @param projectId    不動産情報のID
+   * @param requestToken HTTPリクエストトークン
    */
   @Transactional
   public void deleteRealestate(int projectId, HttpServletRequest requestToken) {
@@ -102,6 +103,20 @@ public class RealestateService {
     repository.deleteParcel(projectId, userId);
     repository.deleteBuilding(projectId, userId);
     repository.deleteIncomeAndExpenses(projectId, userId);
+  }
+
+  /**
+   * 指定されたユーザーの不動産情報を全て削除します。
+   *
+   * @param userId ユーザーID
+   */
+  @Transactional
+  public void deleteRealestateByUserId(Long userId) {
+
+    repository.deleteProjectByUserId(userId);
+    repository.deleteParcelByUserId(userId);
+    repository.deleteBuildingByUserId(userId);
+    repository.deleteIncomeAndExpensesByUserId(userId);
   }
 
 }

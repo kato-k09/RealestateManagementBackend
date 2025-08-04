@@ -86,6 +86,22 @@
       AND is_deleted = false
   </select>
 
+  <select id="existsByUsernameNotId" resultType="boolean">
+    SELECT COUNT(*) > 0
+    FROM users
+    WHERE username = #{username}
+      AND id != #{id}
+      AND is_deleted = false
+  </select>
+
+  <select id="existsByEmailNotId" resultType="boolean">
+    SELECT COUNT(*) > 0
+    FROM users
+    WHERE email = #{email}
+      AND id != #{id}
+      AND is_deleted = false
+  </select>
+
   <insert id="save" parameterType="com.katok09.realestate.management.data.User"
     useGeneratedKeys="true" keyProperty="user.id">
     INSERT INTO users(username, password, email, display_name, role, enabled,
@@ -198,17 +214,12 @@
 
   <update id="changeUserInfo">
     UPDATE users
-    SET username = #{username},
-    email = #{email},
-    display_name = #{displayName},
-    updated_at = CURRENT_TIMESTAMP
-    <if test="password != #{password}">
-      password = #{password},
-      password_changed_at = CURRENT_TIMESTAMP,
-    </if>
+    SET username     = #{updateRequest.username},
+        email        = #{updateRequest.email},
+        display_name = #{updateRequest.displayName},
+        updated_at   = CURRENT_TIMESTAMP
     WHERE id = #{id}
-    AND is_deleted = false
-
+      AND is_deleted = false
   </update>
 
   <update id="updateLastLoginAt">

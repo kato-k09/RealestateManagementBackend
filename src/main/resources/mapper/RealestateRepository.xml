@@ -295,4 +295,32 @@
       AND user_id = #{userId}
   </delete>
 
+  <!-- 指定されたユーザーの不動産プロジェクトを全て削除 -->
+  <delete id="deleteProjectByUserId" parameterType="Long">
+    DELETE
+    FROM projects
+    WHERE user_id = #{userId}
+  </delete>
+
+  <!-- 指定されたユーザーの不動産土地情報を全て削除 -->
+  <delete id="deleteParcelByUserId" parameterType="Long">
+    DELETE
+    FROM parcels
+    WHERE user_id = #{userId}
+  </delete>
+
+  <!-- 指定されたユーザーの不動産建物情報を全て削除 -->
+  <delete id="deleteBuildingByUserId" parameterType="Long">
+    DELETE
+    FROM buildings
+    WHERE user_id = #{userId}
+  </delete>
+
+  <!-- 指定されたユーザーの不動産収支情報を全て削除 -->
+  <delete id="deleteIncomeAndExpensesByUserId" parameterType="Long">
+    DELETE
+    FROM income_and_expenses
+    WHERE user_id = #{userId}
+  </delete>
+
 </mapper>
