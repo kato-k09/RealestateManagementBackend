@@ -247,6 +247,10 @@ public class AuthService {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 
+    if (user.getUsername().equals("guest")) {
+      throw new IllegalArgumentException("ゲストユーザー情報は変更できません");
+    }
+
     validateUserUpdate(updateRequest, user);
 
     if (updateRequest.getCurrentPassword() != null && updateRequest.getNewPassword() != null) {
@@ -310,6 +314,13 @@ public class AuthService {
    */
   @Transactional
   public void deleteUser(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
+
+    if (user.getUsername().equals("guest")) {
+      throw new IllegalArgumentException("ゲストユーザーは削除できません");
+    }
+
     realestateService.deleteRealestateByUserId(userId);
     userRepository.deleteById(userId);
   }

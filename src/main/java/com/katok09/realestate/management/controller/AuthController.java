@@ -89,6 +89,25 @@ public class AuthController {
     }
   }
 
+  @PutMapping("/guest-login")
+  @Operation(summary = "ゲストユーザーログイン", description = "ゲストユーザーでログインします")
+  public ResponseEntity<?> guestLogin() {
+    try {
+      LoginRequest loginRequest = new LoginRequest();
+      loginRequest.setUsername("guest");
+      loginRequest.setPassword("guest123");
+      return login(loginRequest);
+
+    } catch (Exception e) {
+      System.err.println("予期しないエラー: " + e.getMessage());
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(jwtUtil.createErrorResponse("GUEST_LOGIN_ERROR",
+              "ゲストログインに失敗しました: " + e.getMessage()));
+    }
+
+  }
+
   @PostMapping("/register")
   @Operation(summary = "ユーザー登録", description = "新規ユーザーを登録します")
   public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
