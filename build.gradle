@@ -8,6 +8,14 @@ plugins {
 group = 'com.katok09'
 version = '0.0.1-SNAPSHOT'
 
+jar {
+    archiveBaseName = 'realestate-manager-api'
+}
+
+war {
+    archiveBaseName = 'realestate-manager-api'
+}
+
 java {
     configurations {
         compileOnly {
