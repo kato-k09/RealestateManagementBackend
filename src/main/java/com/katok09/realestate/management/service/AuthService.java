@@ -49,40 +49,30 @@ public class AuthService {
    * @throws BadCredentialsException 認証失敗時
    */
   public LoginResponse authenticate(LoginRequest loginRequest) {
-    System.out.println("=== AuthService.authenticate() 開始 ===");
-    System.out.println("Username: " + loginRequest.getUsername());
-
     try {
       // Spring Securityの認証マネージャーを使用してユーザー認証
-      System.out.println("認証マネージャーで認証開始...");
       Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
               loginRequest.getUsername(),
               loginRequest.getPassword()
           )
       );
-      System.out.println("認証成功");
 
       // 認証成功 - ユーザー情報を取得
       UserDetailsServiceImpl.CustomUserPrincipal userPrincipal =
           (UserDetailsServiceImpl.CustomUserPrincipal) authentication.getPrincipal();
 
       User user = userPrincipal.getUser();
-      System.out.println("ユーザー取得成功: " + user.getUsername());
 
       // 最終ログイン日時を更新
-      System.out.println("最終ログイン日時更新中...");
       updateLastLoginTime(user.getId());
-      System.out.println("最終ログイン日時更新完了");
 
       // JWTトークンを生成
-      System.out.println("JWTトークン生成中...");
       String jwtToken = jwtUtil.generateToken(
           user.getUsername(),
           user.getRole(),
           user.getId()
       );
-      System.out.println("JWTトークン生成完了");
 
       // ユーザー情報をDTOに変換
       UserInfo userInfo = new UserInfo(
@@ -93,20 +83,13 @@ public class AuthService {
           user.getRole()
       );
 
-      System.out.println("=== AuthService.authenticate() 正常終了 ===");
       return new LoginResponse(jwtToken, userInfo);
 
     } catch (DisabledException e) {
-      System.err.println("アカウント無効エラー: " + e.getMessage());
-      e.printStackTrace();
       throw new BadCredentialsException("アカウントが無効です");
     } catch (AuthenticationException e) {
-      System.err.println("認証エラー: " + e.getMessage());
-      e.printStackTrace();
       throw new BadCredentialsException("ユーザー名またはパスワードが間違っています");
     } catch (Exception e) {
-      System.err.println("予期しないエラー: " + e.getMessage());
-      e.printStackTrace();
       throw new RuntimeException("認証処理中にエラーが発生しました", e);
     }
   }
@@ -270,7 +253,6 @@ public class AuthService {
       userRepository.updateLastLoginAt(userId, LocalDateTime.now());
     } catch (Exception e) {
       // ログイン日時の更新に失敗してもログイン処理は継続
-      System.err.println("最終ログイン日時の更新に失敗しました: " + e.getMessage());
     }
   }
 

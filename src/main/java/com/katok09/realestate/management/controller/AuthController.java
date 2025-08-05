@@ -49,40 +49,27 @@ public class AuthController {
   @PostMapping("/login")
   @Operation(summary = "ユーザーログイン", description = "ユーザー名とパスワードでログインし、JWTトークンを取得します")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-    System.out.println("=== AuthController.login() 開始 ===");
-    System.out.println("リクエスト受信: " + loginRequest.getUsername());
-
     try {
       // 入力値のバリデーション
       if (loginRequest.getUsername() == null || loginRequest.getUsername().trim().isEmpty()) {
-        System.err.println("ユーザー名が空です");
         return ResponseEntity.badRequest()
             .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", "ユーザー名は必須です"));
       }
 
       if (loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
-        System.err.println("パスワードが空です");
         return ResponseEntity.badRequest()
             .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", "パスワードは必須です"));
       }
 
-      System.out.println("バリデーション完了、AuthService呼び出し開始");
-
       // ログイン認証実行
       LoginResponse loginResponse = authService.authenticate(loginRequest);
-
-      System.out.println("AuthService.authenticate() 完了");
 
       return ResponseEntity.ok(loginResponse);
 
     } catch (BadCredentialsException e) {
-      System.err.println("BadCredentialsException: " + e.getMessage());
-      e.printStackTrace();
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(jwtUtil.createErrorResponse("INVALID_CREDENTIALS", e.getMessage()));
     } catch (Exception e) {
-      System.err.println("予期しないエラー: " + e.getMessage());
-      e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body(jwtUtil.createErrorResponse("INTERNAL_ERROR",
               "システムエラーが発生しました: " + e.getMessage()));
@@ -99,8 +86,6 @@ public class AuthController {
       return login(loginRequest);
 
     } catch (Exception e) {
-      System.err.println("予期しないエラー: " + e.getMessage());
-      e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body(jwtUtil.createErrorResponse("GUEST_LOGIN_ERROR",
               "ゲストログインに失敗しました: " + e.getMessage()));
@@ -236,9 +221,6 @@ public class AuthController {
   @PostMapping("/logout")
   @Operation(summary = "ログアウト", description = "ユーザーをログアウトします")
   public ResponseEntity<?> logout() {
-    // 現在はクライアント側でトークン削除を想定
-    // 必要に応じてサーバー側でのトークン無効化機能を追加
-
     Map<String, Object> response = new HashMap<>();
     response.put("success", true);
     response.put("message", "ログアウトしました");

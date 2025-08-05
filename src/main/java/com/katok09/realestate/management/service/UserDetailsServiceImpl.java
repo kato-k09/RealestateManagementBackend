@@ -27,46 +27,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
    */
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    System.out.println("=== UserDetailsServiceImpl.loadUserByUsername() 開始 ===");
-    System.out.println("検索するユーザー名: " + username);
-
     try {
       // データベースからユーザー情報を取得
-      System.out.println("データベースからユーザー検索中...");
       User user = userRepository.findByUsername(username)
           .orElseThrow(
               () -> new UsernameNotFoundException("ユーザーが見つかりません: " + username));
 
-      System.out.println("ユーザー発見: " + user.getUsername());
-      System.out.println("ユーザーID: " + user.getId());
-      System.out.println("表示名: " + user.getDisplayName());
-      System.out.println("有効フラグ: " + user.isEnabled());
-      System.out.println("削除フラグ: " + user.isDeleted());
-
       // 削除されたユーザーは認証不可
       if (user.isDeleted()) {
-        System.err.println("ユーザーが削除されています: " + username);
         throw new UsernameNotFoundException("ユーザーが削除されています: " + username);
       }
 
       // 無効なユーザーは認証不可
       if (!user.isEnabled()) {
-        System.err.println("ユーザーが無効です: " + username);
         throw new UsernameNotFoundException("ユーザーが無効です: " + username);
       }
 
       // UserDetailsインターフェースを実装したオブジェクトを返す
-      CustomUserPrincipal userPrincipal = new CustomUserPrincipal(user);
-      System.out.println("CustomUserPrincipal作成完了");
-      System.out.println("=== UserDetailsServiceImpl.loadUserByUsername() 正常終了 ===");
-      return userPrincipal;
+      return new CustomUserPrincipal(user);
 
     } catch (UsernameNotFoundException e) {
-      System.err.println("UsernameNotFoundException: " + e.getMessage());
       throw e;
     } catch (Exception e) {
-      System.err.println("予期しないエラー: " + e.getMessage());
-      e.printStackTrace();
       throw new UsernameNotFoundException("ユーザー検索中にエラーが発生しました", e);
     }
   }
