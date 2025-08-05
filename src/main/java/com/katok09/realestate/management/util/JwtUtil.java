@@ -22,7 +22,7 @@ public class JwtUtil {
 
   private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
 
-  @Value("${jwt.secret:mySecretKey12345678901234567890123456789012345678901234567890}")
+  @Value("${jwt.secret}")
   private String secret;
 
   private SecretKey getSigningKey() {
