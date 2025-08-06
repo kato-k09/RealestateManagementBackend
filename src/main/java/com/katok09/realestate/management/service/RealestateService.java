@@ -32,7 +32,7 @@ public class RealestateService {
       HttpServletRequest requestToken) {
 
     String token = jwtUtil.extractTokenFromRequest(requestToken);
-    Long userId = jwtUtil.getUserIdFromToken(token);
+    int userId = jwtUtil.getUserIdFromToken(token);
     searchParams.setUserId(userId);
 
     return repository.searchRealestate(searchParams);
@@ -47,7 +47,7 @@ public class RealestateService {
   public void registerRealestate(RealestateDetail request, HttpServletRequest requestToken) {
 
     String token = jwtUtil.extractTokenFromRequest(requestToken);
-    Long userId = jwtUtil.getUserIdFromToken(token);
+    int userId = jwtUtil.getUserIdFromToken(token);
     request.getProject().setUserId(userId);
     request.getParcel().setUserId(userId);
     request.getBuilding().setUserId(userId);
@@ -74,7 +74,7 @@ public class RealestateService {
 
     // requestにはuserIdが入っているが改ざん防止の為に改めてトークンからuserIdを取得しセット
     String token = jwtUtil.extractTokenFromRequest(requestToken);
-    Long userId = jwtUtil.getUserIdFromToken(token);
+    int userId = jwtUtil.getUserIdFromToken(token);
     request.getProject().setUserId(userId);
     request.getParcel().setUserId(userId);
     request.getBuilding().setUserId(userId);
@@ -97,7 +97,7 @@ public class RealestateService {
   public void deleteRealestate(int projectId, HttpServletRequest requestToken) {
 
     String token = jwtUtil.extractTokenFromRequest(requestToken);
-    Long userId = jwtUtil.getUserIdFromToken(token);
+    int userId = jwtUtil.getUserIdFromToken(token);
 
     repository.deleteProject(projectId, userId);
     repository.deleteParcel(projectId, userId);
@@ -111,7 +111,7 @@ public class RealestateService {
    * @param userId ユーザーID
    */
   @Transactional
-  public void deleteRealestateByUserId(Long userId) {
+  public void deleteRealestateByUserId(int userId) {
 
     repository.deleteProjectByUserId(userId);
     repository.deleteParcelByUserId(userId);

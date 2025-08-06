@@ -135,23 +135,6 @@ public class AuthService {
     if (userRepository.existsByEmail(request.getEmail())) {
       throw new IllegalArgumentException("このメールアドレスは既に使用されています");
     }
-
-    // 基本的なバリデーション
-    if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-      throw new IllegalArgumentException("ユーザー名は必須です");
-    }
-
-    if (request.getPassword() == null || request.getPassword().length() < 6) {
-      throw new IllegalArgumentException("パスワードは6文字以上で入力してください");
-    }
-
-    if (request.getEmail() == null || !request.getEmail().contains("@")) {
-      throw new IllegalArgumentException("有効なメールアドレスを入力してください");
-    }
-
-    if (request.getDisplayName() == null || request.getDisplayName().trim().isEmpty()) {
-      throw new IllegalArgumentException("表示名は必須です");
-    }
   }
 
   /**
@@ -168,27 +151,11 @@ public class AuthService {
       throw new IllegalArgumentException("このメールアドレスは既に使用されています");
     }
 
-    // 基本的なバリデーション
-    if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-      throw new IllegalArgumentException("ユーザー名は必須です");
-    }
-
     if (request.getCurrentPassword() != null) {
       // 現在のパスワードを確認
       if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
         throw new IllegalArgumentException("現在のパスワードが間違っています");
       }
-      if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
-        throw new IllegalArgumentException("パスワードは6文字以上で入力してください");
-      }
-    }
-
-    if (request.getEmail() == null || !request.getEmail().contains("@")) {
-      throw new IllegalArgumentException("有効なメールアドレスを入力してください");
-    }
-
-    if (request.getDisplayName() == null || request.getDisplayName().trim().isEmpty()) {
-      throw new IllegalArgumentException("表示名は必須です");
     }
   }
 
@@ -225,7 +192,7 @@ public class AuthService {
   }
 
   @Transactional
-  public void changeUserInfo(Long userId, UpdateRequest updateRequest) {
+  public void changeUserInfo(int userId, UpdateRequest updateRequest) {
 
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
@@ -248,7 +215,7 @@ public class AuthService {
   /**
    * 最終ログイン日時を更新
    */
-  private void updateLastLoginTime(Long userId) {
+  private void updateLastLoginTime(int userId) {
     try {
       userRepository.updateLastLoginAt(userId, LocalDateTime.now());
     } catch (Exception e) {
@@ -262,7 +229,7 @@ public class AuthService {
    * @param userId ユーザーID
    * @return ユーザー情報
    */
-  public UserInfo getUserInfo(Long userId) {
+  public UserInfo getUserInfo(int userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 
@@ -282,7 +249,7 @@ public class AuthService {
    * @param enabled 有効フラグ
    */
   @Transactional
-  public void toggleUserEnabled(Long userId, boolean enabled) {
+  public void toggleUserEnabled(int userId, boolean enabled) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 
@@ -295,7 +262,7 @@ public class AuthService {
    * @param userId ユーザーID
    */
   @Transactional
-  public void deleteUser(Long userId) {
+  public void deleteUser(int userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 

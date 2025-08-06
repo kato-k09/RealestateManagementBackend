@@ -10,12 +10,14 @@ import com.katok09.realestate.management.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:3000") // Reactのポートに合わせる
 @Tag(name = "認証API", description = "ログイン、ユーザー登録、トークン検証などの認証関連API")
+@Validated
 public class AuthController {
 
   @Autowired
@@ -48,7 +51,7 @@ public class AuthController {
    */
   @PostMapping("/login")
   @Operation(summary = "ユーザーログイン", description = "ユーザー名とパスワードでログインし、JWTトークンを取得します")
-  public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
     try {
       // 入力値のバリデーション
       if (loginRequest.getUsername() == null || loginRequest.getUsername().trim().isEmpty()) {
@@ -95,7 +98,7 @@ public class AuthController {
 
   @PostMapping("/register")
   @Operation(summary = "ユーザー登録", description = "新規ユーザーを登録します")
-  public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+  public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
     try {
       // ユーザー登録実行
       authService.registerUser(registerRequest);
@@ -171,7 +174,7 @@ public class AuthController {
                 "Authorization ヘッダーが見つかりません"));
       }
 
-      Long userId = jwtUtil.getUserIdFromToken(token);
+      int userId = jwtUtil.getUserIdFromToken(token);
       UserInfo userInfo = authService.getUserInfo(userId);
 
       return ResponseEntity.ok(userInfo);
@@ -185,7 +188,7 @@ public class AuthController {
   @PutMapping("/changeUserInfo")
   @Operation(summary = "ユーザー情報変更", description = "現在のユーザー情報を変更します")
   public ResponseEntity<?> changeUserInfo(HttpServletRequest request,
-      @RequestBody UpdateRequest updateRequest) {
+      @Valid @RequestBody UpdateRequest updateRequest) {
     try {
       String token = jwtUtil.extractTokenFromRequest(request);
 
@@ -195,7 +198,7 @@ public class AuthController {
                 "Authorization ヘッダーが見つかりません"));
       }
 
-      Long userId = jwtUtil.getUserIdFromToken(token);
+      int userId = jwtUtil.getUserIdFromToken(token);
 
       authService.changeUserInfo(userId, updateRequest);
 
@@ -256,7 +259,7 @@ public class AuthController {
                 "Authorization ヘッダーが見つかりません"));
       }
 
-      Long userId = jwtUtil.getUserIdFromToken(token);
+      int userId = jwtUtil.getUserIdFromToken(token);
 
       authService.deleteUser(userId);
 

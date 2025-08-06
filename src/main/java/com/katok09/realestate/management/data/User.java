@@ -11,7 +11,7 @@ import lombok.Setter;
 public class User {
 
   @Schema(description = "ユーザーID DB登録時に自動採番されます。", example = "1")
-  private Long id;
+  private int id;
   @Schema(description = "ユーザー名（ログイン用）", example = "yamada_taro")
   private String username;
   @Schema(description = "パスワード（ハッシュ化されて保存）", example = "password123")

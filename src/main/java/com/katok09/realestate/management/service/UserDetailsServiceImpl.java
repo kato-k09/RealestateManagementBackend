@@ -139,7 +139,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * ユーザーIDを取得
      */
-    public Long getUserId() {
+    public int getUserId() {
       return user.getId();
     }
 

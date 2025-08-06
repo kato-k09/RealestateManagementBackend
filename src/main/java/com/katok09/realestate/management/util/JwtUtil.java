@@ -20,10 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-  private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
-
   @Value("${jwt.secret}")
   private String secret;
+
+  @Value("${jwt.expiration}")
+  private long expirationInSeconds;
 
   private SecretKey getSigningKey() {
     byte[] keyBytes = secret.getBytes();
@@ -73,7 +74,7 @@ public class JwtUtil {
     return createToken(claims, userDetails.getUsername());
   }
 
-  public String generateToken(String username, String role, Long userId) {
+  public String generateToken(String username, String role, int userId) {
     Map<String, Object> claims = new HashMap<>();
     claims.put("role", role);
     claims.put("userId", userId);
@@ -85,7 +86,7 @@ public class JwtUtil {
         .setClaims(claims)
         .setSubject(subject)
         .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+        .setExpiration(new Date(System.currentTimeMillis() + expirationInSeconds * 1000))
         .signWith(getSigningKey(), SignatureAlgorithm.HS256)
         .compact();
   }
@@ -104,9 +105,9 @@ public class JwtUtil {
     return claims.get("role", String.class);
   }
 
-  public Long getUserIdFromToken(String token) {
+  public int getUserIdFromToken(String token) {
     Claims claims = getAllClaimsFromToken(token);
-    return claims.get("userId", Long.class);
+    return (Integer) claims.get("userId");
   }
 
   public Boolean isTokenValid(String token) {

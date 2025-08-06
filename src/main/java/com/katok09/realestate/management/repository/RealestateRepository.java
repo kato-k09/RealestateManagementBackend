@@ -109,28 +109,28 @@ public interface RealestateRepository {
    *
    * @param id 不動産プロジェクト情報のID
    */
-  public void deleteProject(int id, Long userId);
+  public void deleteProject(int id, int userId);
 
   /**
    * 不動産土地情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteParcel(int projectId, Long userId);
+  public void deleteParcel(int projectId, int userId);
 
   /**
    * 不動産建物情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteBuilding(int projectId, Long userId);
+  public void deleteBuilding(int projectId, int userId);
 
   /**
    * 不動産収支情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteIncomeAndExpenses(int projectId, Long userId);
+  public void deleteIncomeAndExpenses(int projectId, int userId);
 
   /**
    * 指定されたユーザーの不動産プロジェクトを削除します。。
@@ -138,7 +138,7 @@ public interface RealestateRepository {
    * @param userId
    * @return
    */
-  public void deleteProjectByUserId(Long userId);
+  public void deleteProjectByUserId(int userId);
 
   /**
    * 指定されたユーザーの不動産土地情報を削除します。。
@@ -146,7 +146,7 @@ public interface RealestateRepository {
    * @param userId
    * @return
    */
-  public void deleteParcelByUserId(Long userId);
+  public void deleteParcelByUserId(int userId);
 
   /**
    * 指定されたユーザーの不動産建物情報を削除します。。
@@ -154,7 +154,7 @@ public interface RealestateRepository {
    * @param userId
    * @return
    */
-  public void deleteBuildingByUserId(Long userId);
+  public void deleteBuildingByUserId(int userId);
 
   /**
    * 指定されたユーザーの不動産収支情報を削除します。。
@@ -162,6 +162,6 @@ public interface RealestateRepository {
    * @param userId
    * @return
    */
-  public void deleteIncomeAndExpensesByUserId(Long userId);
+  public void deleteIncomeAndExpensesByUserId(int userId);
 
 }

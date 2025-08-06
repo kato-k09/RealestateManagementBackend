@@ -4,9 +4,11 @@ import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.service.RealestateService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000") // Reactのポートに合わせる
+@Validated
 public class RealestateController {
 
   private RealestateService service;
@@ -50,7 +53,7 @@ public class RealestateController {
    * @return 登録成功のメッセージ
    */
   @PostMapping("/registerRealestate")
-  public ResponseEntity<String> createProject(@RequestBody RealestateDetail request,
+  public ResponseEntity<String> createProject(@Valid @RequestBody RealestateDetail request,
       HttpServletRequest request_token) {
 
     service.registerRealestate(request, request_token);
@@ -65,7 +68,7 @@ public class RealestateController {
    * @return 更新成功のメッセージ
    */
   @PutMapping("/updateRealestate")
-  public ResponseEntity<String> updateRealestate(@RequestBody RealestateDetail request,
+  public ResponseEntity<String> updateRealestate(@Valid @RequestBody RealestateDetail request,
       HttpServletRequest request_token) {
 
     service.updateRealestate(request, request_token);

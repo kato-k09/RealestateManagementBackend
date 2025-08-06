@@ -15,21 +15,21 @@ public interface UserRepository {
 
   Optional<User> findByEmail(@Param("email") String email);
 
-  Optional<User> findById(@Param("id") Long id);
+  Optional<User> findById(@Param("id") int id);
 
   boolean existsByUsername(@Param("username") String username);
 
   boolean existsByEmail(@Param("email") String email);
 
-  boolean existsByUsernameNotId(@Param("username") String username, @Param("id") Long id);
+  boolean existsByUsernameNotId(@Param("username") String username, @Param("id") int id);
 
-  boolean existsByEmailNotId(@Param("email") String email, @Param("id") Long id);
+  boolean existsByEmailNotId(@Param("email") String email, @Param("id") int id);
 
   void save(@Param("user") User user);
 
   void update(@Param("user") User user);
 
-  void deleteById(@Param("id") Long id);
+  void deleteById(@Param("id") int id);
 
   List<User> findAll();
 
@@ -41,11 +41,11 @@ public interface UserRepository {
 
   int countByRole(@Param("role") String role);
 
-  void changeUserInfo(@Param("id") Long id, @Param("updateRequest") UpdateRequest updateRequest);
+  void changeUserInfo(@Param("id") int id, @Param("updateRequest") UpdateRequest updateRequest);
 
-  void updateLastLoginAt(@Param("id") Long id, @Param("lastLoginAt") LocalDateTime lastLoginAt);
+  void updateLastLoginAt(@Param("id") int id, @Param("lastLoginAt") LocalDateTime lastLoginAt);
 
-  void updatePassword(@Param("id") Long id, @Param("newPassword") String newPassword);
+  void updatePassword(@Param("id") int id, @Param("newPassword") String newPassword);
 
-  void updateEnabled(@Param("id") Long id, @Param("enabled") boolean enabled);
+  void updateEnabled(@Param("id") int id, @Param("enabled") boolean enabled);
 }

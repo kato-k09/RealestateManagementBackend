@@ -2,12 +2,15 @@ package com.katok09.realestate.management.exception;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -55,6 +58,21 @@ public class GlobalExceptionHandler {
         HttpStatus.BAD_REQUEST,
         "VALIDATION_ERROR",
         e.getMessage(),
+        request.getDescription(false)
+    );
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException e, WebRequest request) {
+    String errorMessage = e.getBindingResult().getFieldErrors().stream()
+        .map(FieldError::getDefaultMessage)
+        .collect(Collectors.joining("\n"));
+
+    return createErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        "VALIDATION_ERROR",
+        errorMessage,
         request.getDescription(false)
     );
   }

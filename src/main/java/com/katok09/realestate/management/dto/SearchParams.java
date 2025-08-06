@@ -14,7 +14,7 @@ import lombok.Setter;
 public class SearchParams {
 
   @Schema(description = "ユーザーID", example = "99")
-  private Long userId;
+  private int userId;
   @Schema(description = "プロジェクト名", example = "ABCアパート計画")
   private String searchProjectName;
   @Schema(description = "住所", example = "東京都港南区")
