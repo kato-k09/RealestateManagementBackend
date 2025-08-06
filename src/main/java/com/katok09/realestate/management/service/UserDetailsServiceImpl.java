@@ -2,6 +2,7 @@ package com.katok09.realestate.management.service;
 
 import com.katok09.realestate.management.data.User;
 import com.katok09.realestate.management.repository.UserRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -106,11 +107,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * アカウントがロックされていないかチェック 今回は常にtrueを返す（ロック機能なし）
+     * アカウントがロックされていないかチェック
      */
     @Override
     public boolean isAccountNonLocked() {
-      return true;
+      if (user.getAccountLockedUntil() == null) {
+        return true;
+      }
+      return LocalDateTime.now().isAfter(user.getAccountLockedUntil());
     }
 
     /**

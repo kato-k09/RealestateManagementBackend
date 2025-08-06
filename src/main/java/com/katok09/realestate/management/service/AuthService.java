@@ -9,13 +9,15 @@ import com.katok09.realestate.management.dto.UserInfo;
 import com.katok09.realestate.management.repository.UserRepository;
 import com.katok09.realestate.management.util.JwtUtil;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +28,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
-  @Autowired
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtUtil jwtUtil;
+  private final AuthenticationManager authenticationManager;
+  private final RealestateService realestateService;
+  private final LoginFailureService loginFailureService;
 
   @Autowired
-  private PasswordEncoder passwordEncoder;
+  public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+      JwtUtil jwtUtil, AuthenticationManager authenticationManager,
+      RealestateService realestateService, LoginFailureService loginFailureService) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.jwtUtil = jwtUtil;
+    this.authenticationManager = authenticationManager;
+    this.realestateService = realestateService;
+    this.loginFailureService = loginFailureService;
+  }
 
-  @Autowired
-  private JwtUtil jwtUtil;
+  @Value("${security.max-login-attempts}")
+  private int maxLoginAttempts;
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
-
-  @Autowired
-  private RealestateService realestateService;
+  @Value("${security.account-lock-duration}")
+  private int accountLockDurationMinutes;
 
   /**
    * ユーザー認証とJWTトークン生成
@@ -50,6 +62,9 @@ public class AuthService {
    */
   public LoginResponse authenticate(LoginRequest loginRequest) {
     try {
+      // アカウントロックの期限が過ぎている場合はログイン失敗回数、アカウントロック時間をリセット
+      loginFailureService.unlockIfAccountLockExpired(loginRequest);
+
       // Spring Securityの認証マネージャーを使用してユーザー認証
       Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
@@ -63,6 +78,9 @@ public class AuthService {
           (UserDetailsServiceImpl.CustomUserPrincipal) authentication.getPrincipal();
 
       User user = userPrincipal.getUser();
+
+      // ログイン失敗回数、アカウントロック時間をリセット
+      loginFailureService.resetAccountLockState(user);
 
       // 最終ログイン日時を更新
       updateLastLoginTime(user.getId());
@@ -85,12 +103,25 @@ public class AuthService {
 
       return new LoginResponse(jwtToken, userInfo);
 
+    } catch (LockedException e) {
+      String username = loginRequest.getUsername();
+      loginFailureService.handleLoginFailure(username);
+      User user = userRepository.findByUsername(username).orElse(null);
+      long remainingSeconds = (long) accountLockDurationMinutes * 60;
+      if (user != null) {
+        remainingSeconds = LocalDateTime.now()
+            .until(user.getAccountLockedUntil(), ChronoUnit.SECONDS);
+      }
+      throw new BadCredentialsException(
+          "アカウントがロックされています。あと"
+              + remainingSeconds + "秒後にロックが解除されます。");
     } catch (DisabledException e) {
-      throw new BadCredentialsException("アカウントが無効です");
-    } catch (AuthenticationException e) {
-      throw new BadCredentialsException("ユーザー名またはパスワードが間違っています");
+      throw new BadCredentialsException("アカウントが無効です。");
+    } catch (BadCredentialsException e) {
+      loginFailureService.handleLoginFailure(loginRequest.getUsername());
+      throw new BadCredentialsException("ユーザー名またはパスワードが間違っています。");
     } catch (Exception e) {
-      throw new RuntimeException("認証処理中にエラーが発生しました", e);
+      throw new RuntimeException("認証処理中にエラーが発生しました。", e);
     }
   }
 

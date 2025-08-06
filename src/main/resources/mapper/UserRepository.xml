@@ -15,6 +15,8 @@
     <result property="updatedAt" column="updated_at"/>
     <result property="lastLoginAt" column="last_login_at"/>
     <result property="passwordChangedAt" column="password_changed_at"/>
+    <result property="loginFailedAttempts" column="login_failed_attempts"/>
+    <result property="accountLockedUntil" column="account_locked_until"/>
     <result property="isDeleted" column="is_deleted"/>
   </resultMap>
 
@@ -30,6 +32,8 @@
            updated_at,
            last_login_at,
            password_changed_at,
+           login_failed_attempts,
+           account_locked_until,
            is_deleted
     FROM users
     WHERE username = #{username}
@@ -48,6 +52,8 @@
            updated_at,
            last_login_at,
            password_changed_at,
+           login_failed_attempts,
+           account_locked_until,
            is_deleted
     FROM users
     WHERE email = #{email}
@@ -66,6 +72,8 @@
            updated_at,
            last_login_at,
            password_changed_at,
+           login_failed_attempts,
+           account_locked_until,
            is_deleted
     FROM users
     WHERE id = #{id}
@@ -105,20 +113,25 @@
   <insert id="save" parameterType="com.katok09.realestate.management.data.User"
     useGeneratedKeys="true" keyProperty="user.id">
     INSERT INTO users(username, password, email, display_name, role, enabled,
-                      created_at, updated_at, last_login_at, password_changed_at, is_deleted)
+                      created_at, updated_at, last_login_at, password_changed_at,
+                      login_failed_attempts,
+                      account_locked_until, is_deleted)
     VALUES (#{user.username}, #{user.password}, #{user.email}, #{user.displayName},
-            #{user.role}, #{user.enabled}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL,
+            #{user.role}, #{user.enabled}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL, 0, NULL
             #{user.isDeleted})
   </insert>
 
   <update id="update" parameterType="com.katok09.realestate.management.data.User">
     UPDATE users
-    SET username     = #{user.username},
-        email        = #{user.email},
-        display_name = #{user.displayName},
-        role         = #{user.role},
-        enabled      = #{user.enabled},
-        updated_at   = CURRENT_TIMESTAMP
+    SET username              = #{user.username},
+        email                 = #{user.email},
+        display_name          = #{user.displayName},
+        role                  = #{user.role},
+        enabled               = #{user.enabled},
+        last_login_at         = #{user.lastLoginAt},
+        login_failed_attempts = #{user.loginFailedAttempts},
+        account_locked_until  = #{user.accountLockedUntil},
+        updated_at            = CURRENT_TIMESTAMP
     WHERE id = #{user.id}
       AND is_deleted = false
   </update>
@@ -142,6 +155,8 @@
            updated_at,
            last_login_at,
            password_changed_at,
+           login_failed_attempts,
+           account_locked_until,
            is_deleted
              FROU users WHERE is_deleted = false
     OREDER BY created_at DESC
@@ -159,6 +174,8 @@
            updated_at,
            last_login_at,
            password_changed_at,
+           login_failed_attempts,
+           account_locked_until,
            is_deleted
     FROM users
     WHERE enabled = true
@@ -178,6 +195,8 @@
            updated_at,
            last_login_at,
            password_changed_at,
+           login_failed_attempts,
+           account_locked_until,
            is_deleted
     FROM users
     WHERE created_at >= #{since}
@@ -197,6 +216,8 @@
            updated_at,
            last_login_at,
            password_changed_at,
+           login_failed_attempts,
+           account_locked_until,
            is_deleted
     FROM users
     WHERE updated_at >= #{since}

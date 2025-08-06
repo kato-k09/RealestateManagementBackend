@@ -32,6 +32,10 @@ public class User {
   private LocalDateTime lastLoginAt;
   @Schema(description = "パスワード変更日時")
   private LocalDateTime passwordChangedAt;
+  @Schema(description = "ログイン連続失敗回数")
+  private int loginFailedAttempts;
+  @Schema(description = "アカウントロック終了時間")
+  private LocalDateTime accountLockedUntil;
   @Schema(description = "削除フラグ", example = "false")
   private boolean isDeleted;
 
