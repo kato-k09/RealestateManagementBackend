@@ -117,8 +117,8 @@
                       login_failed_attempts,
                       account_locked_until, is_deleted)
     VALUES (#{user.username}, #{user.password}, #{user.email}, #{user.displayName},
-            #{user.role}, #{user.enabled}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL, 0, NULL
-            #{user.isDeleted})
+            #{user.role}, #{user.enabled}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL, 0,
+            NULL, #{user.isDeleted})
   </insert>
 
   <update id="update" parameterType="com.katok09.realestate.management.data.User">
@@ -151,15 +151,16 @@
            display_name,
            role,
            enabled,
-           crated_at,
+           created_at,
            updated_at,
            last_login_at,
            password_changed_at,
            login_failed_attempts,
            account_locked_until,
            is_deleted
-             FROU users WHERE is_deleted = false
-    OREDER BY created_at DESC
+    FROM users
+    WHERE is_deleted = false
+    ORDER BY created_at DESC
   </select>
 
   <select id="findAllActive" resultMap="UserResultMap">
