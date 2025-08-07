@@ -7,11 +7,13 @@ import com.katok09.realestate.management.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -55,21 +57,31 @@ public class AdminController {
   @PutMapping("/users/{userId}/statusChange")
   @Operation(summary = "指定ユーザーのステータス変更", description = "指定ユーザーのrole、enabled、login_failed_attempts、account_locked_untilを変更")
   public ResponseEntity<Map<String, Object>> statusChange(@PathVariable int userId,
-      @Valid @RequestBody StatusRequest request) {
+      @Valid @RequestBody StatusRequest statusRequest, HttpServletRequest httpRequest) {
 
     try {
-      adminService.statusChange(userId, request);
+      String token = jwtUtil.extractTokenFromRequest(httpRequest);
+
+      if (token == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+                "Authorization ヘッダーが見つかりません"));
+      }
+      int selfUserId = jwtUtil.getUserIdFromToken(token);
+
+      adminService.statusChange(userId, selfUserId, statusRequest);
 
       Map<String, Object> response = new HashMap<>();
       response.put("success", true);
-      response.put("role", request.getRole());
-      response.put("enabled", request.isEnabled());
-      response.put("login_failed_attempts", request.getLoginFailedAttempts());
-      response.put("account_locked_until", request.getAccountLockedUntil());
+      response.put("role", statusRequest.getRole());
+      response.put("enabled", statusRequest.isEnabled());
+      response.put("login_failed_attempts", statusRequest.getLoginFailedAttempts());
+      response.put("account_locked_until", statusRequest.getAccountLockedUntil());
       response.put("message",
-          "ステータスを変更しました。\nRole: " + request.getRole() + "\nEnabled: "
-              + request.isEnabled() + "\nLoginFailedAttempts: " + request.getLoginFailedAttempts()
-              + "\nAccountLockedUntil: " + request.getAccountLockedUntil());
+          "ステータスを変更しました。\nRole: " + statusRequest.getRole() + "\nEnabled: "
+              + statusRequest.isEnabled() + "\nLoginFailedAttempts: "
+              + statusRequest.getLoginFailedAttempts()
+              + "\nAccountLockedUntil: " + statusRequest.getAccountLockedUntil());
       return ResponseEntity.ok(response);
 
     } catch (IllegalArgumentException e) {

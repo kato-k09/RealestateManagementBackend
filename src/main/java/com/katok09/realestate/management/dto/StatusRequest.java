@@ -12,7 +12,7 @@ import lombok.Setter;
 public class StatusRequest {
 
   @Schema(description = "ロール", example = "ADMIN")
-  @Pattern(regexp = "^(ADMIN|USER)$", message = "ADMINまたはUSERを選択してください。")
+  @Pattern(regexp = "^(ADMIN|USER|GUEST)$", message = "ADMINまたはUSERまたはGUESTを選択してください。")
   String role;
   @Schema(description = "ユーザーの有効", example = "true")
   boolean enabled;
