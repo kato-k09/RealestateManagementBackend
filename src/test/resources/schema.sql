@@ -8,9 +8,9 @@ CREATE TABLE IF NOT EXISTS income_and_expenses(id INT PRIMARY KEY AUTO_INCREMENT
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
     display_name VARCHAR(100) NOT NULL,
     role VARCHAR(20) NOT NULL DEFAULT 'USER',
     enabled BOOLEAN NOT NULL DEFAULT true,
@@ -18,5 +18,10 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login_at TIMESTAMP NULL,
     password_changed_at TIMESTAMP NULL,
+    login_failed_attempts INT DEFAULT 0,
+    account_locked_until TIMESTAMP DEFAULT NULL,
     is_deleted BOOLEAN NOT NULL DEFAULT false
     );
+
+CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_users_email ON users(email);

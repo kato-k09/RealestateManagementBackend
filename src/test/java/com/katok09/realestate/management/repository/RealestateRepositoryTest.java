@@ -23,7 +23,7 @@ public class RealestateRepositoryTest {
   void 不動産詳細情報リストが全件取得できること() {
 
     SearchParams searchParams = new SearchParams();
-    searchParams.setUserId(1L);
+    searchParams.setUserId(1);
 
     List<RealestateDetail> actual = sut.searchRealestate(searchParams);
 
@@ -34,7 +34,7 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産詳細情報リストが検索条件で取得できること() {
 
-    SearchParams searchParams = new SearchParams(1L, null, "三条", null,
+    SearchParams searchParams = new SearchParams(1, null, "三条", null,
         null, null);
 
     List<RealestateDetail> actual = sut.searchRealestate(searchParams);
@@ -78,7 +78,7 @@ public class RealestateRepositoryTest {
   void 不動産プロジェクト情報が登録できること() {
 
     Project project = new Project();
-    project.setUserId(1L);
+    project.setUserId(1);
 
     sut.registerProject(project);
 
@@ -89,7 +89,7 @@ public class RealestateRepositoryTest {
   void 不動産土地情報が登録できること() {
 
     Parcel parcel = new Parcel();
-    parcel.setUserId(1L);
+    parcel.setUserId(1);
 
     sut.registerParcel(parcel);
 
@@ -100,7 +100,7 @@ public class RealestateRepositoryTest {
   void 不動産建物情報が登録できること() {
 
     Building building = new Building();
-    building.setUserId(1L);
+    building.setUserId(1);
 
     sut.registerBuilding(building);
 
@@ -111,7 +111,7 @@ public class RealestateRepositoryTest {
   void 不動産収支情報が登録できること() {
 
     IncomeAndExpenses incomeAndExpenses = new IncomeAndExpenses();
-    incomeAndExpenses.setUserId(1L);
+    incomeAndExpenses.setUserId(1);
 
     sut.registerIncomeAndExpenses(incomeAndExpenses);
 
@@ -123,7 +123,7 @@ public class RealestateRepositoryTest {
 
     Project project = new Project();
     project.setId(1);
-    project.setUserId(1L);
+    project.setUserId(1);
     project.setProjectName("テストプロジェクト");
 
     assertThat(sut.getProjects().stream()
@@ -146,7 +146,7 @@ public class RealestateRepositoryTest {
 
     Parcel parcel = new Parcel();
     parcel.setProjectId(1);
-    parcel.setUserId(1L);
+    parcel.setUserId(1);
     parcel.setParcelPrice(99999999);
 
     assertThat(sut.getParcels().stream()
@@ -169,7 +169,7 @@ public class RealestateRepositoryTest {
 
     Building building = new Building();
     building.setProjectId(1);
-    building.setUserId(1L);
+    building.setUserId(1);
     building.setBuildingPrice(99999999);
 
     assertThat(sut.getBuildings().stream()
@@ -192,7 +192,7 @@ public class RealestateRepositoryTest {
 
     IncomeAndExpenses incomeAndExpenses = new IncomeAndExpenses();
     incomeAndExpenses.setProjectId(1);
-    incomeAndExpenses.setUserId(1L);
+    incomeAndExpenses.setUserId(1);
     incomeAndExpenses.setRent(99999999);
 
     assertThat(sut.getIncomeAndExpenses().stream()
@@ -217,7 +217,7 @@ public class RealestateRepositoryTest {
         .anyMatch(p -> p.getId() == 1))
         .isTrue();
 
-    sut.deleteProject(1, 1L);
+    sut.deleteProject(1, 1);
 
     assertThat(sut.getProjects().stream()
         .noneMatch(p -> p.getId() == 1))
@@ -233,7 +233,7 @@ public class RealestateRepositoryTest {
         .anyMatch(p -> p.getProjectId() == 1))
         .isTrue();
 
-    sut.deleteParcel(1, 1L);
+    sut.deleteParcel(1, 1);
 
     assertThat(sut.getParcels().stream()
         .noneMatch(p -> p.getProjectId() == 1))
@@ -249,7 +249,7 @@ public class RealestateRepositoryTest {
         .anyMatch(b -> b.getProjectId() == 1))
         .isTrue();
 
-    sut.deleteBuilding(1, 1L);
+    sut.deleteBuilding(1, 1);
 
     assertThat(sut.getBuildings().stream()
         .noneMatch(b -> b.getProjectId() == 1))
@@ -265,7 +265,7 @@ public class RealestateRepositoryTest {
         .anyMatch(i -> i.getProjectId() == 1))
         .isTrue();
 
-    sut.deleteIncomeAndExpenses(1, 1L);
+    sut.deleteIncomeAndExpenses(1, 1);
 
     assertThat(sut.getIncomeAndExpenses().stream()
         .noneMatch(i -> i.getProjectId() == 1))

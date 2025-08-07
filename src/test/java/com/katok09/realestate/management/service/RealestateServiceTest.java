@@ -44,7 +44,7 @@ public class RealestateServiceTest {
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
 
     sut.searchRealestate(dummySearchParams, dummyRequestToken);
 
@@ -59,7 +59,7 @@ public class RealestateServiceTest {
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
 
     sut.registerRealestate(dummyRequest, dummyRequestToken);
 
@@ -77,7 +77,7 @@ public class RealestateServiceTest {
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
 
     sut.updateRealestate(dummyRequest, dummyRequestToken);
 
@@ -94,14 +94,14 @@ public class RealestateServiceTest {
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999L);
+    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
 
     sut.deleteRealestate(projectId, dummyRequestToken);
 
-    verify(repository, times(1)).deleteProject(projectId, 999L);
-    verify(repository, times(1)).deleteParcel(projectId, 999L);
-    verify(repository, times(1)).deleteBuilding(projectId, 999L);
-    verify(repository, times(1)).deleteIncomeAndExpenses(projectId, 999L);
+    verify(repository, times(1)).deleteProject(projectId, 999);
+    verify(repository, times(1)).deleteParcel(projectId, 999);
+    verify(repository, times(1)).deleteBuilding(projectId, 999);
+    verify(repository, times(1)).deleteIncomeAndExpenses(projectId, 999);
   }
 
 }
