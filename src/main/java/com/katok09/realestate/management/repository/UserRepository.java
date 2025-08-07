@@ -1,6 +1,7 @@
 package com.katok09.realestate.management.repository;
 
 import com.katok09.realestate.management.data.User;
+import com.katok09.realestate.management.dto.StatusRequest;
 import com.katok09.realestate.management.dto.UpdateRequest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,5 +48,5 @@ public interface UserRepository {
 
   void updatePassword(@Param("id") int id, @Param("newPassword") String newPassword);
 
-  void updateEnabled(@Param("id") int id, @Param("enabled") boolean enabled);
+  void statusChange(@Param("id") int id, @Param("statusRequest") StatusRequest statusRequest);
 }

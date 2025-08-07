@@ -49,6 +49,8 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
+            // 管理者専用のエンドポイント
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
             // 認証が必要なエンドポイント
             .requestMatchers("/api/auth/validate", "/api/auth/me", "/api/auth/changeUserInfo",
                 "/api/auth/deleteUser")

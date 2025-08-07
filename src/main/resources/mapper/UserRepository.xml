@@ -261,10 +261,13 @@
       AND is_deleted = false
   </update>
 
-  <update id="updateEnabled">
+  <update id="statusChange">
     UPDATE users
-    SET enabled    = #{enabled},
-        updated_at = CURRENT_TIMESTAMP
+    SET role                  = #{statusRequest.role},
+        enabled               = #{statusRequest.enabled},
+        login_failed_attempts = #{statusRequest.loginFailedAttempts},
+        account_locked_until  = #{statusRequest.accountLockedUntil},
+        updated_at            = CURRENT_TIMESTAMP
     WHERE id = #{id}
       AND is_deleted = false
   </update>

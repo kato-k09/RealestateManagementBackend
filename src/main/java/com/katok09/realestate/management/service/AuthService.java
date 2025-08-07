@@ -274,20 +274,6 @@ public class AuthService {
   }
 
   /**
-   * ユーザーの有効/無効状態を切り替え（管理者機能）
-   *
-   * @param userId  ユーザーID
-   * @param enabled 有効フラグ
-   */
-  @Transactional
-  public void toggleUserEnabled(int userId, boolean enabled) {
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
-
-    userRepository.updateEnabled(userId, enabled);
-  }
-
-  /**
    * ユーザーの削除
    *
    * @param userId ユーザーID
