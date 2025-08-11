@@ -16,7 +16,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,70 +51,32 @@ public class AuthController {
   @PostMapping("/login")
   @Operation(summary = "ユーザーログイン", description = "ユーザー名とパスワードでログインし、JWTトークンを取得します")
   public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-    try {
-      // 入力値のバリデーション
-      if (loginRequest.getUsername() == null || loginRequest.getUsername().trim().isEmpty()) {
-        return ResponseEntity.badRequest()
-            .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", "ユーザー名は必須です"));
-      }
 
-      if (loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
-        return ResponseEntity.badRequest()
-            .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", "パスワードは必須です"));
-      }
+    LoginResponse loginResponse = authService.authenticate(loginRequest);
 
-      // ログイン認証実行
-      LoginResponse loginResponse = authService.authenticate(loginRequest);
-
-      return ResponseEntity.ok(loginResponse);
-
-    } catch (BadCredentialsException e) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(jwtUtil.createErrorResponse("INVALID_CREDENTIALS", e.getMessage()));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR",
-              "システムエラーが発生しました: " + e.getMessage()));
-    }
+    return ResponseEntity.ok(loginResponse);
   }
 
-  @PutMapping("/guest-login")
+  @PostMapping("/guest-login")
   @Operation(summary = "ゲストユーザーログイン", description = "ゲストユーザーでログインします")
   public ResponseEntity<?> guestLogin() {
-    try {
-      LoginRequest loginRequest = new LoginRequest();
-      loginRequest.setUsername("guest");
-      loginRequest.setPassword("guest123");
-      return login(loginRequest);
 
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(jwtUtil.createErrorResponse("GUEST_LOGIN_ERROR",
-              "ゲストログインに失敗しました: " + e.getMessage()));
-    }
+    LoginRequest loginRequest = new LoginRequest("guest", "guest123");
 
+    return login(loginRequest);
   }
 
   @PostMapping("/register")
   @Operation(summary = "ユーザー登録", description = "新規ユーザーを登録します")
   public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
-    try {
-      // ユーザー登録実行
-      authService.registerUser(registerRequest);
 
-      Map<String, Object> response = new HashMap<>();
-      response.put("success", true);
-      response.put("message", "ユーザー登録が完了しました");
+    authService.registerUser(registerRequest);
 
-      return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    Map<String, Object> response = new HashMap<>();
+    response.put("success", true);
+    response.put("message", "ユーザー登録が完了しました");
 
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest()
-          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "ユーザー登録に失敗しました"));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   /**
@@ -127,33 +88,28 @@ public class AuthController {
   @GetMapping("/validate")
   @Operation(summary = "トークン有効性確認", description = "JWTトークンの有効性を確認し、ユーザー情報を取得します")
   public ResponseEntity<?> validateToken(HttpServletRequest request) {
-    try {
-      String token = jwtUtil.extractTokenFromRequest(request);
 
-      if (token == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
-                "Authorization ヘッダーが見つかりません"));
-      }
+    String token = jwtUtil.extractTokenFromRequest(request);
 
-      UserInfo userInfo = authService.validateToken(token);
-
-      if (userInfo == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(jwtUtil.createErrorResponse("INVALID_TOKEN", "無効なトークンです"));
-      }
-
-      Map<String, Object> response = new HashMap<>();
-      response.put("valid", true);
-      response.put("userInfo", userInfo);
-      response.put("remainingMinutes", jwtUtil.getRemainingTimeInMinutes(token));
-
-      return ResponseEntity.ok(response);
-
-    } catch (Exception e) {
+    if (token == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(jwtUtil.createErrorResponse("TOKEN_ERROR", "トークンの検証に失敗しました"));
+          .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+              "Authorization ヘッダーが見つかりません"));
     }
+
+    UserInfo userInfo = authService.validateToken(token);
+
+    if (userInfo == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(jwtUtil.createErrorResponse("INVALID_TOKEN", "無効なトークンです"));
+    }
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("valid", true);
+    response.put("userInfo", userInfo);
+    response.put("remainingMinutes", jwtUtil.getRemainingTimeInMinutes(token));
+
+    return ResponseEntity.ok(response);
   }
 
   /**
@@ -165,55 +121,43 @@ public class AuthController {
   @GetMapping("/me")
   @Operation(summary = "現在のユーザー情報取得", description = "JWTトークンから現在のユーザー情報を取得します")
   public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
-    try {
-      String token = jwtUtil.extractTokenFromRequest(request);
 
-      if (token == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
-                "Authorization ヘッダーが見つかりません"));
-      }
+    String token = jwtUtil.extractTokenFromRequest(request);
 
-      int userId = jwtUtil.getUserIdFromToken(token);
-      UserInfo userInfo = authService.getUserInfo(userId);
-
-      return ResponseEntity.ok(userInfo);
-
-    } catch (Exception e) {
+    if (token == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(jwtUtil.createErrorResponse("USER_ERROR", "ユーザー情報の取得に失敗しました"));
+          .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+              "Authorization ヘッダーが見つかりません"));
     }
+
+    int userId = jwtUtil.getUserIdFromToken(token);
+    UserInfo userInfo = authService.getUserInfo(userId);
+
+    return ResponseEntity.ok(userInfo);
   }
 
   @PutMapping("/changeUserInfo")
   @Operation(summary = "ユーザー情報変更", description = "現在のユーザー情報を変更します")
   public ResponseEntity<?> changeUserInfo(HttpServletRequest request,
       @Valid @RequestBody UpdateRequest updateRequest) {
-    try {
-      String token = jwtUtil.extractTokenFromRequest(request);
 
-      if (token == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
-                "Authorization ヘッダーが見つかりません"));
-      }
+    String token = jwtUtil.extractTokenFromRequest(request);
 
-      int userId = jwtUtil.getUserIdFromToken(token);
-
-      authService.changeUserInfo(userId, updateRequest);
-
-      Map<String, Object> response = new HashMap<>();
-      response.put("success", true);
-      response.put("message", "ユーザー情報が変更されました");
-      return ResponseEntity.ok(response);
-
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest()
-          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "ユーザー情報の変更に失敗しました"));
+    if (token == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+              "Authorization ヘッダーが見つかりません"));
     }
+
+    int userId = jwtUtil.getUserIdFromToken(token);
+
+    authService.changeUserInfo(userId, updateRequest);
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("success", true);
+    response.put("message", "ユーザー情報が変更されました");
+    
+    return ResponseEntity.ok(response);
   }
 
   /**
@@ -224,6 +168,7 @@ public class AuthController {
   @PostMapping("/logout")
   @Operation(summary = "ログアウト", description = "ユーザーをログアウトします")
   public ResponseEntity<?> logout() {
+
     Map<String, Object> response = new HashMap<>();
     response.put("success", true);
     response.put("message", "ログアウトしました");
@@ -239,6 +184,7 @@ public class AuthController {
   @GetMapping("/health")
   @Operation(summary = "ヘルスチェック", description = "認証システムの動作状況を確認します")
   public ResponseEntity<Map<String, Object>> healthCheck() {
+
     Map<String, Object> response = new HashMap<>();
     response.put("status", "OK");
     response.put("service", "Auth Service");
@@ -250,31 +196,24 @@ public class AuthController {
   @DeleteMapping("/deleteUser")
   @Operation(summary = "ユーザー削除", description = "ユーザーを削除します")
   public ResponseEntity<Map<String, Object>> deleteUser(HttpServletRequest request) {
-    try {
-      String token = jwtUtil.extractTokenFromRequest(request);
 
-      if (token == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
-                "Authorization ヘッダーが見つかりません"));
-      }
+    String token = jwtUtil.extractTokenFromRequest(request);
 
-      int userId = jwtUtil.getUserIdFromToken(token);
-
-      authService.deleteUser(userId);
-
-      Map<String, Object> response = new HashMap<>();
-      response.put("success", true);
-      response.put("message", "ユーザーが削除されました");
-      return ResponseEntity.ok(response);
-
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest()
-          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "ユーザーの削除に失敗しました"));
+    if (token == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+              "Authorization ヘッダーが見つかりません"));
     }
+
+    int userId = jwtUtil.getUserIdFromToken(token);
+
+    authService.deleteUser(userId);
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("success", true);
+    response.put("message", "ユーザーが削除されました");
+
+    return ResponseEntity.ok(response);
   }
 
 }

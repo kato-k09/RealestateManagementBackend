@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class LoginFailureService {
+public class AccountLockService {
 
   private final UserRepository userRepository;
 
-  public LoginFailureService(UserRepository userRepository) {
+  public AccountLockService(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 

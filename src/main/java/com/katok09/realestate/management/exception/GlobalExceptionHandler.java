@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +37,16 @@ public class GlobalExceptionHandler {
         HttpStatus.UNAUTHORIZED,
         "AUTHENTICATION_ERROR",
         "認証に失敗しました",
+        request.getDescription(false)
+    );
+  }
+
+  @ExceptionHandler(LockedException.class)
+  public ResponseEntity<Map<String, Object>> handlerLocked(LockedException e, WebRequest request) {
+    return createErrorResponse(
+        HttpStatus.LOCKED,
+        "ACCOUNT_LOCKED",
+        e.getMessage(),
         request.getDescription(false)
     );
   }
