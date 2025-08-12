@@ -58,4 +58,6 @@ VALUES ('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
        ('user1', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
         'user1@example.com', '山田太郎', 'USER', true, false),
        ('user2', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
-        'user2@example.com', '田中花子', 'USER', true, false);
+        'user2@example.com', '田中花子', 'USER', false, false),
+       ('user3', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
+        'user3@example.com', '佐藤次郎', 'USER', true, true);
