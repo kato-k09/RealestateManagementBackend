@@ -148,7 +148,7 @@ public class AuthService {
     newUser.setPassword(hashedPassword);
 
     // データベースに保存
-    userRepository.save(newUser);
+    userRepository.registerUser(newUser);
   }
 
   /**
@@ -171,12 +171,12 @@ public class AuthService {
    */
   private void validateUserUpdate(UpdateRequest request, User user) {
     // ユーザー名の重複チェック
-    if (userRepository.existsByUsernameNotId(request.getUsername(), user.getId())) {
+    if (userRepository.existsByUsernameNotSelfId(request.getUsername(), user.getId())) {
       throw new IllegalArgumentException("このユーザー名は既に使用されています");
     }
 
     // メールアドレスの重複チェック
-    if (userRepository.existsByEmailNotId(request.getEmail(), user.getId())) {
+    if (userRepository.existsByEmailNotSelfId(request.getEmail(), user.getId())) {
       throw new IllegalArgumentException("このメールアドレスは既に使用されています");
     }
 
@@ -238,7 +238,7 @@ public class AuthService {
       userRepository.updatePassword(userId, updateRequest.getNewPassword());
     }
 
-    userRepository.changeUserInfo(userId, updateRequest);
+    userRepository.updateUser(userId, updateRequest);
   }
 
   /**
@@ -289,6 +289,6 @@ public class AuthService {
     }
 
     realestateService.deleteRealestateByUserId(userId);
-    userRepository.deleteById(userId);
+    userRepository.deleteUserById(userId);
   }
 }

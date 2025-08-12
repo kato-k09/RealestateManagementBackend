@@ -20,23 +20,24 @@ public interface UserRepository {
 
   boolean existsByEmail(@Param("email") String email);
 
-  boolean existsByUsernameNotId(@Param("username") String username, @Param("id") int id);
+  boolean existsByUsernameNotSelfId(@Param("username") String username, @Param("id") int id);
 
-  boolean existsByEmailNotId(@Param("email") String email, @Param("id") int id);
-
-  void save(@Param("user") User user);
-
-  void update(@Param("user") User user);
-
-  void deleteById(@Param("id") int id);
+  boolean existsByEmailNotSelfId(@Param("email") String email, @Param("id") int id);
 
   List<User> findAll();
 
-  void changeUserInfo(@Param("id") int id, @Param("updateRequest") UpdateRequest updateRequest);
+  void registerUser(@Param("user") User user);
 
-  void updateLastLoginAt(@Param("id") int id, @Param("lastLoginAt") LocalDateTime lastLoginAt);
+  void updateUser(@Param("id") int id, @Param("updateRequest") UpdateRequest updateRequest);
 
   void updatePassword(@Param("id") int id, @Param("newPassword") String newPassword);
+
+  void deleteUserById(@Param("id") int id);
+
+  void updateLoginFailed(@Param("id") int id, @Param("loginFailedAttempts") int loginFailedAttempts,
+      @Param("accountLockedUntil") LocalDateTime accountLockedUntil);
+
+  void updateLastLoginAt(@Param("id") int id, @Param("lastLoginAt") LocalDateTime lastLoginAt);
 
   void statusChange(@Param("id") int id, @Param("statusRequest") StatusRequest statusRequest);
 }

@@ -187,7 +187,7 @@ public class AuthServiceTest {
     when(userRepository.existsByUsername(registerRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(false);
     when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("DummyHashedPassword");
-    doNothing().when(userRepository).save(any(User.class));
+    doNothing().when(userRepository).registerUser(any(User.class));
 
     sut.registerUser(registerRequest);
 
@@ -196,7 +196,7 @@ public class AuthServiceTest {
     verify(passwordEncoder, times(1)).encode("DummyPassword");
 
     ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-    verify(userRepository, times(1)).save(userCaptor.capture());
+    verify(userRepository, times(1)).registerUser(userCaptor.capture());
     User savedUser = userCaptor.getValue();
     assertThat(savedUser.getUsername()).isEqualTo("DummyUsername");
     assertThat(savedUser.getEmail()).isEqualTo("dummy@example.com");
@@ -223,7 +223,7 @@ public class AuthServiceTest {
     verify(userRepository, times(1)).existsByUsername("DummyUsername");
     verify(userRepository, never()).existsByEmail("dummy@example.com");
     verify(passwordEncoder, never()).encode("DummyPassword");
-    verify(userRepository, never()).save(any(User.class));
+    verify(userRepository, never()).registerUser(any(User.class));
 
     assertThat(actual.getMessage()).isEqualTo("このユーザー名は既に使用されています");
 
@@ -245,7 +245,7 @@ public class AuthServiceTest {
     verify(userRepository, times(1)).existsByUsername("DummyUsername");
     verify(userRepository, times(1)).existsByEmail("dummy@example.com");
     verify(passwordEncoder, never()).encode("DummyPassword");
-    verify(userRepository, never()).save(any(User.class));
+    verify(userRepository, never()).registerUser(any(User.class));
 
     assertThat(actual.getMessage()).isEqualTo("このメールアドレスは既に使用されています");
 
@@ -340,18 +340,18 @@ public class AuthServiceTest {
     dummyUser.setDeleted(false);
 
     when(userRepository.findById(999)).thenReturn(Optional.of(dummyUser));
-    when(userRepository.existsByUsernameNotId("ChangedUser", 999)).thenReturn(false);
-    when(userRepository.existsByEmailNotId("changed@example.com", 999)).thenReturn(false);
+    when(userRepository.existsByUsernameNotSelfId("ChangedUser", 999)).thenReturn(false);
+    when(userRepository.existsByEmailNotSelfId("changed@example.com", 999)).thenReturn(false);
     when(passwordEncoder.matches("CurrentPassword", "CurrentPassword")).thenReturn(true);
     when(passwordEncoder.encode("NewPassword")).thenReturn("HashedNewPassword");
     doNothing().when(userRepository).updatePassword(999, "HashedNewPassword");
-    doNothing().when(userRepository).changeUserInfo(eq(999), any(UpdateRequest.class));
+    doNothing().when(userRepository).updateUser(eq(999), any(UpdateRequest.class));
 
     sut.changeUserInfo(999, updateRequest);
 
     verify(userRepository, times(1)).findById(999);
-    verify(userRepository, times(1)).existsByUsernameNotId("ChangedUser", 999);
-    verify(userRepository, times(1)).existsByEmailNotId("changed@example.com", 999);
+    verify(userRepository, times(1)).existsByUsernameNotSelfId("ChangedUser", 999);
+    verify(userRepository, times(1)).existsByEmailNotSelfId("changed@example.com", 999);
     verify(passwordEncoder, times(1)).matches("CurrentPassword", "CurrentPassword");
     verify(passwordEncoder, times(1)).encode("NewPassword");
 
@@ -367,7 +367,7 @@ public class AuthServiceTest {
     // ユーザー情報更新処理の検証（userRepository.updateRequestメソッドの引数の検証）
     ArgumentCaptor<UpdateRequest> updateRequestCaptor = ArgumentCaptor.forClass(
         UpdateRequest.class);
-    verify(userRepository, times(1)).changeUserInfo(userIdCaptor.capture(),
+    verify(userRepository, times(1)).updateUser(userIdCaptor.capture(),
         updateRequestCaptor.capture());
     UpdateRequest changedUser = updateRequestCaptor.getValue();
 
@@ -396,8 +396,8 @@ public class AuthServiceTest {
     });
 
     verify(userRepository, times(1)).findById(999);
-    verify(userRepository, never()).existsByUsernameNotId("ChangedUser", 999);
-    verify(userRepository, never()).existsByEmailNotId("changed@example.com", 999);
+    verify(userRepository, never()).existsByUsernameNotSelfId("ChangedUser", 999);
+    verify(userRepository, never()).existsByEmailNotSelfId("changed@example.com", 999);
     verify(passwordEncoder, never()).matches("CurrentPassword", "CurrentPassword");
     verify(passwordEncoder, never()).encode("NewPassword");
 
@@ -433,8 +433,8 @@ public class AuthServiceTest {
     });
 
     verify(userRepository, times(1)).findById(999);
-    verify(userRepository, never()).existsByUsernameNotId("ChangedUser", 999);
-    verify(userRepository, never()).existsByEmailNotId("changed@example.com", 999);
+    verify(userRepository, never()).existsByUsernameNotSelfId("ChangedUser", 999);
+    verify(userRepository, never()).existsByEmailNotSelfId("changed@example.com", 999);
     verify(passwordEncoder, never()).matches("CurrentPassword", "CurrentPassword");
     verify(passwordEncoder, never()).encode("NewPassword");
     assertThat(actual.getMessage()).isEqualTo("ゲストユーザー情報は変更できません");
@@ -496,13 +496,13 @@ public class AuthServiceTest {
 
     when(userRepository.findById(999)).thenReturn(Optional.of(dummyUser));
     doNothing().when(realestateService).deleteRealestateByUserId(999);
-    doNothing().when(userRepository).deleteById(999);
+    doNothing().when(userRepository).deleteUserById(999);
 
     sut.deleteUser(999);
 
     verify(userRepository, times(1)).findById(999);
     verify(realestateService, times(1)).deleteRealestateByUserId(999);
-    verify(userRepository, times(1)).deleteById(999);
+    verify(userRepository, times(1)).deleteUserById(999);
 
   }
 
@@ -517,7 +517,7 @@ public class AuthServiceTest {
 
     verify(userRepository, times(1)).findById(999);
     verify(realestateService, never()).deleteRealestateByUserId(999);
-    verify(userRepository, never()).deleteById(999);
+    verify(userRepository, never()).deleteUserById(999);
     assertThat(actual.getMessage()).isEqualTo("ユーザーが見つかりません。");
 
   }
@@ -544,7 +544,7 @@ public class AuthServiceTest {
 
     verify(userRepository, times(1)).findById(999);
     verify(realestateService, never()).deleteRealestateByUserId(999);
-    verify(userRepository, never()).deleteById(999);
+    verify(userRepository, never()).deleteUserById(999);
     assertThat(actual.getMessage()).isEqualTo("ゲストユーザーは削除できません。");
 
   }
@@ -571,7 +571,7 @@ public class AuthServiceTest {
 
     verify(userRepository, times(1)).findById(999);
     verify(realestateService, never()).deleteRealestateByUserId(999);
-    verify(userRepository, never()).deleteById(999);
+    verify(userRepository, never()).deleteUserById(999);
     assertThat(actual.getMessage()).isEqualTo("管理者ユーザーは削除できません。");
 
   }

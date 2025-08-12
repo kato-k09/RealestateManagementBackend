@@ -28,18 +28,14 @@ public class AccountLockService {
     User user = userRepository.findByUsername(loginRequest.getUsername()).orElse(null);
     if (user != null && user.getAccountLockedUntil() != null) {
       if (LocalDateTime.now().isAfter(user.getAccountLockedUntil())) {
-        user.setLoginFailedAttempts(0);
-        user.setAccountLockedUntil(null);
-        userRepository.update(user);
+        userRepository.updateLoginFailed(user.getId(), 0, null);
       }
     }
   }
 
   @Transactional
   public void resetAccountLockState(User user) {
-    user.setLoginFailedAttempts(0);
-    user.setAccountLockedUntil(null);
-    userRepository.update(user);
+    userRepository.updateLoginFailed(user.getId(), 0, null);
   }
 
   @Transactional
@@ -47,12 +43,13 @@ public class AccountLockService {
     User user = userRepository.findByUsername(username).orElse(null);
 
     if (user != null) {
-      int attempts = user.getLoginFailedAttempts() + 1;
-      if (attempts >= maxLoginAttempts && user.getAccountLockedUntil() == null) {
-        user.setAccountLockedUntil(LocalDateTime.now().plusMinutes(accountLockDurationMinutes));
+      int loginFailedAttempts = user.getLoginFailedAttempts() + 1;
+      LocalDateTime accountLockedUntil = user.getAccountLockedUntil();
+
+      if (loginFailedAttempts >= maxLoginAttempts && user.getAccountLockedUntil() == null) {
+        accountLockedUntil = LocalDateTime.now().plusMinutes(accountLockDurationMinutes);
       }
-      user.setLoginFailedAttempts(attempts);
-      userRepository.update(user);
+      userRepository.updateLoginFailed(user.getId(), loginFailedAttempts, accountLockedUntil);
     }
   }
 }
