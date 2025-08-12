@@ -37,7 +37,7 @@ public class UserRepositoryTest {
   }
 
   @Test
-  void ユーザー名でユーザー情報取得時に登録が有効でない時nullが返ってくること() {
+  void ユーザー名からユーザー情報取得時に登録が有効でない時nullが返ってくること() {
 
     User deletedUser = sut.findByUsername("user3").orElse(null);
     User unknownUser = sut.findByUsername("UnknownUser").orElse(null);
@@ -64,7 +64,7 @@ public class UserRepositoryTest {
   }
 
   @Test
-  void ユーザーIDでユーザー情報取得時に登録が有効でない時nullが返ってくること() {
+  void ユーザーIDからユーザー情報取得時に登録が有効でない時nullが返ってくること() {
 
     User deletedUser = sut.findById(4).orElse(null);
     User unknownUser = sut.findById(999).orElse(null);
@@ -250,6 +250,7 @@ public class UserRepositoryTest {
     sut.updateLastLoginAt(2, lastLoginAt);
 
     User actual = sut.findById(2).orElse(null);
+    assertThat(actual).isNotNull();
     assertThat(actual.getLastLoginAt()).isEqualTo(lastLoginAt);
   }
 
