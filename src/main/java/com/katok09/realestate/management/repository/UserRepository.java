@@ -14,8 +14,6 @@ public interface UserRepository {
 
   Optional<User> findByUsername(@Param("username") String username);
 
-  Optional<User> findByEmail(@Param("email") String email);
-
   Optional<User> findById(@Param("id") int id);
 
   boolean existsByUsername(@Param("username") String username);
@@ -33,14 +31,6 @@ public interface UserRepository {
   void deleteById(@Param("id") int id);
 
   List<User> findAll();
-
-  List<User> findAllActive();
-
-  List<User> findUsersCreatedAfter(@Param("since") LocalDateTime since);
-
-  List<User> findUsersUpdatedAfter(@Param("since") LocalDateTime since);
-
-  int countByRole(@Param("role") String role);
 
   void changeUserInfo(@Param("id") int id, @Param("updateRequest") UpdateRequest updateRequest);
 
