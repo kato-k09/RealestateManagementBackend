@@ -26,9 +26,16 @@ public class JwtUtil {
   @Value("${jwt.expiration}")
   private long expirationInSeconds;
 
-  private SecretKey getSigningKey() {
-    byte[] keyBytes = secret.getBytes();
-    return Keys.hmacShaKeyFor(keyBytes);
+  public String generateToken(String username, String role, int userId) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("role", role);
+    claims.put("userId", userId);
+    return createToken(claims, username);
+  }
+
+  public int getUserIdFromToken(String token) {
+    Claims claims = getAllClaimsFromToken(token);
+    return (Integer) claims.get("userId");
   }
 
   public String getUsernameFromToken(String token) {
@@ -64,21 +71,14 @@ public class JwtUtil {
     }
   }
 
+  private SecretKey getSigningKey() {
+    byte[] keyBytes = secret.getBytes();
+    return Keys.hmacShaKeyFor(keyBytes);
+  }
+
   private Boolean isTokenExpired(String token) {
     final Date expiration = getExpirationDateFromToken(token);
     return expiration.before(new Date());
-  }
-
-  public String generateToken(UserDetails userDetails) {
-    Map<String, Object> claims = new HashMap<>();
-    return createToken(claims, userDetails.getUsername());
-  }
-
-  public String generateToken(String username, String role, int userId) {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("role", role);
-    claims.put("userId", userId);
-    return createToken(claims, username);
   }
 
   private String createToken(Map<String, Object> claims, String subject) {
@@ -100,26 +100,12 @@ public class JwtUtil {
     }
   }
 
-  public String getRoleFromToken(String token) {
-    Claims claims = getAllClaimsFromToken(token);
-    return claims.get("role", String.class);
-  }
-
-  public int getUserIdFromToken(String token) {
-    Claims claims = getAllClaimsFromToken(token);
-    return (Integer) claims.get("userId");
-  }
-
   public Boolean isTokenValid(String token) {
     try {
       return !isTokenExpired(token);
     } catch (Exception e) {
       return false;
     }
-  }
-
-  public Date getIssuedAtFromToken(String token) {
-    return getClaimFromToken(token, Claims::getIssuedAt);
   }
 
   public long getRemainingTimeInMinutes(String token) {
