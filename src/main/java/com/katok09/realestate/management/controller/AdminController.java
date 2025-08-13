@@ -46,12 +46,10 @@ public class AdminController {
   @GetMapping("/users")
   @Operation(summary = "全ユーザーの一覧取得", description = "システム内の全ユーザー情報を取得")
   public ResponseEntity<List<User>> getAllUsers() {
-    try {
-      List<User> users = adminService.getAllUsers();
-      return ResponseEntity.ok(users);
-    } catch (Exception e) {
-      return ResponseEntity.internalServerError().build();
-    }
+
+    List<User> users = adminService.getAllUsers();
+    return ResponseEntity.ok(users);
+
   }
 
   @PutMapping("/users/{userId}/statusChange")
@@ -59,38 +57,29 @@ public class AdminController {
   public ResponseEntity<Map<String, Object>> statusChange(@PathVariable int userId,
       @Valid @RequestBody StatusRequest statusRequest, HttpServletRequest httpRequest) {
 
-    try {
-      String token = jwtUtil.extractTokenFromRequest(httpRequest);
+    String token = jwtUtil.extractTokenFromRequest(httpRequest);
 
-      if (token == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
-                "Authorization ヘッダーが見つかりません"));
-      }
-      int selfUserId = jwtUtil.getUserIdFromToken(token);
-
-      adminService.statusChange(userId, selfUserId, statusRequest);
-
-      Map<String, Object> response = new HashMap<>();
-      response.put("success", true);
-      response.put("role", statusRequest.getRole());
-      response.put("enabled", statusRequest.isEnabled());
-      response.put("login_failed_attempts", statusRequest.getLoginFailedAttempts());
-      response.put("account_locked_until", statusRequest.getAccountLockedUntil());
-      response.put("message",
-          "ステータスを変更しました。\nRole: " + statusRequest.getRole() + "\nEnabled: "
-              + statusRequest.isEnabled() + "\nLoginFailedAttempts: "
-              + statusRequest.getLoginFailedAttempts()
-              + "\nAccountLockedUntil: " + statusRequest.getAccountLockedUntil());
-      return ResponseEntity.ok(response);
-
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest()
-          .body(jwtUtil.createErrorResponse("VALIDATION_ERROR", e.getMessage()));
-    } catch (Exception e) {
-      return ResponseEntity.internalServerError()
-          .body(jwtUtil.createErrorResponse("INTERNAL_ERROR", "ユーザー状態の変更に失敗しました。"));
+    if (token == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(jwtUtil.createErrorResponse("MISSING_TOKEN",
+              "Authorization ヘッダーが見つかりません"));
     }
+    int selfUserId = jwtUtil.getUserIdFromToken(token);
+
+    adminService.statusChange(userId, selfUserId, statusRequest);
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("success", true);
+    response.put("role", statusRequest.getRole());
+    response.put("enabled", statusRequest.isEnabled());
+    response.put("login_failed_attempts", statusRequest.getLoginFailedAttempts());
+    response.put("account_locked_until", statusRequest.getAccountLockedUntil());
+    response.put("message",
+        "ステータスを変更しました。\nRole: " + statusRequest.getRole() + "\nEnabled: "
+            + statusRequest.isEnabled() + "\nLoginFailedAttempts: "
+            + statusRequest.getLoginFailedAttempts()
+            + "\nAccountLockedUntil: " + statusRequest.getAccountLockedUntil());
+    return ResponseEntity.ok(response);
 
   }
 
