@@ -82,7 +82,7 @@ public class AuthServiceTest {
     when(authenticationManager.authenticate(
         any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuthentication);
     when(mockAuthentication.getPrincipal()).thenReturn(mockPrincipal);
-    doNothing().when(accountLockService).resetAccountLockState(any(User.class));
+    doNothing().when(accountLockService).resetAccountLockState(anyInt());
     when(jwtUtil.generateToken("DummyUser", "USER", 999)).thenReturn("DummyToken");
     doNothing().when(userRepository).updateLastLoginAt(anyInt(), any(LocalDateTime.class));
 
@@ -91,7 +91,7 @@ public class AuthServiceTest {
     verify(accountLockService, times(1)).unlockIfAccountLockExpired(any(LoginRequest.class));
     verify(authenticationManager, times(1)).authenticate(
         any(UsernamePasswordAuthenticationToken.class));
-    verify(accountLockService, times(1)).resetAccountLockState(any(User.class));
+    verify(accountLockService, times(1)).resetAccountLockState(anyInt());
     verify(jwtUtil, times(1)).generateToken("DummyUser", "USER", 999);
     verify(userRepository, times(1)).updateLastLoginAt(anyInt(), any(LocalDateTime.class));
 
@@ -118,7 +118,7 @@ public class AuthServiceTest {
     when(authenticationManager.authenticate(
         any(UsernamePasswordAuthenticationToken.class))).thenThrow(
         new LockedException("DummyLockedMessage"));
-    doNothing().when(accountLockService).handleLoginFailure("LockedUser");
+    doNothing().when(accountLockService).handleLoginFailure(loginRequest);
     when(userRepository.findByUsername("LockedUser")).thenReturn(Optional.of(mockUser));
 
     LockedException actual = assertThrows(LockedException.class, () -> {
@@ -128,11 +128,11 @@ public class AuthServiceTest {
     verify(accountLockService, times(1)).unlockIfAccountLockExpired(any(LoginRequest.class));
     verify(authenticationManager, times(1)).authenticate(
         any(UsernamePasswordAuthenticationToken.class));
-    verify(accountLockService, times(1)).handleLoginFailure("LockedUser");
+    verify(accountLockService, times(1)).handleLoginFailure(loginRequest);
     verify(userRepository, times(1)).findByUsername("LockedUser");
 
     // 正常時の処理が呼ばれないことの確認
-    verify(accountLockService, never()).resetAccountLockState(any(User.class));
+    verify(accountLockService, never()).resetAccountLockState(anyInt());
     verify(jwtUtil, never()).generateToken("LockedUser", "USER", 999);
     verify(userRepository, never()).updateLastLoginAt(anyInt(), any(LocalDateTime.class));
 
@@ -158,7 +158,7 @@ public class AuthServiceTest {
     when(authenticationManager.authenticate(
         any(UsernamePasswordAuthenticationToken.class))).thenThrow(
         new BadCredentialsException("DummyBadCredentialsMessage"));
-    doNothing().when(accountLockService).handleLoginFailure("BadCredentialsUser");
+    doNothing().when(accountLockService).handleLoginFailure(loginRequest);
 
     BadCredentialsException actual = assertThrows(BadCredentialsException.class, () -> {
       sut.authenticate(loginRequest);
@@ -167,10 +167,10 @@ public class AuthServiceTest {
     verify(accountLockService, times(1)).unlockIfAccountLockExpired(any(LoginRequest.class));
     verify(authenticationManager, times(1)).authenticate(
         any(UsernamePasswordAuthenticationToken.class));
-    verify(accountLockService, times(1)).handleLoginFailure("BadCredentialsUser");
+    verify(accountLockService, times(1)).handleLoginFailure(loginRequest);
 
     // 正常時の処理が呼ばれないことの確認
-    verify(accountLockService, never()).resetAccountLockState(any(User.class));
+    verify(accountLockService, never()).resetAccountLockState(anyInt());
     verify(jwtUtil, never()).generateToken("BadCredentialsUser", "USER", 999);
     verify(userRepository, never()).updateLastLoginAt(anyInt(), any(LocalDateTime.class));
 

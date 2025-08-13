@@ -80,7 +80,7 @@ public class AuthService {
       User user = userPrincipal.getUser();
 
       // ログイン失敗回数、アカウントロック時間をリセット
-      accountLockService.resetAccountLockState(user);
+      accountLockService.resetAccountLockState(user.getId());
 
       // 最終ログイン日時を更新
       updateLastLoginTime(user.getId());
@@ -104,9 +104,8 @@ public class AuthService {
       return new LoginResponse(jwtToken, userInfo);
 
     } catch (LockedException e) {
-      String username = loginRequest.getUsername();
-      accountLockService.handleLoginFailure(username);
-      User user = userRepository.findByUsername(username).orElse(null);
+      accountLockService.handleLoginFailure(loginRequest);
+      User user = userRepository.findByUsername(loginRequest.getUsername()).orElse(null);
       long remainingSeconds = (long) accountLockDurationMinutes * 60;
       if (user != null) {
         remainingSeconds = LocalDateTime.now()
@@ -116,7 +115,7 @@ public class AuthService {
           "アカウントがロックされています。あと"
               + remainingSeconds + "秒後にロックが解除されます。");
     } catch (BadCredentialsException e) {
-      accountLockService.handleLoginFailure(loginRequest.getUsername());
+      accountLockService.handleLoginFailure(loginRequest);
       throw new BadCredentialsException("ユーザー名またはパスワードが間違っています。");
     } catch (Exception e) {
       throw new RuntimeException("認証処理中にエラーが発生しました。", e);

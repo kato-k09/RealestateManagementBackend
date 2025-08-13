@@ -34,13 +34,13 @@ public class AccountLockService {
   }
 
   @Transactional
-  public void resetAccountLockState(User user) {
-    userRepository.updateLoginFailed(user.getId(), 0, null);
+  public void resetAccountLockState(int id) {
+    userRepository.updateLoginFailed(id, 0, null);
   }
 
   @Transactional
-  public void handleLoginFailure(String username) {
-    User user = userRepository.findByUsername(username).orElse(null);
+  public void handleLoginFailure(LoginRequest loginRequest) {
+    User user = userRepository.findByUsername(loginRequest.getUsername()).orElse(null);
 
     if (user != null) {
       int loginFailedAttempts = user.getLoginFailedAttempts() + 1;
