@@ -184,6 +184,9 @@ public class AuthService {
       if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
         throw new IllegalArgumentException("現在のパスワードが間違っています");
       }
+      if (request.getNewPassword() == null || request.getNewPassword() == "") {
+        throw new IllegalArgumentException("新しいパスワードを入力してください。");
+      }
     }
   }
 
