@@ -20,8 +20,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+  private final UserRepository userRepository;
+
   @Autowired
-  private UserRepository userRepository;
+  public UserDetailsServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   /**
    * ユーザー名からUserDetailsを取得 Spring Securityの認証処理で自動的に呼び出される
