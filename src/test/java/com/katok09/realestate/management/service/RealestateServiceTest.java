@@ -43,8 +43,8 @@ public class RealestateServiceTest {
     SearchParams dummySearchParams = new SearchParams();
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
+    when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
 
     sut.searchRealestate(dummySearchParams, dummyRequestToken);
 
@@ -58,8 +58,8 @@ public class RealestateServiceTest {
         new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
+    when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
 
     sut.registerRealestate(dummyRequest, dummyRequestToken);
 
@@ -76,8 +76,8 @@ public class RealestateServiceTest {
         new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
+    when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
 
     sut.updateRealestate(dummyRequest, dummyRequestToken);
 
@@ -93,8 +93,8 @@ public class RealestateServiceTest {
     int projectId = 999;
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
-    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("dummyToken");
-    when(jwtUtil.getUserIdFromToken("dummyToken")).thenReturn(999);
+    when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
+    when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
 
     sut.deleteRealestate(projectId, dummyRequestToken);
 

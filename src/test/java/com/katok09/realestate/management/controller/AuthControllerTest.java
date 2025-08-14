@@ -55,7 +55,7 @@ public class AuthControllerTest {
 
   @Test
   void ログイン認証が成功した時OKレスポンスが返ってくること() throws Exception {
-    LoginResponse dummyResponse = new LoginResponse("dummyToken", new UserInfo());
+    LoginResponse dummyResponse = new LoginResponse("DummyToken", new UserInfo());
     when(authService.authenticate(any(LoginRequest.class))).thenReturn(dummyResponse);
 
     mockMvc.perform(post("/api/auth/login")
@@ -63,8 +63,8 @@ public class AuthControllerTest {
             .content(
                 """
                     {
-                        "username":"dummyUser",
-                        "password":"dummyPassword"
+                        "username":"DummyUser",
+                        "password":"DummyPassword"
                     }
                     """
             ))
@@ -92,7 +92,7 @@ public class AuthControllerTest {
                 """
                     {
                         "username":"",
-                        "password":"dummyPassword"
+                        "password":"DummyPassword"
                     }
                     """
             ))
@@ -119,7 +119,7 @@ public class AuthControllerTest {
             .content(
                 """
                     {
-                        "username":"dummyUser",
+                        "username":"DummyUser",
                         "password":""
                     }
                     """
@@ -150,8 +150,8 @@ public class AuthControllerTest {
             .content(
                 """
                     {
-                        "username":"dummyUser",
-                        "password":"dummyPassword"
+                        "username":"DummyUser",
+                        "password":"DummyPassword"
                     }
                     """
             ))
@@ -181,8 +181,8 @@ public class AuthControllerTest {
             .content(
                 """
                     {
-                        "username":"dummyUser",
-                        "password":"dummyPassword"
+                        "username":"DummyUser",
+                        "password":"DummyPassword"
                     }
                     """
             ))
@@ -195,7 +195,7 @@ public class AuthControllerTest {
   void ゲストログイン認証が成功した時にOKレスポンスが返ってくること()
       throws Exception {
 
-    LoginResponse dummyResponse = new LoginResponse("dummyToken", new UserInfo());
+    LoginResponse dummyResponse = new LoginResponse("DummyToken", new UserInfo());
     when(authService.authenticate(any(LoginRequest.class))).thenReturn(dummyResponse);
 
     mockMvc.perform(post("/api/auth/guest-login")
@@ -222,10 +222,10 @@ public class AuthControllerTest {
             .content(
                 """
                     {
-                        "username": "dummyUser",
-                        "password": "dummyPassword",
+                        "username": "DummyUser",
+                        "password": "DummyPassword",
                         "email": "dummy@dummy.com",
-                        "displayName": "dummyDisplayName"
+                        "displayName": "DummyDisplayName"
                     }
                     """
             ))
@@ -246,10 +246,10 @@ public class AuthControllerTest {
             .content(
                 """
                     {
-                        "username": "dummyUser",
-                        "password": "dummyPassword",
+                        "username": "DummyUser",
+                        "password": "DummyPassword",
                         "email": "dummy@dummy.com",
-                        "displayName": "dummyDisplayName"
+                        "displayName": "DummyDisplayName"
                     }
                     """
             ))
@@ -269,10 +269,10 @@ public class AuthControllerTest {
             .content(
                 """
                     {
-                        "username": "dummyUser",
-                        "password": "dummyPassword",
+                        "username": "DummyUser",
+                        "password": "DummyPassword",
                         "email": "dummy@dummy.com",
-                        "displayName": "dummyDisplayName"
+                        "displayName": "DummyDisplayName"
                     }
                     """
             ))
@@ -284,7 +284,7 @@ public class AuthControllerTest {
   @Test
   void トークン認証が成功した時にOKレスポンスが返ってくること() throws Exception {
     String dummyToken = "DummyToken";
-    UserInfo dummyUserInfo = new UserInfo(999, "dummy", "dummy", "dummy@dummy.com", "USER");
+    UserInfo dummyUserInfo = new UserInfo(999, "DummyUser", "DummyUser", "dummy@dummy.com", "USER");
 
     when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn(dummyToken);
     when(authService.validateToken(dummyToken)).thenReturn(dummyUserInfo);
