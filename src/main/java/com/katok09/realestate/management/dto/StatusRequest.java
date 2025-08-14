@@ -1,6 +1,7 @@
 package com.katok09.realestate.management.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 public class StatusRequest {
 
   @Schema(description = "ロール", example = "ADMIN")
+  @NotBlank(message = "ロールは必須です。")
   @Pattern(regexp = "^(ADMIN|USER|GUEST)$", message = "ADMINまたはUSERまたはGUESTを選択してください。")
   String role;
   @Schema(description = "ユーザーの有効", example = "true")
