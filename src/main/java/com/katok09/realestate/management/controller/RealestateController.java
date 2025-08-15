@@ -39,7 +39,7 @@ public class RealestateController {
    */
   @GetMapping("/searchRealestate")
   public ResponseEntity<List<RealestateDetail>> searchRealestate(
-      @ModelAttribute SearchParams searchParams, HttpServletRequest request) {
+      @Valid @ModelAttribute SearchParams searchParams, HttpServletRequest request) {
 
     List<RealestateDetail> result = service.searchRealestate(searchParams, request);
 
