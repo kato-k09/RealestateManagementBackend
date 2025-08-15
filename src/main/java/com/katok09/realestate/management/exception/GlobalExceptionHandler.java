@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValid(
+  public ResponseEntity<Map<String, Object>> handlerMethodArgumentNotValid(
       MethodArgumentNotValidException e, WebRequest request) {
     String errorMessage = e.getBindingResult().getFieldErrors().stream()
         .map(FieldError::getDefaultMessage)
