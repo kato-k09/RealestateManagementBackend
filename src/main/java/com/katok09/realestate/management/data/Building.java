@@ -1,6 +1,7 @@
 package com.katok09.realestate.management.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -41,5 +42,15 @@ public class Building {
   private String buildingRemark;
   @Schema(description = "削除フラグ", example = "false")
   private boolean isDeleted;
+
+  @AssertTrue(message = "築年月日は1000年から2999年までの範囲で入力してください。")
+  private boolean isBuildingDateValid() {
+    if (buildingDate == null) {
+      return true;
+    }
+    LocalDate minDate = LocalDate.of(1000, 1, 1);
+    LocalDate maxDate = LocalDate.of(2999, 12, 31);
+    return !buildingDate.isBefore(minDate) && !buildingDate.isAfter(maxDate);
+  }
 
 }

@@ -2,6 +2,7 @@ package com.katok09.realestate.management.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class Project {
   private int userId;
   @Schema(description = "プロジェクト名", example = "○○アパート")
   @NotBlank(message = "プロジェクト名を入力してください。")
+  @Size(max = 100, message = "プロジェクト名は100字以内で入力してください。")
   private String projectName;
   @Schema(description = "削除フラグ", example = "false")
   private boolean isDeleted;
