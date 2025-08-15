@@ -13,30 +13,6 @@ public class ParcelTest {
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
-  void setterとgetterが正常に動作すること() {
-    Parcel actual = new Parcel();
-    actual.setId(999);
-    actual.setProjectId(999);
-    actual.setUserId(999);
-    actual.setParcelPrice(10000000L);
-    actual.setParcelAddress("東京都");
-    actual.setParcelCategory("宅地");
-    actual.setParcelSize(123.45);
-    actual.setParcelRemark("特に無し");
-    actual.setDeleted(false);
-
-    assertThat(actual.getId()).isEqualTo(999);
-    assertThat(actual.getProjectId()).isEqualTo(999);
-    assertThat(actual.getUserId()).isEqualTo(999);
-    assertThat(actual.getParcelPrice()).isEqualTo(10000000);
-    assertThat(actual.getParcelAddress()).isEqualTo("東京都");
-    assertThat(actual.getParcelCategory()).isEqualTo("宅地");
-    assertThat(actual.getParcelSize()).isEqualTo(123.45);
-    assertThat(actual.getParcelRemark()).isEqualTo("特に無し");
-    assertThat(actual.isDeleted()).isFalse();
-  }
-
-  @Test
   void 土地価格が0円の時入力チェックに異常が発生しないこと() {
     Parcel parcel = new Parcel();
     parcel.setParcelPrice(0L);

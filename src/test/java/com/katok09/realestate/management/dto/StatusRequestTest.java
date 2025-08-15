@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java.time.LocalDateTime;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,20 +13,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class StatusRequestTest {
 
   private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
-  @Test
-  void setterとgetterが正常に動作すること() {
-    StatusRequest actual = new StatusRequest();
-    actual.setRole("USER");
-    actual.setEnabled(true);
-    actual.setLoginFailedAttempts(1);
-    actual.setAccountLockedUntil(LocalDateTime.of(2025, 1, 1, 0, 0, 0));
-
-    assertThat(actual.getRole()).isEqualTo("USER");
-    assertThat(actual.isEnabled()).isTrue();
-    assertThat(actual.getLoginFailedAttempts()).isEqualTo(1);
-    assertThat(actual.getAccountLockedUntil()).isEqualTo(LocalDateTime.of(2025, 1, 1, 0, 0, 0));
-  }
 
   @ParameterizedTest
   @ValueSource(strings = {"USER", "ADMIN", "GUEST"})

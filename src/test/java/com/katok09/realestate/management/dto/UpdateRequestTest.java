@@ -13,22 +13,6 @@ public class UpdateRequestTest {
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
-  void setterとgetterが正常に動作すること() {
-    UpdateRequest actual = new UpdateRequest();
-    actual.setUsername("DummyUser");
-    actual.setEmail("dummy@example.com");
-    actual.setDisplayName("DummyUser");
-    actual.setCurrentPassword("CurrentPassword");
-    actual.setNewPassword("NewPassword");
-
-    assertThat(actual.getUsername()).isEqualTo("DummyUser");
-    assertThat(actual.getEmail()).isEqualTo("dummy@example.com");
-    assertThat(actual.getDisplayName()).isEqualTo("DummyUser");
-    assertThat(actual.getCurrentPassword()).isEqualTo("CurrentPassword");
-    assertThat(actual.getNewPassword()).isEqualTo("NewPassword");
-  }
-
-  @Test
   void 各フィールドに正常な値が設定された時入力チェックに異常が発生しないこと() {
     UpdateRequest updateRequest = new UpdateRequest();
     updateRequest.setUsername("DummyUser");

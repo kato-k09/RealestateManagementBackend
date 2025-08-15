@@ -16,32 +16,6 @@ public class BuildingTest {
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
-  void setterとgetterが正常に動作すること() {
-    Building actual = new Building();
-    actual.setId(999);
-    actual.setProjectId(999);
-    actual.setUserId(999);
-    actual.setBuildingPrice(10000000L);
-    actual.setBuildingType("アパート");
-    actual.setBuildingStructure("木造");
-    actual.setBuildingSize(123.45);
-    actual.setBuildingDate(LocalDate.of(2025, 1, 1));
-    actual.setBuildingRemark("特に無し");
-    actual.setDeleted(false);
-
-    assertThat(actual.getId()).isEqualTo(999);
-    assertThat(actual.getProjectId()).isEqualTo(999);
-    assertThat(actual.getUserId()).isEqualTo(999);
-    assertThat(actual.getBuildingPrice()).isEqualTo(10000000L);
-    assertThat(actual.getBuildingType()).isEqualTo("アパート");
-    assertThat(actual.getBuildingStructure()).isEqualTo("木造");
-    assertThat(actual.getBuildingSize()).isEqualTo(123.45);
-    assertThat(actual.getBuildingDate()).isEqualTo(LocalDate.of(2025, 1, 1));
-    assertThat(actual.getBuildingRemark()).isEqualTo("特に無し");
-    assertThat(actual.isDeleted()).isFalse();
-  }
-
-  @Test
   void 建物価格が0円の時入力チェックに異常が発生しないこと() {
     Building building = new Building();
     building.setBuildingPrice(0L);

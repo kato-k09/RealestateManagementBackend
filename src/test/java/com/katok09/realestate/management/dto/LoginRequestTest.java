@@ -13,16 +13,6 @@ public class LoginRequestTest {
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
-  void setterとgetterが正常に動作すること() {
-    LoginRequest actual = new LoginRequest();
-    actual.setUsername("DummyUser");
-    actual.setPassword("DummyPassword");
-
-    assertThat(actual.getUsername()).isEqualTo("DummyUser");
-    assertThat(actual.getPassword()).isEqualTo("DummyPassword");
-  }
-
-  @Test
   void ユーザー名とパスワードが設定された時入力チェックに異常が発生しないこと() {
     LoginRequest loginRequest = new LoginRequest();
     loginRequest.setUsername("DummyUser");

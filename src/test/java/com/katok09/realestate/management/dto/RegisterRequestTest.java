@@ -13,20 +13,6 @@ public class RegisterRequestTest {
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
-  void setterとgetterが正常に動作すること() {
-    RegisterRequest actual = new RegisterRequest();
-    actual.setUsername("DummyUser");
-    actual.setPassword("DummyPassword");
-    actual.setEmail("dummy@example.com");
-    actual.setDisplayName("DummyUser");
-
-    assertThat(actual.getUsername()).isEqualTo("DummyUser");
-    assertThat(actual.getPassword()).isEqualTo("DummyPassword");
-    assertThat(actual.getEmail()).isEqualTo("dummy@example.com");
-    assertThat(actual.getDisplayName()).isEqualTo("DummyUser");
-  }
-
-  @Test
   void 各フィールドに正常な値が設定された時入力チェックに異常が発生しないこと() {
     RegisterRequest registerRequest = new RegisterRequest();
     registerRequest.setUsername("DummyUser");

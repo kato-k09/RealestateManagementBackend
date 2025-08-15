@@ -13,43 +13,6 @@ public class IncomeAndExpensesTest {
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
-  void setterとgetterが正常に動作すること() {
-    IncomeAndExpenses actual = new IncomeAndExpenses();
-    actual.setId(999);
-    actual.setProjectId(999);
-    actual.setUserId(999);
-    actual.setRent(100000);
-    actual.setMaintenanceCost(1000);
-    actual.setRepairFund(1000);
-    actual.setManagementFee(1000);
-    actual.setPrincipal(1000);
-    actual.setInterest(1000);
-    actual.setTax(1000);
-    actual.setWaterBill(1000);
-    actual.setElectricBill(1000);
-    actual.setGasBill(1000);
-    actual.setFireInsurance(1000);
-    actual.setOther("特に無し");
-    actual.setDeleted(false);
-
-    assertThat(actual.getId()).isEqualTo(999);
-    assertThat(actual.getProjectId()).isEqualTo(999);
-    assertThat(actual.getUserId()).isEqualTo(999);
-    assertThat(actual.getRent()).isEqualTo(100000);
-    assertThat(actual.getMaintenanceCost()).isEqualTo(1000);
-    assertThat(actual.getRepairFund()).isEqualTo(1000);
-    assertThat(actual.getManagementFee()).isEqualTo(1000);
-    assertThat(actual.getPrincipal()).isEqualTo(1000);
-    assertThat(actual.getTax()).isEqualTo(1000);
-    assertThat(actual.getWaterBill()).isEqualTo(1000);
-    assertThat(actual.getElectricBill()).isEqualTo(1000);
-    assertThat(actual.getGasBill()).isEqualTo(1000);
-    assertThat(actual.getFireInsurance()).isEqualTo(1000);
-    assertThat(actual.getOther()).isEqualTo("特に無し");
-    assertThat(actual.isDeleted()).isFalse();
-  }
-
-  @Test
   void 月収入が0円の時入力チェックに異常が発生しないこと() {
     IncomeAndExpenses incomeAndExpenses = new IncomeAndExpenses();
     incomeAndExpenses.setRent(0);

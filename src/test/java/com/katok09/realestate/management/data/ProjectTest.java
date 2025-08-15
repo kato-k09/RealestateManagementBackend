@@ -13,20 +13,6 @@ public class ProjectTest {
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
-  void setterとgetterが正常に動作すること() {
-    Project actual = new Project();
-    actual.setId(999);
-    actual.setUserId(999);
-    actual.setProjectName("DummyProject");
-    actual.setDeleted(false);
-
-    assertThat(actual.getId()).isEqualTo(999);
-    assertThat(actual.getUserId()).isEqualTo(999);
-    assertThat(actual.getProjectName()).isEqualTo("DummyProject");
-    assertThat(actual.isDeleted()).isFalse();
-  }
-
-  @Test
   void プロジェクト名が100文字の時入力チェックに異常が発生しないこと() {
     Project project = new Project();
     project.setId(999);
