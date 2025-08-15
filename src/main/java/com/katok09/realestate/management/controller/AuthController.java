@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,11 +35,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class AuthController {
 
-  @Autowired
-  private AuthService authService;
+  private final AuthService authService;
+  private final JwtUtil jwtUtil;
 
-  @Autowired
-  private JwtUtil jwtUtil;
+  public AuthController(AuthService authService, JwtUtil jwtUtil) {
+    this.authService = authService;
+    this.jwtUtil = jwtUtil;
+  }
 
   /**
    * ユーザーログイン
@@ -156,7 +157,7 @@ public class AuthController {
     Map<String, Object> response = new HashMap<>();
     response.put("success", true);
     response.put("message", "ユーザー情報が変更されました");
-    
+
     return ResponseEntity.ok(response);
   }
 

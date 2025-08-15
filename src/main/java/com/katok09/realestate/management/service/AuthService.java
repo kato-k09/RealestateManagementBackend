@@ -10,7 +10,6 @@ import com.katok09.realestate.management.repository.UserRepository;
 import com.katok09.realestate.management.util.JwtUtil;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,7 +33,6 @@ public class AuthService {
   private final UserRepository userRepository;
   private final RealestateService realestateService;
 
-  @Autowired
   public AuthService(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder,
       JwtUtil jwtUtil, AccountLockService accountLockService, UserRepository userRepository,
       RealestateService realestateService) {

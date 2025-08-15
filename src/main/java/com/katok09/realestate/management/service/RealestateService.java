@@ -6,7 +6,6 @@ import com.katok09.realestate.management.repository.RealestateRepository;
 import com.katok09.realestate.management.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +15,6 @@ public class RealestateService {
   private final RealestateRepository repository;
   private final JwtUtil jwtUtil;
 
-  @Autowired
   public RealestateService(RealestateRepository repository, JwtUtil jwtUtil) {
     this.repository = repository;
     this.jwtUtil = jwtUtil;

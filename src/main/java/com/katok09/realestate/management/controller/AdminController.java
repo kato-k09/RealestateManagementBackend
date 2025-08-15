@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +36,6 @@ public class AdminController {
   private final AdminService adminService;
   private final JwtUtil jwtUtil;
 
-  @Autowired
   public AdminController(AdminService adminService, JwtUtil jwtUtil) {
     this.adminService = adminService;
     this.jwtUtil = jwtUtil;

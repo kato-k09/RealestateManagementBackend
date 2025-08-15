@@ -6,7 +6,6 @@ import com.katok09.realestate.management.service.RealestateService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,9 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class RealestateController {
 
-  private RealestateService service;
+  private final RealestateService service;
 
-  @Autowired
   public RealestateController(RealestateService service) {
     this.service = service;
   }
