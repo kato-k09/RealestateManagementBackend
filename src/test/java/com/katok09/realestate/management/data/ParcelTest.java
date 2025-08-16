@@ -174,7 +174,7 @@ public class ParcelTest {
   }
 
   @Test
-  void 土地備考が101字の時入力チェックに異常が発生しないこと() {
+  void 土地備考が101字の時入力チェックに異常が発生すること() {
     Parcel parcel = new Parcel();
     parcel.setParcelRemark("a".repeat(101));
 
