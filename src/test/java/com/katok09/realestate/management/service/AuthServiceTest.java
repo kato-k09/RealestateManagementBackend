@@ -264,13 +264,13 @@ public class AuthServiceTest {
     dummyUser.setEnabled(true);
     dummyUser.setDeleted(false);
 
-    when(jwtUtil.isTokenValid(dummyToken)).thenReturn(true);
+    when(jwtUtil.isTokenExpired(dummyToken)).thenReturn(true);
     when(jwtUtil.getUsernameFromToken(dummyToken)).thenReturn("DummyUser");
     when(userRepository.findByUsername("DummyUser")).thenReturn(Optional.of(dummyUser));
 
     UserInfo actual = sut.validateToken(dummyToken);
 
-    verify(jwtUtil, times(1)).isTokenValid(dummyToken);
+    verify(jwtUtil, times(1)).isTokenExpired(dummyToken);
     verify(jwtUtil, times(1)).getUsernameFromToken(dummyToken);
     verify(userRepository, times(1)).findByUsername("DummyUser");
 
@@ -288,11 +288,11 @@ public class AuthServiceTest {
 
     String dummyToken = "DummyToken";
 
-    when(jwtUtil.isTokenValid(dummyToken)).thenReturn(false);
+    when(jwtUtil.isTokenExpired(dummyToken)).thenReturn(false);
 
     UserInfo actual = sut.validateToken(dummyToken);
 
-    verify(jwtUtil, times(1)).isTokenValid(dummyToken);
+    verify(jwtUtil, times(1)).isTokenExpired(dummyToken);
     verify(jwtUtil, never()).getUsernameFromToken(dummyToken);
     verify(userRepository, never()).findByUsername("DummyUser");
 
@@ -305,13 +305,13 @@ public class AuthServiceTest {
 
     String dummyToken = "DummyToken";
 
-    when(jwtUtil.isTokenValid(dummyToken)).thenReturn(true);
+    when(jwtUtil.isTokenExpired(dummyToken)).thenReturn(true);
     when(jwtUtil.getUsernameFromToken(dummyToken)).thenReturn("DummyUser");
     when(userRepository.findByUsername("DummyUser")).thenReturn(Optional.empty());
 
     UserInfo actual = sut.validateToken(dummyToken);
 
-    verify(jwtUtil, times(1)).isTokenValid(dummyToken);
+    verify(jwtUtil, times(1)).isTokenExpired(dummyToken);
     verify(jwtUtil, times(1)).getUsernameFromToken(dummyToken);
     verify(userRepository, times(1)).findByUsername("DummyUser");
 

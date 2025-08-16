@@ -125,7 +125,7 @@ public class JwtUtilTest {
 
     String token = sut.generateToken("DummyUser", "USER", 1);
 
-    boolean actual = sut.isTokenValid(token);
+    boolean actual = sut.isTokenExpired(token);
 
     assertThat(actual).isTrue();
   }
@@ -136,7 +136,7 @@ public class JwtUtilTest {
     // tokenはgenerateToken("DummyUser", "USER", 1)で生成
     String token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJJZCI6MSwic3ViIjoiRHVtbXlVc2VyIiwiaWF0IjoxNzU1MDcwMDY0LCJleHAiOjE3NTUwNzAwNjV9.rf6SOWcZiistJSd1iy0hpvNFmtp_aaUePBzTN8cLhog";
 
-    boolean actual = sut.isTokenValid(token);
+    boolean actual = sut.isTokenExpired(token);
 
     assertThat(actual).isFalse();
   }
