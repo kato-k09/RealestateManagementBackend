@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 管理者専用REST APIエンドポイントを提供するコントローラー
+ */
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -41,6 +44,11 @@ public class AdminController {
     this.jwtUtil = jwtUtil;
   }
 
+  /**
+   * 削除済み以外の全てのユーザー情報を取得します。
+   *
+   * @return ユーザー情報リスト
+   */
   @GetMapping("/users")
   @Operation(summary = "全ユーザーの一覧取得", description = "システム内の全ユーザー情報を取得")
   public ResponseEntity<List<User>> getAllUsers() {
@@ -50,6 +58,14 @@ public class AdminController {
 
   }
 
+  /**
+   * ユーザーステータスの更新をします。
+   *
+   * @param userId        更新対象のユーザーID
+   * @param statusRequest ステータスリクエストDTO
+   * @param httpRequest   httpリクエスト
+   * @return 結果のレスポンス
+   */
   @PutMapping("/users/{userId}/updateStatus")
   @Operation(summary = "指定ユーザーのステータス変更", description = "指定ユーザーのrole、enabled、login_failed_attempts、account_locked_untilを変更")
   public ResponseEntity<Map<String, Object>> updateStatus(@PathVariable int userId,

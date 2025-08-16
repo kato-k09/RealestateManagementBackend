@@ -9,6 +9,9 @@ import com.katok09.realestate.management.dto.SearchParams;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * 不動産情報のデータアクセスを提供するリポジトリ
+ */
 @Mapper
 public interface RealestateRepository {
 
@@ -51,28 +54,28 @@ public interface RealestateRepository {
   /**
    * 不動産プロジェクト情報の登録を行います。
    *
-   * @param project 不動産プロジェクト情報
+   * @param project 不動産プロジェクト情報（IDは自動採番されます）
    */
   public void registerProject(Project project);
 
   /**
    * 不動産土地情報の登録を行います。
    *
-   * @param parcel 不動産土地情報
+   * @param parcel 不動産土地情報（IDは自動採番されます）
    */
   public void registerParcel(Parcel parcel);
 
   /**
    * 不動産建物情報の登録を行います。
    *
-   * @param building 不動産建物情報
+   * @param building 不動産建物情報（IDは自動採番されます）
    */
   public void registerBuilding(Building building);
 
   /**
    * 不動産収支情報の登録を行います。
    *
-   * @param incomeAndExpenses 不動産収支情報
+   * @param incomeAndExpenses 不動産収支情報（IDは自動採番されます）
    */
   public void registerIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
 
@@ -135,32 +138,28 @@ public interface RealestateRepository {
   /**
    * 指定されたユーザーの不動産プロジェクトを削除します。。
    *
-   * @param userId
-   * @return
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    */
   public void deleteProjectByUserId(int userId);
 
   /**
    * 指定されたユーザーの不動産土地情報を削除します。。
    *
-   * @param userId
-   * @return
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    */
   public void deleteParcelByUserId(int userId);
 
   /**
    * 指定されたユーザーの不動産建物情報を削除します。。
    *
-   * @param userId
-   * @return
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    */
   public void deleteBuildingByUserId(int userId);
 
   /**
    * 指定されたユーザーの不動産収支情報を削除します。。
    *
-   * @param userId
-   * @return
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    */
   public void deleteIncomeAndExpensesByUserId(int userId);
 

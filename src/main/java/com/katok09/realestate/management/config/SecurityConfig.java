@@ -16,6 +16,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * SpringSecurityの設定クラス
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -29,17 +32,36 @@ public class SecurityConfig {
     this.jwtRequestFilter = jwtRequestFilter;
   }
 
+  /**
+   * パスワードエンコーダーのBean定義
+   *
+   * @return BCryptPasswordEncoderインスタンス
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * 認証マネージャーのBean定義
+   *
+   * @param config 認証設定オブジェクト
+   * @return AuthenticationManagerインスタンス
+   * @throws Exception 設定例外
+   */
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
   }
 
+  /**
+   * セキュリティフィターチェーンの設定 Jwt認証やCORS設定、エンドポイントの認可設定を行います。
+   *
+   * @param http Httpセキュリティ設定オブジェクト
+   * @return SecurityFilterChainインスタンス
+   * @throws Exception 設定例外
+   */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -70,6 +92,11 @@ public class SecurityConfig {
     return http.build();
   }
 
+  /**
+   * CORS設定のBean定義 全オリジンからのリクエストを許可
+   *
+   * @return CorsConfigurationSourceインスタンス
+   */
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();

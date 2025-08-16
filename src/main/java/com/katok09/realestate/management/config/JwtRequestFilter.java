@@ -14,6 +14,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * Jwt認証フィルター リクエストがある度に実行されます。
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -25,6 +28,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     this.jwtUtil = jwtUtil;
   }
 
+  /**
+   * 認証が必要なエンドポイントのフィルター　リクエストに有効なトークンがある場合はSecurityContextに認証情報を設定します。
+   *
+   * @param request  HTTPリクエスト（Authorizationヘッダーを含みます）
+   * @param response HTTPレスポンス
+   * @param chain    フィルターチェーン（次の処理に制御を渡すために使います）
+   * @throws ServletException フィルター処理中にServlet関連のエラーが発生した場合
+   * @throws IOException      リクエスト/レスポンスの入出力処理中にエラーが発生した場合
+   */
   @Override
   protected void doFilterInternal(HttpServletRequest request,
       HttpServletResponse response,
@@ -71,6 +83,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
   }
 
+  /**
+   * 認証が不要なエンドポイントのフィルター除外 doFilterInternalが実行される前にこちらでフィルター処理必要有無をチェックします。
+   *
+   * @param request HTTPリクエスト
+   * @return フィルター処理をしない場合trueが、フィルター処理をする場合はfalseが返ります。
+   * @throws ServletException Servlet関連のエラーが発生した場合
+   */
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 

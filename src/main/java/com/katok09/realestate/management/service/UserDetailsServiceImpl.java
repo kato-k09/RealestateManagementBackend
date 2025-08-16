@@ -14,7 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * Spring Securityが認証時に使用するUserDetailsServiceの実装 ユーザー名からユーザー情報を取得し、Spring SecurityのUserDetails形式で返す
+ * Spring Securityが認証時に使用するUserDetailsServiceの実装 ユーザー名からユーザー情報を取得し、Spring
+ * SecurityのUserDetails形式で返します。
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -26,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
 
   /**
-   * ユーザー名からUserDetailsを取得 Spring Securityの認証処理で自動的に呼び出される
+   * ユーザー名からUserDetailsを取得 Spring Securityの認証処理で自動的に呼び出されます。
    */
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -69,7 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * ユーザーの権限（ロール）を取得 ROLE_プレフィックスを付けてGrantedAuthorityのリストを返す
+     * ユーザーの権限（ロール）を取得 ROLE_プレフィックスを付けてGrantedAuthorityのリストを返します。
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -101,7 +102,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * アカウントの有効期限が切れていないかチェック 今回は常にtrueを返す（有効期限なし）
+     * アカウントの有効期限が切れていないかチェック 今回は常にtrueを返します（有効期限なし）。
      */
     @Override
     public boolean isAccountNonExpired() {
@@ -120,7 +121,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * 認証情報（パスワード）の有効期限が切れていないかチェック 今回は常にtrueを返す（パスワード有効期限なし）
+     * 認証情報（パスワード）の有効期限が切れていないかチェック 今回は常にtrueを返します（パスワード有効期限なし）。
      */
     @Override
     public boolean isCredentialsNonExpired() {

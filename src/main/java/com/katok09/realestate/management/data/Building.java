@@ -43,6 +43,11 @@ public class Building {
   @Schema(description = "削除フラグ", example = "false")
   private boolean isDeleted;
 
+  /**
+   * 築年月日の入力を1000年1月1日から2999年12月31日の範囲に限定します。 範囲外の場合異常値としてバリデーションエラーとなります。
+   *
+   * @return 範囲内ならtrue、範囲外ならfalseが返ります。
+   */
   @AssertTrue(message = "築年月日は1000年から2999年までの範囲で入力してください。")
   private boolean isBuildingDateValid() {
     if (buildingDate == null) {

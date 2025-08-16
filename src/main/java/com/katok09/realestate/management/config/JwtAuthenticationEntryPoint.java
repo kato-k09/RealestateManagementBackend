@@ -12,6 +12,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+/**
+ * トークン認証失敗時の処理。ケースごとに詳細なエラーレスポンスを返します。
+ */
 @Component
 public class JwtAuthenticationEntryPoint implements
     AuthenticationEntryPoint {

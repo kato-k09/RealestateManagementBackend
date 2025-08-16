@@ -45,9 +45,11 @@ public class AuthService {
     this.realestateService = realestateService;
   }
 
+  // アカウントロックがかかるログイン連続失敗回数閾値
   @Value("${security.max-login-attempts}")
   private int maxLoginAttempts;
 
+  // アカウントロックがかかる期間
   @Value("${security.account-lock-duration}")
   private int accountLockDurationMinutes;
 
@@ -189,14 +191,14 @@ public class AuthService {
   }
 
   /**
-   * JWTトークンの有効性を検証
+   * JWTトークンの有効性を検証（画面遷移時等で実行されます）
    *
    * @param token JWTトークン
    * @return 有効な場合はユーザー情報、無効な場合はnull
    */
   public UserInfo validateToken(String token) {
     try {
-      if (!jwtUtil.isTokenValid(token)) {
+      if (!jwtUtil.isTokenExpired(token)) {
         return null;
       }
 
@@ -220,6 +222,12 @@ public class AuthService {
     }
   }
 
+  /**
+   * ユーザー自身によるユーザー情報の更新
+   *
+   * @param userId        トークンから抽出したユーザーID（ユーザーID偽装防止）
+   * @param updateRequest ユーザー情報更新DTO
+   */
   @Transactional
   public void updateUserInfo(int userId, UpdateRequest updateRequest) {
 
@@ -232,6 +240,7 @@ public class AuthService {
 
     validateUserUpdate(updateRequest, user);
 
+    // 現在のパスワードと新しいパスワードの値が共に設定されている場合にパスワード更新処理を実行します。
     if (updateRequest.getCurrentPassword() != null && updateRequest.getNewPassword() != null) {
       String hashedPassword = passwordEncoder.encode(updateRequest.getNewPassword());
       updateRequest.setNewPassword(hashedPassword);
@@ -255,7 +264,7 @@ public class AuthService {
   /**
    * ユーザー情報を取得
    *
-   * @param userId ユーザーID
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    * @return ユーザー情報
    */
   public UserInfo getUserInfo(int userId) {
@@ -274,7 +283,7 @@ public class AuthService {
   /**
    * ユーザーの削除
    *
-   * @param userId ユーザーID
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    */
   @Transactional
   public void deleteUser(int userId) {

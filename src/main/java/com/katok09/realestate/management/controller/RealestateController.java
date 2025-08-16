@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 不動産関係のREST APIエンドポイントを提供するコントローラー
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:3000") // Reactのポートに合わせる
 @Validated
@@ -32,7 +35,7 @@ public class RealestateController {
   /**
    * 不動産情報の一覧表示・検索を行います。
    *
-   * @param searchParams
+   * @param searchParams 不動産検索パラメーターDTO。各フィールドがnullの場合はそのフィールドでの検索は行われません。
    * @return エラーが発生しなければ200 OKとともに不動産情報のリストを返します。
    */
   @GetMapping("/searchRealestate")

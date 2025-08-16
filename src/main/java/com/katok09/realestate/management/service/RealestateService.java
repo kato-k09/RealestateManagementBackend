@@ -9,6 +9,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 不動産関係のビジネスロジックを担当するサービス
+ */
 @Service
 public class RealestateService {
 
@@ -51,6 +54,7 @@ public class RealestateService {
     request.getBuilding().setUserId(userId);
     request.getIncomeAndExpenses().setUserId(userId);
 
+    // プロジェクトオブジェクトの自動採番を行ってから各オブジェクトにプロジェクトIDを設定します。
     repository.registerProject(request.getProject());
 
     request.getParcel().setProjectId(request.getProject().getId());
@@ -97,6 +101,8 @@ public class RealestateService {
     String token = jwtUtil.extractTokenFromRequest(requestToken);
     int userId = jwtUtil.getUserIdFromToken(token);
 
+    // トークンから抽出したユーザーIDが設定されているプロジェクトIDのみ削除が実行されます。
+    // これにより本人以外のプロジェクトが削除されることを防止します。
     repository.deleteProject(projectId, userId);
     repository.deleteParcel(projectId, userId);
     repository.deleteBuilding(projectId, userId);
@@ -106,7 +112,7 @@ public class RealestateService {
   /**
    * 指定されたユーザーの不動産情報を全て削除します。
    *
-   * @param userId ユーザーID
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    */
   @Transactional
   public void deleteRealestateByUserId(int userId) {

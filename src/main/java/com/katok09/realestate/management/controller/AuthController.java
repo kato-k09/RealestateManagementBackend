@@ -58,6 +58,11 @@ public class AuthController {
     return ResponseEntity.ok(loginResponse);
   }
 
+  /**
+   * ゲストユーザーログイン
+   *
+   * @return ログインレスポンス（JWTトークン、ユーザー情報）
+   */
   @PostMapping("/guest-login")
   @Operation(summary = "ゲストユーザーログイン", description = "ゲストユーザーでログインします")
   public ResponseEntity<?> guestLogin() {
@@ -67,6 +72,12 @@ public class AuthController {
     return login(loginRequest);
   }
 
+  /**
+   * ユーザー登録
+   *
+   * @param registerRequest ユーザー登録DTO
+   * @return 登録成功レスポンス
+   */
   @PostMapping("/register")
   @Operation(summary = "ユーザー登録", description = "新規ユーザーを登録します")
   public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
@@ -137,6 +148,13 @@ public class AuthController {
     return ResponseEntity.ok(userInfo);
   }
 
+  /**
+   * ユーザー情報更新
+   *
+   * @param request       HTTPリクエスト
+   * @param updateRequest ユーザー情報更新DTO
+   * @return ユーザー情報更新成功レスポンス
+   */
   @PutMapping("/updateUserInfo")
   @Operation(summary = "ユーザー情報変更", description = "現在のユーザー情報を変更します")
   public ResponseEntity<?> updateUserInfo(HttpServletRequest request,
@@ -162,7 +180,7 @@ public class AuthController {
   }
 
   /**
-   * ログアウト（トークン無効化） 現在の実装では、クライアント側でトークンを削除する 将来的にはトークンのブラックリスト機能を追加可能
+   * ログアウト（トークン無効化） 現在の実装では、クライアント側でトークンを削除します。
    *
    * @return ログアウト結果
    */
@@ -194,6 +212,12 @@ public class AuthController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * ユーザー削除
+   *
+   * @param request HTTPリクエスト
+   * @return ユーザー削除成功レスポンス
+   */
   @DeleteMapping("/deleteUser")
   @Operation(summary = "ユーザー削除", description = "ユーザーを削除します")
   public ResponseEntity<Map<String, Object>> deleteUser(HttpServletRequest request) {
