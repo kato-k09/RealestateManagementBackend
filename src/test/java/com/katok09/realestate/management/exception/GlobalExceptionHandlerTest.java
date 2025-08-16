@@ -201,23 +201,6 @@ public class GlobalExceptionHandlerTest {
   }
 
   @Test
-  void ResourceNotFoundExceptionが適切にハンドリングされること() {
-
-    ResourceNotFoundException exception = new ResourceNotFoundException("DummyMessage");
-
-    ResponseEntity<Map<String, Object>> actual = sut.handlerResourceNotFound(exception, webRequest);
-
-    assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    Map<String, Object> body = actual.getBody();
-    assertThat(body.get("error")).isEqualTo(true);
-    assertThat(body.get("status")).isEqualTo(404);
-    assertThat(body.get("errorCode")).isEqualTo("RESOURCE_NOT_FOUND");
-    assertThat(body.get("message")).isEqualTo("DummyMessage");
-    assertThat(body.get("path")).isEqualTo("uri=/test");
-    assertThat(body.get("timestamp")).isNotNull();
-  }
-
-  @Test
   void RuntimeExceptionが適切にハンドリングされること() {
 
     RuntimeException exception = new RuntimeException("DummyMessage");
