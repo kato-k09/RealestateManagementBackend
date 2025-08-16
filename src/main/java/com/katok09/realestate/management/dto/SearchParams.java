@@ -26,7 +26,7 @@ public class SearchParams {
   @Schema(description = "建物種別", example = "アパート")
   @Pattern(regexp = "^(|マンション|アパート|戸建て|店舗|事務所|その他)$", message = "建物種別は指定された選択肢から選んでください。")
   private String searchBuildingType;
-  @Schema(description = "建物構造", example = "鉄筋コンクリート")
+  @Schema(description = "建物構造", example = "鉄筋コンクリート造")
   @Pattern(regexp = "^(|鉄筋コンクリート造|鉄骨造|木造|軽量鉄骨造|その他)$", message = "建物構造は指定された選択肢から選んでください。")
   private String searchBuildingStructure;
   @Schema(description = "融資の有無", example = "true")
