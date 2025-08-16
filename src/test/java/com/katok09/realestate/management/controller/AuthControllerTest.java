@@ -364,9 +364,9 @@ public class AuthControllerTest {
     int dummyUserId = 999;
     when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn(dummyToken);
     when(jwtUtil.getUserIdFromToken(dummyToken)).thenReturn(dummyUserId);
-    doNothing().when(authService).changeUserInfo(eq(dummyUserId), any(UpdateRequest.class));
+    doNothing().when(authService).updateUserInfo(eq(dummyUserId), any(UpdateRequest.class));
 
-    mockMvc.perform(put("/api/auth/changeUserInfo")
+    mockMvc.perform(put("/api/auth/updateUserInfo")
             .contentType("application/json")
             .content(
                 """
@@ -381,7 +381,7 @@ public class AuthControllerTest {
 
     verify(jwtUtil, times(1)).extractTokenFromRequest(any(HttpServletRequest.class));
     verify(jwtUtil, times(1)).getUserIdFromToken(dummyToken);
-    verify(authService, times(1)).changeUserInfo(eq(dummyUserId), any(UpdateRequest.class));
+    verify(authService, times(1)).updateUserInfo(eq(dummyUserId), any(UpdateRequest.class));
   }
 
   @Test
@@ -393,9 +393,9 @@ public class AuthControllerTest {
     when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn(dummyToken);
     when(jwtUtil.getUserIdFromToken(dummyToken)).thenReturn(dummyUserId);
     doThrow(new IllegalArgumentException("このユーザー名は既に使用されています")).when(authService)
-        .changeUserInfo(eq(dummyUserId), any(UpdateRequest.class));
+        .updateUserInfo(eq(dummyUserId), any(UpdateRequest.class));
 
-    mockMvc.perform(put("/api/auth/changeUserInfo")
+    mockMvc.perform(put("/api/auth/updateUserInfo")
             .contentType("application/json")
             .content(
                 """
@@ -410,7 +410,7 @@ public class AuthControllerTest {
 
     verify(jwtUtil, times(1)).extractTokenFromRequest(any(HttpServletRequest.class));
     verify(jwtUtil, times(1)).getUserIdFromToken(dummyToken);
-    verify(authService, times(1)).changeUserInfo(eq(dummyUserId), any(UpdateRequest.class));
+    verify(authService, times(1)).updateUserInfo(eq(dummyUserId), any(UpdateRequest.class));
   }
 
   @Test
@@ -422,9 +422,9 @@ public class AuthControllerTest {
     when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn(dummyToken);
     when(jwtUtil.getUserIdFromToken(dummyToken)).thenReturn(dummyUserId);
     doThrow(new RuntimeException()).when(authService)
-        .changeUserInfo(eq(dummyUserId), any(UpdateRequest.class));
+        .updateUserInfo(eq(dummyUserId), any(UpdateRequest.class));
 
-    mockMvc.perform(put("/api/auth/changeUserInfo")
+    mockMvc.perform(put("/api/auth/updateUserInfo")
             .contentType("application/json")
             .content(
                 """
@@ -439,7 +439,7 @@ public class AuthControllerTest {
 
     verify(jwtUtil, times(1)).extractTokenFromRequest(any(HttpServletRequest.class));
     verify(jwtUtil, times(1)).getUserIdFromToken(dummyToken);
-    verify(authService, times(1)).changeUserInfo(eq(dummyUserId), any(UpdateRequest.class));
+    verify(authService, times(1)).updateUserInfo(eq(dummyUserId), any(UpdateRequest.class));
   }
 
   @Test

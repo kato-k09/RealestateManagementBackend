@@ -49,11 +49,11 @@ public class AdminServiceTest {
     StatusRequest statusRequest = new StatusRequest();
     statusRequest.setRole("USER");
 
-    doNothing().when(userRepository).statusChange(999, statusRequest);
+    doNothing().when(userRepository).updateStatus(999, statusRequest);
 
-    sut.statusChange(999, 1, statusRequest);
+    sut.updateStatus(999, 1, statusRequest);
 
-    verify(userRepository, times(1)).statusChange(anyInt(), any(StatusRequest.class));
+    verify(userRepository, times(1)).updateStatus(anyInt(), any(StatusRequest.class));
   }
 
 }

@@ -265,7 +265,7 @@ public class UserRepositoryTest {
     statusRequest.setLoginFailedAttempts(999);
     statusRequest.setAccountLockedUntil(accountLockedUntil);
 
-    sut.statusChange(2, statusRequest);
+    sut.updateStatus(2, statusRequest);
 
     User actual = sut.findById(2).orElse(null);
     assertThat(actual).isNotNull();

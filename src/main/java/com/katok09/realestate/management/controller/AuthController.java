@@ -137,9 +137,9 @@ public class AuthController {
     return ResponseEntity.ok(userInfo);
   }
 
-  @PutMapping("/changeUserInfo")
+  @PutMapping("/updateUserInfo")
   @Operation(summary = "ユーザー情報変更", description = "現在のユーザー情報を変更します")
-  public ResponseEntity<?> changeUserInfo(HttpServletRequest request,
+  public ResponseEntity<?> updateUserInfo(HttpServletRequest request,
       @Valid @RequestBody UpdateRequest updateRequest) {
 
     String token = jwtUtil.extractTokenFromRequest(request);
@@ -152,7 +152,7 @@ public class AuthController {
 
     int userId = jwtUtil.getUserIdFromToken(token);
 
-    authService.changeUserInfo(userId, updateRequest);
+    authService.updateUserInfo(userId, updateRequest);
 
     Map<String, Object> response = new HashMap<>();
     response.put("success", true);

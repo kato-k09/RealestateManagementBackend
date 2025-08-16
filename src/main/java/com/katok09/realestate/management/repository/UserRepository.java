@@ -39,5 +39,5 @@ public interface UserRepository {
 
   void updateLastLoginAt(@Param("id") int id, @Param("lastLoginAt") LocalDateTime lastLoginAt);
 
-  void statusChange(@Param("id") int id, @Param("statusRequest") StatusRequest statusRequest);
+  void updateStatus(@Param("id") int id, @Param("statusRequest") StatusRequest statusRequest);
 }

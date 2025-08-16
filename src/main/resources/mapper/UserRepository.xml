@@ -164,7 +164,7 @@
     AND is_deleted = false
   </update>
 
-  <update id="statusChange">
+  <update id="updateStatus">
     UPDATE users
     SET role = #{statusRequest.role},
     enabled = #{statusRequest.enabled},

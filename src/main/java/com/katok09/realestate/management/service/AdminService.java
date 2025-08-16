@@ -21,10 +21,10 @@ public class AdminService {
   }
 
   @Transactional
-  public void statusChange(int userId, int selfUserId, StatusRequest statusRequest) {
+  public void updateStatus(int userId, int selfUserId, StatusRequest statusRequest) {
     if (userId == selfUserId) {
       throw new IllegalArgumentException("自信のステータスは変更できません。");
     }
-    userRepository.statusChange(userId, statusRequest);
+    userRepository.updateStatus(userId, statusRequest);
   }
 }

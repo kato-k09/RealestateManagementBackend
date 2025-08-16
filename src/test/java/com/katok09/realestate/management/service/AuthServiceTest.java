@@ -347,7 +347,7 @@ public class AuthServiceTest {
     doNothing().when(userRepository).updatePassword(999, "HashedNewPassword");
     doNothing().when(userRepository).updateUser(eq(999), any(UpdateRequest.class));
 
-    sut.changeUserInfo(999, updateRequest);
+    sut.updateUserInfo(999, updateRequest);
 
     verify(userRepository, times(1)).findById(999);
     verify(userRepository, times(1)).existsByUsernameNotSelfId("ChangedUser", 999);
@@ -392,7 +392,7 @@ public class AuthServiceTest {
     when(userRepository.findById(999)).thenReturn(Optional.empty());
 
     IllegalArgumentException actual = assertThrows(IllegalArgumentException.class, () -> {
-      sut.changeUserInfo(999, updateRequest);
+      sut.updateUserInfo(999, updateRequest);
     });
 
     verify(userRepository, times(1)).findById(999);
@@ -429,7 +429,7 @@ public class AuthServiceTest {
     when(userRepository.findById(999)).thenReturn(Optional.of(dummyUser));
 
     IllegalArgumentException actual = assertThrows(IllegalArgumentException.class, () -> {
-      sut.changeUserInfo(999, updateRequest);
+      sut.updateUserInfo(999, updateRequest);
     });
 
     verify(userRepository, times(1)).findById(999);

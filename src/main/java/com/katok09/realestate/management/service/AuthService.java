@@ -221,7 +221,7 @@ public class AuthService {
   }
 
   @Transactional
-  public void changeUserInfo(int userId, UpdateRequest updateRequest) {
+  public void updateUserInfo(int userId, UpdateRequest updateRequest) {
 
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));

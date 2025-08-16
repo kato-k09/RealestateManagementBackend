@@ -153,7 +153,7 @@ public class JwtRequestFilterTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"/searchRealestate", "/registerRealestate", "/updateRealestate",
-      "/deleteRealestate", "/api/auth/validate", "/api/auth/me", "/api/auth/changeUserInfo",
+      "/deleteRealestate", "/api/auth/validate", "/api/auth/me", "/api/auth/updateUserInfo",
       "/api/auth/deleteUser", "/api/admin/users"})
   void 認証の必要なエンドポイントへのリクエストはフィルターを通ること(String uri)
       throws ServletException {

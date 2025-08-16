@@ -71,9 +71,9 @@ public class AdminControllerTest {
 
     when(jwtUtil.extractTokenFromRequest(any(HttpServletRequest.class))).thenReturn("DummyToken");
     when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(1);
-    doNothing().when(adminService).statusChange(999, 1, statusRequest);
+    doNothing().when(adminService).updateStatus(999, 1, statusRequest);
 
-    mockMvc.perform(put("/api/admin/users/{id}/statusChange", 999)
+    mockMvc.perform(put("/api/admin/users/{id}/updateStatus", 999)
             .contentType("application/Json")
             .content(
                 """
@@ -96,7 +96,7 @@ public class AdminControllerTest {
 
     verify(jwtUtil, times(1)).extractTokenFromRequest(any(HttpServletRequest.class));
     verify(jwtUtil, times(1)).getUserIdFromToken(any(String.class));
-    verify(adminService, times(1)).statusChange(anyInt(), anyInt(), any(StatusRequest.class));
+    verify(adminService, times(1)).updateStatus(anyInt(), anyInt(), any(StatusRequest.class));
   }
 
 
@@ -114,7 +114,7 @@ public class AdminControllerTest {
     when(jwtUtil.createErrorResponse("MISSING_TOKEN", "Authorization ヘッダーが見つかりません"))
         .thenReturn(errorResponse);
 
-    mockMvc.perform(put("/api/admin/users/{id}/statusChange", 999)
+    mockMvc.perform(put("/api/admin/users/{id}/updateStatus", 999)
             .contentType("application/Json")
             .content(
                 """
@@ -132,7 +132,7 @@ public class AdminControllerTest {
 
     verify(jwtUtil, times(1)).extractTokenFromRequest(any(HttpServletRequest.class));
     verify(jwtUtil, never()).getUserIdFromToken(any(String.class));
-    verify(adminService, never()).statusChange(anyInt(), anyInt(), any(StatusRequest.class));
+    verify(adminService, never()).updateStatus(anyInt(), anyInt(), any(StatusRequest.class));
   }
 
 }

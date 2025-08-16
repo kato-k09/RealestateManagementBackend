@@ -50,9 +50,9 @@ public class AdminController {
 
   }
 
-  @PutMapping("/users/{userId}/statusChange")
+  @PutMapping("/users/{userId}/updateStatus")
   @Operation(summary = "指定ユーザーのステータス変更", description = "指定ユーザーのrole、enabled、login_failed_attempts、account_locked_untilを変更")
-  public ResponseEntity<Map<String, Object>> statusChange(@PathVariable int userId,
+  public ResponseEntity<Map<String, Object>> updateStatus(@PathVariable int userId,
       @Valid @RequestBody StatusRequest statusRequest, HttpServletRequest httpRequest) {
 
     String token = jwtUtil.extractTokenFromRequest(httpRequest);
@@ -64,7 +64,7 @@ public class AdminController {
     }
     int selfUserId = jwtUtil.getUserIdFromToken(token);
 
-    adminService.statusChange(userId, selfUserId, statusRequest);
+    adminService.updateStatus(userId, selfUserId, statusRequest);
 
     Map<String, Object> response = new HashMap<>();
     response.put("success", true);

@@ -49,11 +49,11 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/login", "/api/auth/guest-login", "/api/auth/register")
             .permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-            
+
             // 管理者専用のエンドポイント
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
             // 認証が必要なエンドポイント
-            .requestMatchers("/api/auth/validate", "/api/auth/me", "/api/auth/changeUserInfo",
+            .requestMatchers("/api/auth/validate", "/api/auth/me", "/api/auth/updateUserInfo",
                 "/api/auth/deleteUser").authenticated()
             // 不動産管理API（認証が必要）
             .requestMatchers("/searchRealestate", "/registerRealestate", "/updateRealestate",
