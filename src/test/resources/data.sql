@@ -52,12 +52,18 @@ VALUES (1, 1, 160000, 8000, 0, 0, 85000, 25000, 0, 0, 5000, 0, 5000, '', false),
        (8, 3, 1100000, 0, 0, 0, 0, 0, 0, 20000, 20000, 20000, 20000, '', false);
 
 
-INSERT INTO users (username, password, email, display_name, role, enabled, is_deleted)
-VALUES ('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
-        'admin@example.com', '管理者', 'ADMIN', true, false),
-       ('user1', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
-        'user1@example.com', '山田太郎', 'USER', true, false),
-       ('user2', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
-        'user2@example.com', '田中花子', 'USER', false, false),
-       ('user3', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC',
-        'user3@example.com', '佐藤次郎', 'USER', true, true);
+INSERT INTO users (username, password, email, display_name, role, enabled, login_failed_attempts, account_locked_until, is_deleted)
+VALUES ('admin', '$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6',
+        'admin@example.com', '管理者', 'ADMIN', true, 0, null, false),
+       ('user1', '$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6',
+        'user1@example.com', '山田太郎', 'USER', true, 0, null, false),
+       ('user2', '$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6',
+        'user2@example.com', '田中花子', 'USER', false, 0, null, false),
+       ('user3', '$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6',
+        'user3@example.com', '佐藤次郎', 'USER', true, 0, null, true),
+       ('emptyProjectUser', '$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6',
+        'empty@example.com', 'EmptyUser', 'USER', true, 0, null, false),
+       ('guest', '$2a$10$St177xwQG11Bx1WAvt4yqurgrVfeeuFJayIo8v2Zw1wrpmkGq1.aC',
+        'guest@example.com', 'ゲストユーザー', 'GUEST', true, 0, null, false),
+       ('accountLockedUser', '$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6',
+        'locked@example.com', 'アカウントロックユーザー', 'USER', true, 5, '2038-01-01T00:00:00', false);
