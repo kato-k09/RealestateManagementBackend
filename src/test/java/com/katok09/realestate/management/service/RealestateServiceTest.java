@@ -74,10 +74,19 @@ public class RealestateServiceTest {
 
     RealestateDetail dummyRequest = new RealestateDetail(
         new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
+    dummyRequest.getProject().setUserId(999);
+    dummyRequest.getParcel().setUserId(999);
+    dummyRequest.getBuilding().setUserId(999);
+    dummyRequest.getIncomeAndExpenses().setUserId(999);
+
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
     when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
+    when(repository.updateProject(dummyRequest.getProject())).thenReturn(1);
+    when(repository.updateParcel(dummyRequest.getParcel())).thenReturn(1);
+    when(repository.updateBuilding(dummyRequest.getBuilding())).thenReturn(1);
+    when(repository.updateIncomeAndExpenses(dummyRequest.getIncomeAndExpenses())).thenReturn(1);
 
     sut.updateRealestate(dummyRequest, dummyRequestToken);
 
@@ -95,6 +104,10 @@ public class RealestateServiceTest {
 
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
     when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
+    when(repository.deleteProject(projectId, 999)).thenReturn(1);
+    when(repository.deleteParcel(projectId, 999)).thenReturn(1);
+    when(repository.deleteBuilding(projectId, 999)).thenReturn(1);
+    when(repository.deleteIncomeAndExpenses(projectId, 999)).thenReturn(1);
 
     sut.deleteRealestate(projectId, dummyRequestToken);
 

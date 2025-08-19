@@ -50,6 +50,7 @@ public class AdminServiceTest {
     statusRequest.setRole("USER");
 
     doNothing().when(userRepository).updateStatus(999, statusRequest);
+    when(userRepository.existsByUserId(999)).thenReturn(true);
 
     sut.updateStatus(999, 1, statusRequest);
 

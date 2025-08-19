@@ -20,6 +20,7 @@ import com.katok09.realestate.management.dto.LoginResponse;
 import com.katok09.realestate.management.dto.RegisterRequest;
 import com.katok09.realestate.management.dto.UpdateRequest;
 import com.katok09.realestate.management.dto.UserInfo;
+import com.katok09.realestate.management.exception.ResourceNotFoundException;
 import com.katok09.realestate.management.repository.UserRepository;
 import com.katok09.realestate.management.util.JwtUtil;
 import java.time.LocalDateTime;
@@ -391,7 +392,7 @@ public class AuthServiceTest {
 
     when(userRepository.findById(999)).thenReturn(Optional.empty());
 
-    IllegalArgumentException actual = assertThrows(IllegalArgumentException.class, () -> {
+    ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
       sut.updateUserInfo(999, updateRequest);
     });
 
@@ -472,7 +473,7 @@ public class AuthServiceTest {
 
     when(userRepository.findById(999)).thenReturn(Optional.empty());
 
-    IllegalArgumentException actual = assertThrows(IllegalArgumentException.class, () -> {
+    ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
       sut.getUserInfo(999);
     });
 
@@ -511,7 +512,7 @@ public class AuthServiceTest {
 
     when(userRepository.findById(999)).thenReturn(Optional.empty());
 
-    IllegalArgumentException actual = assertThrows(IllegalArgumentException.class, () -> {
+    ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class, () -> {
       sut.deleteUser(999);
     });
 

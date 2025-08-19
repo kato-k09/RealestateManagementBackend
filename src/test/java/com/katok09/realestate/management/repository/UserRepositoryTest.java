@@ -28,7 +28,7 @@ public class UserRepositoryTest {
     assertThat(actual.getId()).isEqualTo(2);
     assertThat(actual.getUsername()).isEqualTo("user1");
     assertThat(actual.getPassword()).isEqualTo(
-        "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC");
+        "$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6");
     assertThat(actual.getEmail()).isEqualTo("user1@example.com");
     assertThat(actual.getDisplayName()).isEqualTo("山田太郎");
     assertThat(actual.getRole()).isEqualTo("USER");
@@ -55,7 +55,7 @@ public class UserRepositoryTest {
     assertThat(actual.getId()).isEqualTo(2);
     assertThat(actual.getUsername()).isEqualTo("user1");
     assertThat(actual.getPassword()).isEqualTo(
-        "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9b6rCiWAXEBkEfC");
+        "$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6");
     assertThat(actual.getEmail()).isEqualTo("user1@example.com");
     assertThat(actual.getDisplayName()).isEqualTo("山田太郎");
     assertThat(actual.getRole()).isEqualTo("USER");
@@ -146,7 +146,7 @@ public class UserRepositoryTest {
 
     List<User> actual = sut.findAll();
 
-    assertThat(actual.size()).isEqualTo(3);
+    assertThat(actual.size()).isEqualTo(6);
   }
 
   @Test
@@ -165,11 +165,11 @@ public class UserRepositoryTest {
     sut.registerUser(newUser);
 
     List<User> actual = sut.findAll();
-    assertThat(actual.size()).isEqualTo(4); // 削除済み以外のユーザーは3件DBに登録されていた
+    assertThat(actual.size()).isEqualTo(7); // 削除済み以外のユーザーは6件DBに登録されている
 
     User registeredUser = sut.findByUsername("NewUser").orElse(null);
     assertThat(registeredUser).isNotNull();
-    assertThat(registeredUser.getId()).isEqualTo(5);
+    assertThat(registeredUser.getId()).isEqualTo(8);
     assertThat(registeredUser.getUsername()).isEqualTo("NewUser");
     assertThat(registeredUser.getPassword()).isEqualTo("Password");
     assertThat(registeredUser.getEmail()).isEqualTo("NewUser@example.com");
@@ -224,7 +224,7 @@ public class UserRepositoryTest {
     assertThat(actual).isNull();
 
     List<User> allUsers = sut.findAll();
-    assertThat(allUsers.size()).isEqualTo(2);
+    assertThat(allUsers.size()).isEqualTo(5);
   }
 
   @Test
