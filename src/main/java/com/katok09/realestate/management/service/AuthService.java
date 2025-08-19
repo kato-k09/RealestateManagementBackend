@@ -6,6 +6,7 @@ import com.katok09.realestate.management.dto.LoginResponse;
 import com.katok09.realestate.management.dto.RegisterRequest;
 import com.katok09.realestate.management.dto.UpdateRequest;
 import com.katok09.realestate.management.dto.UserInfo;
+import com.katok09.realestate.management.exception.ResourceNotFoundException;
 import com.katok09.realestate.management.repository.UserRepository;
 import com.katok09.realestate.management.util.JwtUtil;
 import java.time.LocalDateTime;
@@ -232,7 +233,7 @@ public class AuthService {
   public void updateUserInfo(int userId, UpdateRequest updateRequest) {
 
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
+        .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません"));
 
     if (user.getRole().equals("GUEST")) {
       throw new IllegalArgumentException("ゲストユーザー情報は変更できません");
@@ -269,7 +270,7 @@ public class AuthService {
    */
   public UserInfo getUserInfo(int userId) {
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
+        .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません"));
 
     return new UserInfo(
         user.getId(),
@@ -288,7 +289,7 @@ public class AuthService {
   @Transactional
   public void deleteUser(int userId) {
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません。"));
+        .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません。"));
 
     if (user.getRole().equals("GUEST")) {
       throw new IllegalArgumentException("ゲストユーザーは削除できません。");

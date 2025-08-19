@@ -164,6 +164,24 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * データが見つからない場合の例外をハンドリングします。
+   *
+   * @param e       ResourceNotFoundException
+   * @param request WebRequest
+   * @return 404 Not Foundエラーレスポンス
+   */
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<Map<String, Object>> handlerResourceNotFound(ResourceNotFoundException e,
+      WebRequest request) {
+    return createErrorResponse(
+        HttpStatus.NOT_FOUND,
+        "RESOURCE_NOT_FOUND",
+        e.getMessage(),
+        request.getDescription(false)
+    );
+  }
+
+  /**
    * 予期しない全般的なエラー時の例外をハンドリング
    *
    * @param e       RuntimeException

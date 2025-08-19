@@ -84,56 +84,56 @@ public interface RealestateRepository {
    *
    * @param project 不動産プロジェクト情報
    */
-  public void updateProject(Project project);
+  public int updateProject(Project project);
 
   /**
    * 不動産土地情報の更新を行います。
    *
    * @param parcel 不動産土地情報
    */
-  public void updateParcel(Parcel parcel);
+  public int updateParcel(Parcel parcel);
 
   /**
    * 不動産建物情報の更新を行います。
    *
    * @param building 不動産建物情報
    */
-  public void updateBuilding(Building building);
+  public int updateBuilding(Building building);
 
   /**
    * 不動産収支情報の更新を行います。
    *
    * @param incomeAndExpenses 不動産収支情報
    */
-  public void updateIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
+  public int updateIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
 
   /**
    * 不動産プロジェクト情報の削除を行います。
    *
    * @param id 不動産プロジェクト情報のID
    */
-  public void deleteProject(int id, int userId);
+  public int deleteProject(int id, int userId);
 
   /**
    * 不動産土地情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteParcel(int projectId, int userId);
+  public int deleteParcel(int projectId, int userId);
 
   /**
    * 不動産建物情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteBuilding(int projectId, int userId);
+  public int deleteBuilding(int projectId, int userId);
 
   /**
    * 不動産収支情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteIncomeAndExpenses(int projectId, int userId);
+  public int deleteIncomeAndExpenses(int projectId, int userId);
 
   /**
    * 指定されたユーザーの不動産プロジェクトを削除します。。

@@ -2,6 +2,7 @@ package com.katok09.realestate.management.service;
 
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
+import com.katok09.realestate.management.exception.ResourceNotFoundException;
 import com.katok09.realestate.management.repository.RealestateRepository;
 import com.katok09.realestate.management.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,19 +75,30 @@ public class RealestateService {
   @Transactional
   public void updateRealestate(RealestateDetail request, HttpServletRequest requestToken) {
 
-    // requestにはuserIdが入っているが改ざん防止の為に改めてトークンからuserIdを取得しセット
+    if (!isProjectIdConsistent(request)) {
+      throw new IllegalArgumentException("プロジェクトIDが一致していません。");
+    }
+
+    // トークンから取得したユーザーIDとrequest内の各オブジェクトのユーザーIDを照合
     String token = jwtUtil.extractTokenFromRequest(requestToken);
     int userId = jwtUtil.getUserIdFromToken(token);
-    request.getProject().setUserId(userId);
-    request.getParcel().setUserId(userId);
-    request.getBuilding().setUserId(userId);
-    request.getIncomeAndExpenses().setUserId(userId);
 
-    repository.updateProject(request.getProject());
-    repository.updateParcel(request.getParcel());
-    repository.updateBuilding(request.getBuilding());
-    repository.updateIncomeAndExpenses(request.getIncomeAndExpenses());
+    if (!isUserIdConsistent(userId, request)) {
+      throw new IllegalArgumentException("ユーザーIDが一致していません。");
+    }
 
+    if (repository.updateProject(request.getProject()) == 0) {
+      throw new ResourceNotFoundException("更新対象のプロジェクトが存在しません。");
+    }
+    if (repository.updateParcel(request.getParcel()) == 0) {
+      throw new ResourceNotFoundException("更新対象の土地情報が存在しません。");
+    }
+    if (repository.updateBuilding(request.getBuilding()) == 0) {
+      throw new ResourceNotFoundException("更新対象の建物情報が存在しません。");
+    }
+    if (repository.updateIncomeAndExpenses(request.getIncomeAndExpenses()) == 0) {
+      throw new ResourceNotFoundException("更新対象の収支情報が存在しません。");
+    }
   }
 
   /**
@@ -103,10 +115,18 @@ public class RealestateService {
 
     // トークンから抽出したユーザーIDが設定されているプロジェクトIDのみ削除が実行されます。
     // これにより本人以外のプロジェクトが削除されることを防止します。
-    repository.deleteProject(projectId, userId);
-    repository.deleteParcel(projectId, userId);
-    repository.deleteBuilding(projectId, userId);
-    repository.deleteIncomeAndExpenses(projectId, userId);
+    if (repository.deleteProject(projectId, userId) == 0) {
+      throw new ResourceNotFoundException("削除対象のプロジェクトが存在しません。");
+    }
+    if (repository.deleteParcel(projectId, userId) == 0) {
+      throw new ResourceNotFoundException("削除対象の土地情報が存在しません。");
+    }
+    if (repository.deleteBuilding(projectId, userId) == 0) {
+      throw new ResourceNotFoundException("削除対象の建物情報が存在しません。");
+    }
+    if (repository.deleteIncomeAndExpenses(projectId, userId) == 0) {
+      throw new ResourceNotFoundException("削除対象の収支情報が存在しません。");
+    }
   }
 
   /**
@@ -121,6 +141,20 @@ public class RealestateService {
     repository.deleteParcelByUserId(userId);
     repository.deleteBuildingByUserId(userId);
     repository.deleteIncomeAndExpensesByUserId(userId);
+  }
+
+  private boolean isProjectIdConsistent(RealestateDetail request) {
+    int projectId = request.getProject().getId();
+    return projectId == request.getParcel().getProjectId() &&
+        projectId == request.getBuilding().getProjectId() &&
+        projectId == request.getIncomeAndExpenses().getProjectId();
+  }
+
+  private boolean isUserIdConsistent(int userId, RealestateDetail request) {
+    return userId == request.getProject().getUserId() &&
+        userId == request.getParcel().getUserId() &&
+        userId == request.getBuilding().getUserId() &&
+        userId == request.getIncomeAndExpenses().getUserId();
   }
 
 }

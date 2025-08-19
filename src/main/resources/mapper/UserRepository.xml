@@ -60,6 +60,13 @@
     AND is_deleted = false
   </select>
 
+  <select id="existsByUserId" resultType="boolean">
+    SELECT COUNT(*) > 0
+    FROM users
+    WHERE id = #{id}
+    AND is_deleted = false
+  </select>
+
   <select id="existsByUsername" resultType="boolean">
     SELECT COUNT(*) > 0
     FROM users

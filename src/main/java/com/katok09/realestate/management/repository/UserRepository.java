@@ -32,6 +32,14 @@ public interface UserRepository {
   Optional<User> findById(@Param("id") int id);
 
   /**
+   * 指定されたユーザーIDが既に登録されているかを検証します。
+   *
+   * @param id ユーザーID
+   * @return 既に登録されていればtrue、無ければfalseが返ります。
+   */
+  boolean existsByUserId(@Param("id") int id);
+
+  /**
    * 指定されたユーザー名が既に登録されているかを検証します。
    *
    * @param username ユーザー名
