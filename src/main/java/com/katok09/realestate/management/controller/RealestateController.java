@@ -3,9 +3,11 @@ package com.katok09.realestate.management.controller;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
 import com.katok09.realestate.management.service.RealestateService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +18,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 不動産関係のREST APIエンドポイントを提供するコントローラー
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:3000") // Reactのポートに合わせる
+@Validated
 public class RealestateController {
 
-  private RealestateService service;
+  private final RealestateService service;
 
-  @Autowired
   public RealestateController(RealestateService service) {
     this.service = service;
   }
@@ -30,14 +35,14 @@ public class RealestateController {
   /**
    * 不動産情報の一覧表示・検索を行います。
    *
-   * @param searchParams
+   * @param searchParams 不動産検索パラメーターDTO。各フィールドがnullの場合はそのフィールドでの検索は行われません。
    * @return エラーが発生しなければ200 OKとともに不動産情報のリストを返します。
    */
   @GetMapping("/searchRealestate")
   public ResponseEntity<List<RealestateDetail>> searchRealestate(
-      @ModelAttribute SearchParams searchParams) {
+      @Valid @ModelAttribute SearchParams searchParams, HttpServletRequest request) {
 
-    List<RealestateDetail> result = service.searchRealestate(searchParams);
+    List<RealestateDetail> result = service.searchRealestate(searchParams, request);
 
     return ResponseEntity.ok(result);
   }
@@ -49,11 +54,11 @@ public class RealestateController {
    * @return 登録成功のメッセージ
    */
   @PostMapping("/registerRealestate")
-  public ResponseEntity<String> createProject(@RequestBody RealestateDetail request) {
-    // ここでそれぞれのエンティティにアクセスできます
-    service.registerRealestate(request);
+  public ResponseEntity<String> createProject(@Valid @RequestBody RealestateDetail request,
+      HttpServletRequest request_token) {
 
-    // 保存処理などを行う
+    service.registerRealestate(request, request_token);
+
     return ResponseEntity.ok("登録成功");
   }
 
@@ -64,9 +69,10 @@ public class RealestateController {
    * @return 更新成功のメッセージ
    */
   @PutMapping("/updateRealestate")
-  public ResponseEntity<String> updateRealestate(@RequestBody RealestateDetail request) {
+  public ResponseEntity<String> updateRealestate(@Valid @RequestBody RealestateDetail request,
+      HttpServletRequest request_token) {
 
-    service.updateRealestate(request);
+    service.updateRealestate(request, request_token);
 
     return ResponseEntity.ok("更新成功");
   }
@@ -78,9 +84,10 @@ public class RealestateController {
    * @return 削除成功のメッセージ
    */
   @DeleteMapping("/deleteRealestate/{id}")
-  public ResponseEntity<String> deleteRealestate(@PathVariable int id) {
+  public ResponseEntity<String> deleteRealestate(@PathVariable int id,
+      HttpServletRequest request_token) {
 
-    service.deleteRealestate(id);
+    service.deleteRealestate(id, request_token);
 
     return ResponseEntity.ok("削除成功");
   }

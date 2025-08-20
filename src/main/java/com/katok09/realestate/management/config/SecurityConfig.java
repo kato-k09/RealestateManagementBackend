@@ -1,0 +1,119 @@
+package com.katok09.realestate.management.config;
+
+import java.util.Arrays;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+/**
+ * SpringSecurityの設定クラス
+ */
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  private final JwtRequestFilter jwtRequestFilter;
+
+  public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+      JwtRequestFilter jwtRequestFilter) {
+    this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+    this.jwtRequestFilter = jwtRequestFilter;
+  }
+
+  /**
+   * パスワードエンコーダーのBean定義
+   *
+   * @return BCryptPasswordEncoderインスタンス
+   */
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  /**
+   * 認証マネージャーのBean定義
+   *
+   * @param config 認証設定オブジェクト
+   * @return AuthenticationManagerインスタンス
+   * @throws Exception 設定例外
+   */
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
+
+  /**
+   * セキュリティフィターチェーンの設定 Jwt認証やCORS設定、エンドポイントの認可設定を行います。
+   *
+   * @param http Httpセキュリティ設定オブジェクト
+   * @return SecurityFilterChainインスタンス
+   * @throws Exception 設定例外
+   */
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(authz -> authz
+            // 認証不要のエンドポイント
+            .requestMatchers("/api/auth/login", "/api/auth/guest-login", "/api/auth/register")
+            .permitAll()
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
+
+            // Actuator（ヘルスチェック）は認証不要
+            .requestMatchers("/actuator/health").permitAll()
+
+            // Actuator（詳細情報）は認証必要
+            .requestMatchers("/actuator/info").authenticated()
+            .requestMatchers("/actuator/**").denyAll() // その他のactuatorは拒否
+
+            // 管理者専用のエンドポイント
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            // 認証が必要なエンドポイント
+            .requestMatchers("/api/auth/validate", "/api/auth/me", "/api/auth/updateUserInfo",
+                "/api/auth/deleteUser").authenticated()
+            // 不動産管理API（認証が必要）
+            .requestMatchers("/searchRealestate", "/registerRealestate", "/updateRealestate",
+                "/deleteRealestate/**").authenticated()
+            // その他は認証が必要
+            .anyRequest().authenticated()
+        )
+        .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+    http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+  }
+
+  /**
+   * CORS設定のBean定義 全オリジンからのリクエストを許可
+   *
+   * @return CorsConfigurationSourceインスタンス
+   */
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(Arrays.asList("*"));
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+}

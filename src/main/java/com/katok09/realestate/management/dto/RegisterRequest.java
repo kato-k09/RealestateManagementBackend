@@ -1,0 +1,34 @@
+package com.katok09.realestate.management.dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(description = "ユーザー登録リクエスト")
+public class RegisterRequest {
+
+  @Schema(description = "ユーザー名", example = "newuser")
+  @NotBlank(message = "ユーザー名を入力してください。")
+  private String username;
+  @Schema(description = "パスワード", example = "password123")
+  @NotBlank(message = "パスワードを入力してください。")
+  @Size(min = 6, message = "パスワードは6文字以上で入力してください。")
+  private String password;
+  @Schema(description = "メールアドレス", example = "newuser@example.com")
+  @NotBlank(message = "メールアドレスを入力してください。")
+  @Email(message = "有効なメールアドレスを入力してください。")
+  private String email;
+  @Schema(description = "表示名", example = "新規ユーザー")
+  @NotBlank(message = "表示名を入力してください。")
+  private String displayName;
+
+}

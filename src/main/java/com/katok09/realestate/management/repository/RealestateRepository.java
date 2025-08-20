@@ -9,6 +9,9 @@ import com.katok09.realestate.management.dto.SearchParams;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * 不動産情報のデータアクセスを提供するリポジトリ
+ */
 @Mapper
 public interface RealestateRepository {
 
@@ -51,28 +54,28 @@ public interface RealestateRepository {
   /**
    * 不動産プロジェクト情報の登録を行います。
    *
-   * @param project 不動産プロジェクト情報
+   * @param project 不動産プロジェクト情報（IDは自動採番されます）
    */
   public void registerProject(Project project);
 
   /**
    * 不動産土地情報の登録を行います。
    *
-   * @param parcel 不動産土地情報
+   * @param parcel 不動産土地情報（IDは自動採番されます）
    */
   public void registerParcel(Parcel parcel);
 
   /**
    * 不動産建物情報の登録を行います。
    *
-   * @param building 不動産建物情報
+   * @param building 不動産建物情報（IDは自動採番されます）
    */
   public void registerBuilding(Building building);
 
   /**
    * 不動産収支情報の登録を行います。
    *
-   * @param incomeAndExpenses 不動産収支情報
+   * @param incomeAndExpenses 不動産収支情報（IDは自動採番されます）
    */
   public void registerIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
 
@@ -81,54 +84,83 @@ public interface RealestateRepository {
    *
    * @param project 不動産プロジェクト情報
    */
-  public void updateProject(Project project);
+  public int updateProject(Project project);
 
   /**
    * 不動産土地情報の更新を行います。
    *
    * @param parcel 不動産土地情報
    */
-  public void updateParcel(Parcel parcel);
+  public int updateParcel(Parcel parcel);
 
   /**
    * 不動産建物情報の更新を行います。
    *
    * @param building 不動産建物情報
    */
-  public void updateBuilding(Building building);
+  public int updateBuilding(Building building);
 
   /**
    * 不動産収支情報の更新を行います。
    *
    * @param incomeAndExpenses 不動産収支情報
    */
-  public void updateIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
+  public int updateIncomeAndExpenses(IncomeAndExpenses incomeAndExpenses);
 
   /**
    * 不動産プロジェクト情報の削除を行います。
    *
    * @param id 不動産プロジェクト情報のID
    */
-  public void deleteProject(int id);
+  public int deleteProject(int id, int userId);
 
   /**
    * 不動産土地情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteParcel(int projectId);
+  public int deleteParcel(int projectId, int userId);
 
   /**
    * 不動産建物情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteBuilding(int projectId);
+  public int deleteBuilding(int projectId, int userId);
 
   /**
    * 不動産収支情報の削除を行います。
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public void deleteIncomeAndExpenses(int projectId);
+  public int deleteIncomeAndExpenses(int projectId, int userId);
+
+  /**
+   * 指定されたユーザーの不動産プロジェクトを削除します。。
+   *
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
+   */
+  public void deleteProjectByUserId(int userId);
+
+  /**
+   * 指定されたユーザーの不動産土地情報を削除します。。
+   *
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
+   */
+  public void deleteParcelByUserId(int userId);
+
+  /**
+   * 指定されたユーザーの不動産建物情報を削除します。。
+   *
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
+   */
+  public void deleteBuildingByUserId(int userId);
+
+  /**
+   * 指定されたユーザーの不動産収支情報を削除します。。
+   *
+   * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
+   */
+  public void deleteIncomeAndExpensesByUserId(int userId);
+
 }
