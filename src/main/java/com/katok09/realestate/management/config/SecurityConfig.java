@@ -72,6 +72,13 @@ public class SecurityConfig {
             .permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
 
+            // Actuator（ヘルスチェック）は認証不要
+            .requestMatchers("/actuator/health").permitAll()
+
+            // Actuator（詳細情報）は認証必要
+            .requestMatchers("/actuator/info").authenticated()
+            .requestMatchers("/actuator/**").denyAll() // その他のactuatorは拒否
+
             // 管理者専用のエンドポイント
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
             // 認証が必要なエンドポイント

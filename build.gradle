@@ -34,6 +34,8 @@ repositories {
 dependencies {
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Spring Boot Actuator（本番監視用）
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     // Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     // Validation
