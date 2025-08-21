@@ -1,6 +1,7 @@
 package com.katok09.realestate.management.config;
 
 import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,11 +24,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+
+  private final String[] allowedOrigins;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
   private final JwtRequestFilter jwtRequestFilter;
 
-  public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+  public SecurityConfig(@Value("${cors.allowed-origins}") String[] allowedOrigins,
+      JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
       JwtRequestFilter jwtRequestFilter) {
+    this.allowedOrigins = allowedOrigins;
     this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     this.jwtRequestFilter = jwtRequestFilter;
   }
@@ -107,7 +112,7 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+    configuration.setAllowedOriginPatterns(Arrays.asList(allowedOrigins));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);
