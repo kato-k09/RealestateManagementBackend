@@ -49,7 +49,7 @@ public class RealestateControllerTest {
     when(service.searchRealestate(any(SearchParams.class), any(HttpServletRequest.class)))
         .thenReturn(Collections.emptyList());
 
-    mockMvc.perform(get("/searchRealestate"))
+    mockMvc.perform(get("/api/searchRealestate"))
         .andExpect(status().isOk())
         .andExpect(content().json("[]"));
 
@@ -64,7 +64,7 @@ public class RealestateControllerTest {
     doNothing().when(service)
         .registerRealestate(any(RealestateDetail.class), any(HttpServletRequest.class));
 
-    mockMvc.perform(post("/registerRealestate")
+    mockMvc.perform(post("/api/registerRealestate")
             .contentType("application/json").content(
                 """
                         {
@@ -125,7 +125,7 @@ public class RealestateControllerTest {
     doNothing().when(service)
         .updateRealestate(any(RealestateDetail.class), any(HttpServletRequest.class));
 
-    mockMvc.perform(put("/updateRealestate")
+    mockMvc.perform(put("/api/updateRealestate")
             .contentType("application/json").content(
                 """
                         {
@@ -192,7 +192,7 @@ public class RealestateControllerTest {
 
     doNothing().when(service).deleteRealestate(eq(99), any(HttpServletRequest.class));
 
-    mockMvc.perform(delete("/deleteRealestate/99"))
+    mockMvc.perform(delete("/api/deleteRealestate/99"))
         .andExpect(status().isOk())
         .andExpect(content().string("削除成功"));
 

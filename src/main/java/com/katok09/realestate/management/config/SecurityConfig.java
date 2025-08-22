@@ -90,8 +90,9 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/validate", "/api/auth/me", "/api/auth/updateUserInfo",
                 "/api/auth/deleteUser").authenticated()
             // 不動産管理API（認証が必要）
-            .requestMatchers("/searchRealestate", "/registerRealestate", "/updateRealestate",
-                "/deleteRealestate/**").authenticated()
+            .requestMatchers("/api/searchRealestate", "/api/registerRealestate",
+                "/api/updateRealestate",
+                "/api/deleteRealestate/**").authenticated()
             // その他は認証が必要
             .anyRequest().authenticated()
         )
