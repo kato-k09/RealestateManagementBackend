@@ -68,7 +68,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/searchRealestate", HttpMethod.GET, entity, String.class);
+        "/api/searchRealestate", HttpMethod.GET, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains("Authorizationヘッダーが存在しません");
@@ -85,7 +85,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/searchRealestate", HttpMethod.GET, entity, String.class);
+        "/api/searchRealestate", HttpMethod.GET, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains(
@@ -115,7 +115,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.postForEntity(
-        "/registerRealestate", entity, String.class);
+        "/api/registerRealestate", entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -142,7 +142,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.postForEntity(
-        "/registerRealestate", entity, String.class);
+        "/api/registerRealestate", entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(response.getBody()).contains("プロジェクト名を入力してください");
@@ -160,7 +160,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail);
 
     ResponseEntity<String> response = restTemplate.postForEntity(
-        "/registerRealestate", entity, String.class);
+        "/api/registerRealestate", entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains("Authorizationヘッダーが存在しません");
@@ -176,7 +176,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.postForEntity(
-        "/registerRealestate", entity, String.class);
+        "/api/registerRealestate", entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains("JWTトークンが無効または期限切れです");
@@ -207,7 +207,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/updateRealestate", HttpMethod.PUT, entity, String.class);
+        "/api/updateRealestate", HttpMethod.PUT, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -242,7 +242,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/updateRealestate", HttpMethod.PUT, entity, String.class);
+        "/api/updateRealestate", HttpMethod.PUT, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains("Authorizationヘッダーが存在しません");
@@ -278,7 +278,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/updateRealestate", HttpMethod.PUT, entity, String.class);
+        "/api/updateRealestate", HttpMethod.PUT, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains("JWTトークンが無効または期限切れです");
@@ -314,7 +314,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/updateRealestate", HttpMethod.PUT, entity, String.class);
+        "/api/updateRealestate", HttpMethod.PUT, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     assertThat(response.getBody()).contains("更新対象のプロジェクトが存在しません");
@@ -351,7 +351,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(detail, headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/updateRealestate", HttpMethod.PUT, entity, String.class);
+        "/api/updateRealestate", HttpMethod.PUT, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(response.getBody()).contains("プロジェクトIDが一致していません。");
@@ -378,7 +378,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
+        "/api/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -400,7 +400,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
+        "/api/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains("Authorizationヘッダーが存在しません");
@@ -423,7 +423,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
+        "/api/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     assertThat(response.getBody()).contains("JWTトークンが無効または期限切れです");
@@ -446,7 +446,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<String> response = restTemplate.exchange(
-        "/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
+        "/api/deleteRealestate/" + projectId, HttpMethod.DELETE, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     assertThat(response.getBody()).contains("削除対象のプロジェクトが存在しません。");
@@ -489,7 +489,7 @@ public class RealestateControllerIntegrationTest {
     HttpEntity<RealestateDetail> entity = new HttpEntity<>(headers);
 
     ResponseEntity<List<RealestateDetail>> response = restTemplate.exchange(
-        "/searchRealestate?" + params, HttpMethod.GET, entity,
+        "/api/searchRealestate?" + params, HttpMethod.GET, entity,
         new ParameterizedTypeReference<List<RealestateDetail>>() {
         });
 
