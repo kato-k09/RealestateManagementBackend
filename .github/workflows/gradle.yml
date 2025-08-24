@@ -52,8 +52,8 @@ jobs:
           envs: DEST_PATH
           script: |
             sudo yum update -y
-            if sudo systemctl status StudentManagement 2>&1 | grep "Active: active (running)" ; then
-              sudo systemctl restart StudentManagement
+            if sudo systemctl status RealestateManagementBackend.service 2>&1 | grep "Active: active (running)" ; then
+              sudo systemctl restart RealestateManagementBackend.service
             else
-              sudo systemctl start StudentManagement
+              sudo systemctl start RealestateManagementBackend.service
             fi
