@@ -10,7 +10,7 @@ env:
   EC2_USER: "ec2-user"
   EC2_HOST: "54.168.64.82"
   SRC_PATH: "build/libs/*.jar"
-  DEST_PATH: "/home/ec2-user/RealestateManagementBackend/build/libs/realestate.management-0.0.1-SNAPSHOT.jar"
+  DEST_PATH: "/home/ec2-user/RealestateManagementBackend/build/libs/realestate-management-backend.jar"
 
 jobs:
   deploy:
