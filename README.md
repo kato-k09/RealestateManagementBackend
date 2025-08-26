@@ -11,8 +11,8 @@
 
 # アプリ名
 
-アプリ名は「Simple iSvest（シンプル・インベスト）」です。iSvestをインベストと読みます。<br>
-Simple is vest と Simple investを掛けた名前で誤字ではありません。<br>
+アプリ名は「Simple iSvest（シンプル・インベスト）」です。<br>
+iSvestをインベストと読み、Simple is best と Simple investを掛けた造語です。<br>
 他のサイト名と被らない独自性のある名前になるように工夫しました。
 
 # デプロイURL
@@ -24,7 +24,7 @@ https://simple-isvest.com/
 - Java 21（バックエンド）
 - Springboot（バックエンド）
 - MySQL（バックエンド）
-- React（フロントエンド）
+- React（フロントエンド 主にAIを使い作成）
 - AWS（デプロイ）
 
 # 機能一覧
@@ -83,14 +83,9 @@ https://simple-isvest.com/
 
 - トップページ中央の無料で始める または 画面右上の新規登録から、ユーザー登録画面を表示します。
 - 登録済みのユーザー名、EmailはバックエンドのAuthServiceでバリデーションチェックをし、登録できないようにしています。
--
-
-パスワードは6文字以上でない場合、6文字以上で入力するメッセージが表示され登録できないようになっています（フロントエンドでもバリデーションチェックをしていますが、バックエンドのRegisterRequest
-DTOでも@Sizeアノテーションによるバリデーションチェックを行っています）。
-
-- ユーザー情報はAWS RDS内のMySQL
-  DBのusersテーブルに保存されます。パスワードはBCryptPasswordEncoderにてハッシュ化され保存されます。ユーザー情報はID単位で管理し、IDはMySQL
-  DBのAUTO_INCREMENTにて自動採番されます。
+- パスワードは6文字以上でない場合、6文字以上で入力するメッセージが表示され登録できないようになっています（フロントエンドでもバリデーションチェックをしていますが、バックエンドのRegisterRequest
+  DTOでも@Sizeアノテーションによるバリデーションチェックを行っています）。
+- ユーザー情報はAWS RDS内のMySQL DBのusersテーブルに保存されます。パスワードはBCryptPasswordEncoderにてハッシュ化され保存されます。ユーザー情報はID単位で管理し、IDはMySQL DBのAUTO_INCREMENTにて自動採番されます。
 
 ## ユーザー情報変更
 
@@ -112,8 +107,7 @@ DTOでも@Sizeアノテーションによるバリデーションチェックを
 ![アカウントロック](https://github.com/user-attachments/assets/2089d7d8-e892-4282-af27-f11f95fd5504)
 
 - 一定回数ログインに連続失敗するとアカウントロックがかかります。
-- ログイン失敗の度にMySQL
-  DB、usersテーブルのlogin_failed_attemptsに値が加算され、一定回数（既定では5回）のログイン連続失敗でアカウントロック解除までの期間（既定では1800秒後）がaccount_locked_untilに設定されます。以後アカウントロック解除期間を過ぎるまでは正しいパスワードを入力したとしてもログインできなくなります。
+- ログイン失敗の度にMySQL DB、usersテーブルのlogin_failed_attemptsに値が加算され、一定回数（既定では5回）のログイン連続失敗でアカウントロック解除までの期間（既定では1800秒後）がaccount_locked_untilに設定されます。以後アカウントロック解除期間を過ぎるまでは正しいパスワードを入力したとしてもログインできなくなります。
 
 ## 不動産の一覧取得・検索
 
@@ -121,8 +115,7 @@ DTOでも@Sizeアノテーションによるバリデーションチェックを
 
 - 登録された不動産一覧が表示されます。
 - 検索条件から特定の物件のみ取得し一覧を表示することができます。
-- MySQL
-  DBからProject（プロジェクト）、Parcel（土地）、Building（建物）、IncomeAndExpenses（収支）オブジェクトとしてそれぞれ情報を取得し、RealestateDetailでまとめてJson形式でフロントエンドに出力します。
+- MySQL DBからProject（プロジェクト）、Parcel（土地）、Building（建物）、IncomeAndExpenses（収支）オブジェクトとしてそれぞれ情報を取得し、RealestateDetailでまとめてJson形式でフロントエンドに出力します。
 - フロントエンドからの検索パラメーターは、バックエンド側のSearchParams
   DTOで受けます。パラメーターに値が入った項目のみMapper XMLにてwhere、ifで絞り込みをします。
 
@@ -131,21 +124,15 @@ DTOでも@Sizeアノテーションによるバリデーションチェックを
 ![不動産登録](https://github.com/user-attachments/assets/ff050c6f-1699-4a5c-a7cb-d901cecfb8cf)
 
 - ログイン後の上部メニューから不動産登録をする画面に遷移します。
--
-
-フロントエンドからはJson形式でプロジェクト、土地、建物、収支情報が送られ、バックエンドでは各オブジェクトを格納するRealestateDetailで情報を受けます。各オブジェクトには負の価格が入らないようにするなどアノテーションを使ったバリデーションチェックを施しています。
-
-- 不動産情報はプロジェクトID単位で管理し、初めにプロジェクトのIDがMySQL
-  DBのAUTO_INCREMENTで自動採番された後、土地、建物、収支情報にプロジェクトIDを設定します。
+- フロントエンドからはJson形式でプロジェクト、土地、建物、収支情報が送られ、バックエンドでは各オブジェクトを格納するRealestateDetailで情報を受けます。各オブジェクトには負の価格が入らないようにするなどアノテーションを使ったバリデーションチェックを施しています。
+- 不動産情報はプロジェクトID単位で管理し、初めにプロジェクトのIDがMySQL DBのAUTO_INCREMENTで自動採番された後、土地、建物、収支情報にプロジェクトIDを設定します。
 
 ## 不動産の情報更新
 
 ![不動産情報更新](https://github.com/user-attachments/assets/314d0b7d-5e06-4eee-8e93-b52c113ff898)
 
 - 登録した不動産は一覧の緑色のペンとメモのボタンを押すことで情報更新用モーダルが開き修正することができます。
--
-
-不動産の登録と同様にフロントエンドからはJson形式で、バックエンドではRealestateDetailで情報を受けます。更新処理は各オブジェクトが持つ同一のユーザーID、プロジェクトIDを元に更新を行います。ユーザーIDを偽装し別ユーザーの不動産情報が改竄されることの対策として、JwtトークンからログインユーザーのIDを取得しユーザーIDが一致しない場合は例外を発生させ更新処理を行わないようにしています。
+- 不動産の登録と同様にフロントエンドからはJson形式で、バックエンドではRealestateDetailで情報を受けます。更新処理は各オブジェクトが持つ同一のユーザーID、プロジェクトIDを元に更新を行います。ユーザーIDを偽装し別ユーザーの不動産情報が改竄されることの対策として、JwtトークンからログインユーザーのIDを取得しユーザーIDが一致しない場合は例外を発生させ更新処理を行わないようにしています。
 
 ## 不動産の詳細情報
 
@@ -173,98 +160,15 @@ DTOでも@Sizeアノテーションによるバリデーションチェックを
 他のユーザーの不動産情報を取得、変更、削除できないようにトークンからユーザーIDを取得し、不動産情報に設定されているユーザーIDが一致している時のみ不動産情報を取得、変更、削除できるようにしました。
 セキュリティを意識して構成することができたかと思います。
 
-```
-RealestateService.javaから一部抜粋
-
-  @Transactional
-  public void updateRealestate(RealestateDetail request, HttpServletRequest requestToken) {
-
-    if (!isProjectIdConsistent(request)) {
-      throw new IllegalArgumentException("プロジェクトIDが一致していません。");
-    }
-
-    // トークンから取得したユーザーIDとrequest内の各オブジェクトのユーザーIDを照合
-    String token = jwtUtil.extractTokenFromRequest(requestToken);
-    int userId = jwtUtil.getUserIdFromToken(token);
-
-    if (!isUserIdConsistent(userId, request)) {
-      throw new IllegalArgumentException("ユーザーIDが一致していません。");
-    }
-  ～～～
-
-
-  private boolean isUserIdConsistent(int userId, RealestateDetail request) {
-    return userId == request.getProject().getUserId() &&
-        userId == request.getParcel().getUserId() &&
-        userId == request.getBuilding().getUserId() &&
-        userId == request.getIncomeAndExpenses().getUserId();
-  }
-```
-
 # 工夫した点②
 
 ブルートフォースアタック対策として、DBのusersテーブルにログイン連続失敗回数を記録し、一定回数記録されたら一定期間アカウントロックがかかるようにしました。
-
-```
-AuthService.javaからauthenticateメソッド一部抜粋
-
-  public LoginResponse authenticate(LoginRequest loginRequest) {
-  ～～～
-    } catch (BadCredentialsException e) {
-      accountLockService.handleLoginFailure(loginRequest);
-      throw new BadCredentialsException("ユーザー名またはパスワードが間違っています。");
-  ～～～
-
-AccountLockService.javaから一部抜粋
-
-  @Transactional
-  public void handleLoginFailure(LoginRequest loginRequest) {
-    User user = userRepository.findByUsername(loginRequest.getUsername()).orElse(null);
-
-    if (user != null) {
-      // ログイン連続失敗回数を加算します。
-      int loginFailedAttempts = user.getLoginFailedAttempts() + 1;
-      LocalDateTime accountLockedUntil = user.getAccountLockedUntil();
-
-      // maxLoginAttemptsで指定された回数以上のログイン連続失敗回数となった場合、
-      // accountLockDurationMinutesで指定された期間のアカウントロックがかかります。
-      // 一度アカウントロックがかかった場合はアカウントロックがリセットされない限り再度アカウントロックがかからない仕様です。
-      if (loginFailedAttempts >= maxLoginAttempts && user.getAccountLockedUntil() == null) {
-        accountLockedUntil = LocalDateTime.now().plusMinutes(accountLockDurationMinutes);
-      }
-      userRepository.updateLoginFailed(user.getId(), loginFailedAttempts, accountLockedUntil);
-    }
-  }
-
-  @Transactional
-  public void unlockIfAccountLockExpired(LoginRequest loginRequest) {
-    User user = userRepository.findByUsername(loginRequest.getUsername()).orElse(null);
-    if (user != null && user.getAccountLockedUntil() != null) {
-      if (LocalDateTime.now().isAfter(user.getAccountLockedUntil())) {
-        userRepository.updateLoginFailed(user.getId(), 0, null);
-      }
-    }
-  }
-```
 
 # 工夫した点③
 
 ゲストログイン機能を実装し、ボタン一つでユーザー登録をすることなく機能を試せるようにしたことです。
 予めDBのusersテーブルにゲスト用アカウントを作成し、ゲストログインボタンを押した時に(/guest-login)
 予め設定しているゲストユーザーのユーザー名、パスワードを/loginエンドポイントメソッドに送る仕様となっています。
-
-```
-AuthController.javaから一部抜粋
-
-  @PostMapping("/guest-login")
-  @Operation(summary = "ゲストユーザーログイン", description = "ゲストユーザーでログインします")
-  public ResponseEntity<?> guestLogin() {
-
-    LoginRequest loginRequest = new LoginRequest("guest", "guest123");
-
-    return login(loginRequest);
-  }
-```
 
 # 今後追加したい機能
 
