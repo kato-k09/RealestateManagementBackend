@@ -2,7 +2,7 @@ package com.katok09.realestate.management.repository;
 
 import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
-import com.katok09.realestate.management.data.Parcel;
+import com.katok09.realestate.management.data.LandParcel;
 import com.katok09.realestate.management.data.Project;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
@@ -35,7 +35,7 @@ public interface RealestateRepository {
    *
    * @return 不動産土地情報リスト
    */
-  public List<Parcel> getParcels();
+  public List<LandParcel> getLandParcels();
 
   /**
    * 不動産建物情報のリスト取得を行います。
@@ -61,9 +61,9 @@ public interface RealestateRepository {
   /**
    * 不動産土地情報の登録を行います。
    *
-   * @param parcel 不動産土地情報（IDは自動採番されます）
+   * @param landParcel 不動産土地情報（IDは自動採番されます）
    */
-  public void registerParcel(Parcel parcel);
+  public void registerLandParcel(LandParcel landParcel);
 
   /**
    * 不動産建物情報の登録を行います。
@@ -89,9 +89,9 @@ public interface RealestateRepository {
   /**
    * 不動産土地情報の更新を行います。
    *
-   * @param parcel 不動産土地情報
+   * @param landParcel 不動産土地情報
    */
-  public int updateParcel(Parcel parcel);
+  public int updateLandParcel(LandParcel landParcel);
 
   /**
    * 不動産建物情報の更新を行います。
@@ -119,7 +119,7 @@ public interface RealestateRepository {
    *
    * @param projectId 不動産プロジェクト情報のID
    */
-  public int deleteParcel(int projectId, int userId);
+  public int deleteLandParcel(int projectId, int userId);
 
   /**
    * 不動産建物情報の削除を行います。
@@ -147,7 +147,7 @@ public interface RealestateRepository {
    *
    * @param userId トークンから抽出したユーザーID（ユーザーID偽装防止）
    */
-  public void deleteParcelByUserId(int userId);
+  public void deleteLandParcelByUserId(int userId);
 
   /**
    * 指定されたユーザーの不動産建物情報を削除します。。

@@ -73,13 +73,13 @@ public class RealestateControllerTest {
                                 "projectName": "東三条AP",
                                 "deleted": false
                             },
-                            "parcel": {
+                            "landParcel": {
                                 "userId": "999",
-                                "parcelPrice": 10000000,
-                                "parcelAddress": "新潟県三条市",
-                                "parcelCategory": "宅地",
-                                "parcelSize": 452.65,
-                                "parcelRemark": "",
+                                "landParcelPrice": 10000000,
+                                "landParcelAddress": "新潟県三条市",
+                                "landParcelCategory": "宅地",
+                                "landParcelSize": 452.65,
+                                "landParcelRemark": "",
                                 "deleted": false
                             },
                             "building": {
@@ -135,15 +135,15 @@ public class RealestateControllerTest {
                                 "projectName": "東三条AP",
                                 "deleted": false
                             },
-                            "parcel": {
+                            "landParcel": {
                                 "id": 6,
                                 "projectId": 11,
                                 "userId": "999",
-                                "parcelPrice": 10000000,
-                                "parcelAddress": "新潟県三条市",
-                                "parcelCategory": "宅地",
-                                "parcelSize": 452.65,
-                                "parcelRemark": "",
+                                "landParcelPrice": 10000000,
+                                "landParcelAddress": "新潟県三条市",
+                                "landParcelCategory": "宅地",
+                                "landParcelSize": 452.65,
+                                "landParcelRemark": "",
                                 "deleted": false
                             },
                             "building": {

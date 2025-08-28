@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
-import com.katok09.realestate.management.data.Parcel;
+import com.katok09.realestate.management.data.LandParcel;
 import com.katok09.realestate.management.data.Project;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
@@ -55,7 +55,7 @@ public class RealestateServiceTest {
   void 不動産登録_リポジトリが適切に呼び出されていること() {
 
     RealestateDetail dummyRequest = new RealestateDetail(
-        new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
+        new Project(), new LandParcel(), new Building(), new IncomeAndExpenses());
     HttpServletRequest dummyRequestToken = mock(HttpServletRequest.class);
 
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
@@ -64,7 +64,7 @@ public class RealestateServiceTest {
     sut.registerRealestate(dummyRequest, dummyRequestToken);
 
     verify(repository, times(1)).registerProject(dummyRequest.getProject());
-    verify(repository, times(1)).registerParcel(dummyRequest.getParcel());
+    verify(repository, times(1)).registerLandParcel(dummyRequest.getLandParcel());
     verify(repository, times(1)).registerBuilding(dummyRequest.getBuilding());
     verify(repository, times(1)).registerIncomeAndExpenses(dummyRequest.getIncomeAndExpenses());
   }
@@ -73,9 +73,9 @@ public class RealestateServiceTest {
   void 不動産更新_リポジトリが適切に呼び出されていること() {
 
     RealestateDetail dummyRequest = new RealestateDetail(
-        new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
+        new Project(), new LandParcel(), new Building(), new IncomeAndExpenses());
     dummyRequest.getProject().setUserId(999);
-    dummyRequest.getParcel().setUserId(999);
+    dummyRequest.getLandParcel().setUserId(999);
     dummyRequest.getBuilding().setUserId(999);
     dummyRequest.getIncomeAndExpenses().setUserId(999);
 
@@ -84,14 +84,14 @@ public class RealestateServiceTest {
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
     when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
     when(repository.updateProject(dummyRequest.getProject())).thenReturn(1);
-    when(repository.updateParcel(dummyRequest.getParcel())).thenReturn(1);
+    when(repository.updateLandParcel(dummyRequest.getLandParcel())).thenReturn(1);
     when(repository.updateBuilding(dummyRequest.getBuilding())).thenReturn(1);
     when(repository.updateIncomeAndExpenses(dummyRequest.getIncomeAndExpenses())).thenReturn(1);
 
     sut.updateRealestate(dummyRequest, dummyRequestToken);
 
     verify(repository, times(1)).updateProject(dummyRequest.getProject());
-    verify(repository, times(1)).updateParcel(dummyRequest.getParcel());
+    verify(repository, times(1)).updateLandParcel(dummyRequest.getLandParcel());
     verify(repository, times(1)).updateBuilding(dummyRequest.getBuilding());
     verify(repository, times(1)).updateIncomeAndExpenses(dummyRequest.getIncomeAndExpenses());
   }
@@ -105,14 +105,14 @@ public class RealestateServiceTest {
     when(jwtUtil.extractTokenFromRequest(dummyRequestToken)).thenReturn("DummyToken");
     when(jwtUtil.getUserIdFromToken("DummyToken")).thenReturn(999);
     when(repository.deleteProject(projectId, 999)).thenReturn(1);
-    when(repository.deleteParcel(projectId, 999)).thenReturn(1);
+    when(repository.deleteLandParcel(projectId, 999)).thenReturn(1);
     when(repository.deleteBuilding(projectId, 999)).thenReturn(1);
     when(repository.deleteIncomeAndExpenses(projectId, 999)).thenReturn(1);
 
     sut.deleteRealestate(projectId, dummyRequestToken);
 
     verify(repository, times(1)).deleteProject(projectId, 999);
-    verify(repository, times(1)).deleteParcel(projectId, 999);
+    verify(repository, times(1)).deleteLandParcel(projectId, 999);
     verify(repository, times(1)).deleteBuilding(projectId, 999);
     verify(repository, times(1)).deleteIncomeAndExpenses(projectId, 999);
   }

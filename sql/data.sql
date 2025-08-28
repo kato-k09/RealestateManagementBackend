@@ -26,7 +26,7 @@ VALUES (2, '東三条アパート', false),
        (3, '吉田旭町アパート', false);
 
 -- サンプル土地データ
-INSERT INTO parcels (project_id, user_id, parcel_price, parcel_address, parcel_category, parcel_size, parcel_remark, is_deleted)
+INSERT INTO land_parcels (project_id, user_id, land_parcel_price, land_parcel_address, land_parcel_category, land_parcel_size, land_parcel_remark, is_deleted)
 VALUES (1, 2, 10000000, '新潟県三条市東三条', '宅地', 452.65, '駅徒歩10分の好立地', false),
        (2, 2, 5000000, '燕市寿町', '宅地', 265.32, '住宅街の静かな立地', false),
        (3, 3, 100000, '村上市', '宅地', 85.1, '要リフォーム物件', false),

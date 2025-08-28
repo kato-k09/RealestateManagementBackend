@@ -1,3 +1,8 @@
+-- ============================================
+-- H2DB：初期データ投入SQL
+-- ============================================
+
+-- プロジェクト
 INSERT INTO projects (user_id, project_name, is_deleted)
 VALUES (1, '東三条AP', false),
        (1, '寿町AP', false),
@@ -9,9 +14,9 @@ VALUES (1, '東三条AP', false),
        (3, 'RC1棟', false);
 
 -- 土地データ
-INSERT INTO parcels (project_id, user_id, parcel_price, parcel_address, parcel_category,
-                     parcel_size,
-                     parcel_remark, is_deleted)
+INSERT INTO land_parcels (project_id, user_id, land_parcel_price, land_parcel_address, land_parcel_category,
+                     land_parcel_size,
+                     land_parcel_remark, is_deleted)
 VALUES (1, 1, 10000000, '新潟県三条市', '宅地', 452.65, '', false),
        (2, 1, 5000000, '燕市寿町', '宅地', 265.32, '', false),
        (3, 2, 100000, '村上市', '宅地', 85.1, '', false),
@@ -51,7 +56,7 @@ VALUES (1, 1, 160000, 8000, 0, 0, 85000, 25000, 0, 0, 5000, 0, 5000, '', false),
        (7, 1, 640000, 32000, 0, 0, 250000, 220000, 0, 0, 8000, 0, 4000, '', false),
        (8, 3, 1100000, 0, 0, 0, 0, 0, 0, 20000, 20000, 20000, 20000, '', false);
 
-
+-- ユーザーデータ
 INSERT INTO users (username, password, email, display_name, role, enabled, login_failed_attempts, account_locked_until, is_deleted)
 VALUES ('admin', '$2a$10$7imSMTO8x43cBc9LdoeRTOPLsNvxUaxElB9dDzEv5RhoYdY6x8ve6',
         'admin@example.com', '管理者', 'ADMIN', true, 0, null, false),

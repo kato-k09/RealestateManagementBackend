@@ -11,15 +11,15 @@ CREATE TABLE projects (
 ) COMMENT = 'プロジェクト情報テーブル';
 
 -- 2. 土地テーブル
-CREATE TABLE parcels (
+CREATE TABLE land_parcels (
     id INT PRIMARY KEY AUTO_INCREMENT,
     project_id INT NOT NULL,
     user_id INT NOT NULL,
-    parcel_price BIGINT COMMENT '土地価格',
-    parcel_address VARCHAR(100) COMMENT '土地住所',
-    parcel_category VARCHAR(50) COMMENT '土地カテゴリ',
-    parcel_size DOUBLE COMMENT '土地面積',
-    parcel_remark VARCHAR(100) COMMENT '土地備考',
+    land_parcel_price BIGINT COMMENT '土地価格',
+    land_parcel_address VARCHAR(100) COMMENT '土地住所',
+    land_parcel_category VARCHAR(50) COMMENT '土地カテゴリ',
+    land_parcel_size DOUBLE COMMENT '土地面積',
+    land_parcel_remark VARCHAR(100) COMMENT '土地備考',
     is_deleted BOOLEAN NOT NULL DEFAULT false COMMENT '論理削除フラグ'
 ) COMMENT = '土地情報テーブル';
 
@@ -83,8 +83,8 @@ CREATE TABLE users (
 CREATE INDEX idx_projects_user_id ON projects(user_id);
 
 -- 土地テーブル
-CREATE INDEX idx_parcels_project_id ON parcels(project_id);
-CREATE INDEX idx_parcels_user_id ON parcels(user_id);
+CREATE INDEX idx_land_parcels_project_id ON land_parcels(project_id);
+CREATE INDEX idx_land_parcels_user_id ON land_parcels(user_id);
 
 -- 建物テーブル
 CREATE INDEX idx_buildings_project_id ON buildings(project_id);
