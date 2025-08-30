@@ -12,8 +12,8 @@
 
 # アプリ名
 
-アプリ名は「Simple Investate（シンプル・インベステイト）」です。<br>
-Investateは投資を意味するinvestと不動産を意味するestateを掛け合わせた造語です。<br>
+アプリ名は「Simple iSvest（シンプル・イズベスト）」です。<br>
+iSvestは、投資を意味する「invest」と、「シンプルが一番」を表す英語フレーズ “Simple is best” を組み合わせた造語です。<br>
 他のサイト名と被らない独自性のある名前になるように工夫しました。
 
 # デプロイURL
