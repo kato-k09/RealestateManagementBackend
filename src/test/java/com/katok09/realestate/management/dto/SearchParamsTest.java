@@ -49,7 +49,7 @@ public class SearchParamsTest {
   @Test
   void 住所が100字の時入力チェックに異常が発生しないこと() {
     SearchParams searchParams = new SearchParams();
-    searchParams.setSearchParcelAddress("a".repeat(100));
+    searchParams.setSearchLandParcelAddress("a".repeat(100));
 
     Set<ConstraintViolation<SearchParams>> actual = validator.validate(searchParams);
 
@@ -59,7 +59,7 @@ public class SearchParamsTest {
   @Test
   void 住所が101字の時入力チェックに異常が発生すること() {
     SearchParams searchParams = new SearchParams();
-    searchParams.setSearchParcelAddress("a".repeat(101));
+    searchParams.setSearchLandParcelAddress("a".repeat(101));
 
     Set<ConstraintViolation<SearchParams>> actual = validator.validate(searchParams);
 
@@ -71,7 +71,7 @@ public class SearchParamsTest {
   @Test
   void 住所がnullの時入力チェックに異常が発生しないこと() {
     SearchParams searchParams = new SearchParams();
-    searchParams.setSearchParcelAddress(null);
+    searchParams.setSearchLandParcelAddress(null);
 
     Set<ConstraintViolation<SearchParams>> actual = validator.validate(searchParams);
 

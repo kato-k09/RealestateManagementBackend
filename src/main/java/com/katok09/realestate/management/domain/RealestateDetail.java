@@ -2,7 +2,7 @@ package com.katok09.realestate.management.domain;
 
 import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
-import com.katok09.realestate.management.data.Parcel;
+import com.katok09.realestate.management.data.LandParcel;
 import com.katok09.realestate.management.data.Project;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class RealestateDetail {
   private Project project;
   @Schema(description = "不動産土地情報")
   @Valid
-  private Parcel parcel;
+  private LandParcel landParcel;
   @Schema(description = "不動産建物情報")
   @Valid
   private Building building;

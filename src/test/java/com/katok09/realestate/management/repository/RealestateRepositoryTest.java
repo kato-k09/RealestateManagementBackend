@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
-import com.katok09.realestate.management.data.Parcel;
+import com.katok09.realestate.management.data.LandParcel;
 import com.katok09.realestate.management.data.Project;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.SearchParams;
@@ -53,7 +53,7 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産土地情報リストが取得できること() {
 
-    List<Parcel> actual = sut.getParcels();
+    List<LandParcel> actual = sut.getLandParcels();
 
     assertThat(actual.size()).isEqualTo(8);
   }
@@ -88,12 +88,12 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産土地情報が登録できること() {
 
-    Parcel parcel = new Parcel();
-    parcel.setUserId(1);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setUserId(1);
 
-    sut.registerParcel(parcel);
+    sut.registerLandParcel(landParcel);
 
-    assertThat(sut.getParcels().size()).isEqualTo(9);
+    assertThat(sut.getLandParcels().size()).isEqualTo(9);
   }
 
   @Test
@@ -144,24 +144,24 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産土地情報が更新できること() {
 
-    Parcel parcel = new Parcel();
-    parcel.setProjectId(1);
-    parcel.setUserId(1);
-    parcel.setParcelPrice(99999999);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setProjectId(1);
+    landParcel.setUserId(1);
+    landParcel.setLandParcelPrice(99999999);
 
-    assertThat(sut.getParcels().stream()
+    assertThat(sut.getLandParcels().stream()
         .filter(p -> p.getProjectId() == 1)
         .findFirst()
         .orElseThrow()
-        .getParcelPrice()).isEqualTo(10000000);
+        .getLandParcelPrice()).isEqualTo(10000000);
 
-    sut.updateParcel(parcel);
+    sut.updateLandParcel(landParcel);
 
-    assertThat(sut.getParcels().stream()
+    assertThat(sut.getLandParcels().stream()
         .filter(p -> p.getProjectId() == 1)
         .findFirst()
         .orElseThrow()
-        .getParcelPrice()).isEqualTo(99999999);
+        .getLandParcelPrice()).isEqualTo(99999999);
   }
 
   @Test
@@ -229,17 +229,17 @@ public class RealestateRepositoryTest {
   @Test
   void 不動産土地情報が削除できること() {
 
-    assertThat(sut.getParcels().stream()
+    assertThat(sut.getLandParcels().stream()
         .anyMatch(p -> p.getProjectId() == 1))
         .isTrue();
 
-    sut.deleteParcel(1, 1);
+    sut.deleteLandParcel(1, 1);
 
-    assertThat(sut.getParcels().stream()
+    assertThat(sut.getLandParcels().stream()
         .noneMatch(p -> p.getProjectId() == 1))
         .isTrue();
 
-    assertThat(sut.getParcels().size()).isEqualTo(7);
+    assertThat(sut.getLandParcels().size()).isEqualTo(7);
   }
 
   @Test

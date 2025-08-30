@@ -22,7 +22,7 @@ public class SearchParams {
   private String searchProjectName;
   @Schema(description = "住所", example = "東京都")
   @Size(max = 100, message = "住所は100字以内で入力してください。")
-  private String searchParcelAddress;
+  private String searchLandParcelAddress;
   @Schema(description = "建物種別", example = "アパート")
   @Pattern(regexp = "^(|マンション|アパート|戸建て|店舗|事務所|その他)$", message = "建物種別は指定された選択肢から選んでください。")
   private String searchBuildingType;

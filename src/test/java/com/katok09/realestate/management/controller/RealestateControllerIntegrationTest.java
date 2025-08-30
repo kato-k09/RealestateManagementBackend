@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.katok09.realestate.management.data.Building;
 import com.katok09.realestate.management.data.IncomeAndExpenses;
-import com.katok09.realestate.management.data.Parcel;
+import com.katok09.realestate.management.data.LandParcel;
 import com.katok09.realestate.management.data.Project;
 import com.katok09.realestate.management.domain.RealestateDetail;
 import com.katok09.realestate.management.dto.LoginRequest;
@@ -194,11 +194,11 @@ public class RealestateControllerIntegrationTest {
 
     // 更新対象のユーザーIDとプロジェクトIDを設定
     detail.getProject().setUserId(userId);
-    detail.getParcel().setUserId(userId);
+    detail.getLandParcel().setUserId(userId);
     detail.getBuilding().setUserId(userId);
     detail.getIncomeAndExpenses().setUserId(userId);
     detail.getProject().setId(projectId);
-    detail.getParcel().setProjectId(projectId);
+    detail.getLandParcel().setProjectId(projectId);
     detail.getBuilding().setProjectId(projectId);
     detail.getIncomeAndExpenses().setProjectId(projectId);
 
@@ -229,11 +229,11 @@ public class RealestateControllerIntegrationTest {
 
     // 更新対象のユーザーIDとプロジェクトIDを設定
     detail.getProject().setUserId(userId);
-    detail.getParcel().setUserId(userId);
+    detail.getLandParcel().setUserId(userId);
     detail.getBuilding().setUserId(userId);
     detail.getIncomeAndExpenses().setUserId(userId);
     detail.getProject().setId(projectId);
-    detail.getParcel().setProjectId(projectId);
+    detail.getLandParcel().setProjectId(projectId);
     detail.getBuilding().setProjectId(projectId);
     detail.getIncomeAndExpenses().setProjectId(projectId);
 
@@ -265,11 +265,11 @@ public class RealestateControllerIntegrationTest {
 
     // 更新対象のユーザーIDとプロジェクトIDを設定
     detail.getProject().setUserId(userId);
-    detail.getParcel().setUserId(userId);
+    detail.getLandParcel().setUserId(userId);
     detail.getBuilding().setUserId(userId);
     detail.getIncomeAndExpenses().setUserId(userId);
     detail.getProject().setId(projectId);
-    detail.getParcel().setProjectId(projectId);
+    detail.getLandParcel().setProjectId(projectId);
     detail.getBuilding().setProjectId(projectId);
     detail.getIncomeAndExpenses().setProjectId(projectId);
 
@@ -301,11 +301,11 @@ public class RealestateControllerIntegrationTest {
 
     // 更新対象のユーザーIDとプロジェクトIDを設定
     detail.getProject().setUserId(userId);
-    detail.getParcel().setUserId(userId);
+    detail.getLandParcel().setUserId(userId);
     detail.getBuilding().setUserId(userId);
     detail.getIncomeAndExpenses().setUserId(userId);
     detail.getProject().setId(projectId);
-    detail.getParcel().setProjectId(projectId);
+    detail.getLandParcel().setProjectId(projectId);
     detail.getBuilding().setProjectId(projectId);
     detail.getIncomeAndExpenses().setProjectId(projectId);
 
@@ -338,11 +338,11 @@ public class RealestateControllerIntegrationTest {
 
     // 更新対象のユーザーIDとプロジェクトIDを設定
     detail.getProject().setUserId(userId);
-    detail.getParcel().setUserId(userId);
+    detail.getLandParcel().setUserId(userId);
     detail.getBuilding().setUserId(userId);
     detail.getIncomeAndExpenses().setUserId(userId);
     detail.getProject().setId(projectId);
-    detail.getParcel().setProjectId(projectId);
+    detail.getLandParcel().setProjectId(projectId);
     detail.getBuilding().setProjectId(differentProjectId); // user1のプロジェクトIDだが更新対象と一致しないプロジェクトIDを設定
     detail.getIncomeAndExpenses().setProjectId(projectId);
 
@@ -529,19 +529,19 @@ public class RealestateControllerIntegrationTest {
   /**
    * 不動産詳細情報リスト内に指定した値が入っているかを検証
    *
-   * @param detailList    検証する不動産詳細情報対象
-   * @param projectName   プロジェクト名
-   * @param parcelPrice   土地価格
-   * @param buildingPrice 建物価格
-   * @param rent          月収入
+   * @param detailList      検証する不動産詳細情報対象
+   * @param projectName     プロジェクト名
+   * @param landParcelPrice 土地価格
+   * @param buildingPrice   建物価格
+   * @param rent            月収入
    */
   private static void verifyRealestateDetail(List<RealestateDetail> detailList, String projectName,
-      long parcelPrice, long buildingPrice, int rent) {
+      long landParcelPrice, long buildingPrice, int rent) {
     assertThat(detailList).isNotNull();
     assertThat(detailList).extracting(actual -> actual.getProject().getProjectName())
         .containsOnly(projectName);
-    assertThat(detailList).extracting(actual -> actual.getParcel().getParcelPrice())
-        .containsOnly(parcelPrice);
+    assertThat(detailList).extracting(actual -> actual.getLandParcel().getLandParcelPrice())
+        .containsOnly(landParcelPrice);
     assertThat(detailList).extracting(actual -> actual.getBuilding().getBuildingPrice())
         .containsOnly(buildingPrice);
     assertThat(detailList).extracting(actual -> actual.getIncomeAndExpenses().getRent())
@@ -559,7 +559,7 @@ public class RealestateControllerIntegrationTest {
 
     assertThat(detailList).extracting(actual -> actual.getProject().getUserId())
         .containsOnly(userId);
-    assertThat(detailList).extracting(actual -> actual.getParcel().getUserId())
+    assertThat(detailList).extracting(actual -> actual.getLandParcel().getUserId())
         .containsOnly(userId);
     assertThat(detailList).extracting(actual -> actual.getBuilding().getUserId())
         .containsOnly(userId);
@@ -570,20 +570,20 @@ public class RealestateControllerIntegrationTest {
   /**
    * 不動産詳細情報を簡単に生成
    *
-   * @param projectName   プロジェクト名
-   * @param parcelPrice   土地価格
-   * @param buildingPrice 建物価格
-   * @param rent          月収入
+   * @param projectName     プロジェクト名
+   * @param landParcelPrice 土地価格
+   * @param buildingPrice   建物価格
+   * @param rent            月収入
    * @return 不動産詳細情報
    */
   private static RealestateDetail simpleCreateRealestateDetails(String projectName,
-      long parcelPrice, long buildingPrice, int rent) {
+      long landParcelPrice, long buildingPrice, int rent) {
 
     RealestateDetail detail = new RealestateDetail(
-        new Project(), new Parcel(), new Building(), new IncomeAndExpenses());
+        new Project(), new LandParcel(), new Building(), new IncomeAndExpenses());
 
     detail.getProject().setProjectName(projectName);
-    detail.getParcel().setParcelPrice(parcelPrice);
+    detail.getLandParcel().setLandParcelPrice(landParcelPrice);
     detail.getBuilding().setBuildingPrice(buildingPrice);
     detail.getIncomeAndExpenses().setRent(rent);
     return detail;

@@ -8,26 +8,26 @@ import jakarta.validation.Validator;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-public class ParcelTest {
+public class LandParcelTest {
 
   Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   @Test
   void 土地価格が0円の時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelPrice(0L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelPrice(0L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地価格がマイナス1円の時入力チェックに異常が発生すること() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelPrice(-1L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelPrice(-1L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual).extracting("message").containsOnly("土地価格は0円以上で入力してください。");
@@ -35,20 +35,20 @@ public class ParcelTest {
 
   @Test
   void 土地価格が1000兆円の時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelPrice(1000L * 1000L * 1000L * 1000L * 1000L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelPrice(1000L * 1000L * 1000L * 1000L * 1000L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地価格が1000兆1円の時入力チェックに異常が発生すること() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelPrice(1000L * 1000L * 1000L * 1000L * 1000L + 1L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelPrice(1000L * 1000L * 1000L * 1000L * 1000L + 1L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual).extracting("message")
@@ -57,20 +57,20 @@ public class ParcelTest {
 
   @Test
   void 土地住所が100字の時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelAddress("a".repeat(100));
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelAddress("a".repeat(100));
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地住所が101字の時入力チェックに異常が発生すること() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelAddress("a".repeat(101));
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelAddress("a".repeat(101));
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual).extracting("message")
@@ -79,30 +79,30 @@ public class ParcelTest {
 
   @Test
   void 土地住所がnullの時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelAddress(null);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelAddress(null);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地種別が50字の時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelCategory("a".repeat(50));
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelCategory("a".repeat(50));
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地種別が51字の時入力チェックに異常が発生すること() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelCategory("a".repeat(51));
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelCategory("a".repeat(51));
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual).extracting("message")
@@ -111,30 +111,30 @@ public class ParcelTest {
 
   @Test
   void 土地種別がnullの時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelCategory(null);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelCategory(null);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地面積が0の時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelSize(0L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelSize(0L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地面積がマイナス1の時入力チェックに異常が発生すること() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelSize(-1L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelSize(-1L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual).extracting("message")
@@ -143,20 +143,20 @@ public class ParcelTest {
 
   @Test
   void 土地面積が10億の時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelSize(1000L * 1000L * 1000L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelSize(1000L * 1000L * 1000L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地面積が10億1の時入力チェックに異常が発生すること() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelSize(1000L * 1000L * 1000L + 1L);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelSize(1000L * 1000L * 1000L + 1L);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual).extracting("message")
@@ -165,20 +165,20 @@ public class ParcelTest {
 
   @Test
   void 土地備考が100字の時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelRemark("a".repeat(100));
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelRemark("a".repeat(100));
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }
 
   @Test
   void 土地備考が101字の時入力チェックに異常が発生すること() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelRemark("a".repeat(101));
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelRemark("a".repeat(101));
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual).extracting("message")
@@ -187,10 +187,10 @@ public class ParcelTest {
 
   @Test
   void 土地備考がnullの時入力チェックに異常が発生しないこと() {
-    Parcel parcel = new Parcel();
-    parcel.setParcelRemark(null);
+    LandParcel landParcel = new LandParcel();
+    landParcel.setLandParcelRemark(null);
 
-    Set<ConstraintViolation<Parcel>> actual = validator.validate(parcel);
+    Set<ConstraintViolation<LandParcel>> actual = validator.validate(landParcel);
 
     assertThat(actual.size()).isEqualTo(0);
   }

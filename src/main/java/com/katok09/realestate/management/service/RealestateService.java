@@ -51,18 +51,18 @@ public class RealestateService {
     String token = jwtUtil.extractTokenFromRequest(requestToken);
     int userId = jwtUtil.getUserIdFromToken(token);
     request.getProject().setUserId(userId);
-    request.getParcel().setUserId(userId);
+    request.getLandParcel().setUserId(userId);
     request.getBuilding().setUserId(userId);
     request.getIncomeAndExpenses().setUserId(userId);
 
     // プロジェクトオブジェクトの自動採番を行ってから各オブジェクトにプロジェクトIDを設定します。
     repository.registerProject(request.getProject());
 
-    request.getParcel().setProjectId(request.getProject().getId());
+    request.getLandParcel().setProjectId(request.getProject().getId());
     request.getBuilding().setProjectId(request.getProject().getId());
     request.getIncomeAndExpenses().setProjectId(request.getProject().getId());
 
-    repository.registerParcel(request.getParcel());
+    repository.registerLandParcel(request.getLandParcel());
     repository.registerBuilding(request.getBuilding());
     repository.registerIncomeAndExpenses(request.getIncomeAndExpenses());
   }
@@ -90,7 +90,7 @@ public class RealestateService {
     if (repository.updateProject(request.getProject()) == 0) {
       throw new ResourceNotFoundException("更新対象のプロジェクトが存在しません。");
     }
-    if (repository.updateParcel(request.getParcel()) == 0) {
+    if (repository.updateLandParcel(request.getLandParcel()) == 0) {
       throw new ResourceNotFoundException("更新対象の土地情報が存在しません。");
     }
     if (repository.updateBuilding(request.getBuilding()) == 0) {
@@ -118,7 +118,7 @@ public class RealestateService {
     if (repository.deleteProject(projectId, userId) == 0) {
       throw new ResourceNotFoundException("削除対象のプロジェクトが存在しません。");
     }
-    if (repository.deleteParcel(projectId, userId) == 0) {
+    if (repository.deleteLandParcel(projectId, userId) == 0) {
       throw new ResourceNotFoundException("削除対象の土地情報が存在しません。");
     }
     if (repository.deleteBuilding(projectId, userId) == 0) {
@@ -138,21 +138,21 @@ public class RealestateService {
   public void deleteRealestateByUserId(int userId) {
 
     repository.deleteProjectByUserId(userId);
-    repository.deleteParcelByUserId(userId);
+    repository.deleteLandParcelByUserId(userId);
     repository.deleteBuildingByUserId(userId);
     repository.deleteIncomeAndExpensesByUserId(userId);
   }
 
   private boolean isProjectIdConsistent(RealestateDetail request) {
     int projectId = request.getProject().getId();
-    return projectId == request.getParcel().getProjectId() &&
+    return projectId == request.getLandParcel().getProjectId() &&
         projectId == request.getBuilding().getProjectId() &&
         projectId == request.getIncomeAndExpenses().getProjectId();
   }
 
   private boolean isUserIdConsistent(int userId, RealestateDetail request) {
     return userId == request.getProject().getUserId() &&
-        userId == request.getParcel().getUserId() &&
+        userId == request.getLandParcel().getUserId() &&
         userId == request.getBuilding().getUserId() &&
         userId == request.getIncomeAndExpenses().getUserId();
   }
